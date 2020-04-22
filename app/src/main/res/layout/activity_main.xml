@@ -1,18 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:background="@color/colorPrimaryDark">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark" />
+
+        <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimaryDark" app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:layout_scrollFlags="scroll|enterAlways">
+        </androidx.appcompat.widget.Toolbar>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/colorAccent" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Main content view -->
+        <FrameLayout
+            android:id="@+id/mainContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            //google maps
+
+            //dugme
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="35dp"
+                android:background="@drawable/roundedbutton"
+                android:text="@string/showListOfCars"
+                android:textColor="@color/colorPrimaryDark"
+                android:id="@+id/mapButton" />
+
+        </FrameLayout>
+
+        <!-- The navigation drawer -->
+        <RelativeLayout
+            android:layout_width="280dp"
+            android:layout_height="match_parent"
+            android:id="@+id/drawerPane"
+            android:background="@color/colorPrimaryDark"
+            android:layout_gravity="start">
+
+            <RelativeLayout
+                android:id="@+id/profileBox"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:padding="8dp" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/helloMenu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hello "
+                        android:textColor="@color/colorMenuText"
+                        android:textSize="20sp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorMenuText"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <!-- List of Actions (pages) -->
+            <ListView
+                android:id="@+id/navList"
+                android:layout_width="280dp"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/profileBox"
+                android:choiceMode="singleChoice"
+                android:background="@color/colorGhostWhite" />
+
+        </RelativeLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</LinearLayout>

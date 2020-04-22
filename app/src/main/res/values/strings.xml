@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Cruise</string>
+    <string name="ride_history">Ride history</string>
+    <string name="wallet">Wallet</string>
+    <string name="settings">Settings</string>
+    <string name="about_us">About us</string>
+    <string name="log_out">Log out</string>
+    <string name="drawer_open">Open menu</string>
+    <string name="drawer_close">Close menu</string>
+    <string name="cruise_logo">Cruise</string>
+    <string name="showListOfCars">Show list of cars nearby</string>
 </resources>
