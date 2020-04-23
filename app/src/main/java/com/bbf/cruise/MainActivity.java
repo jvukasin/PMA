@@ -7,13 +7,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bbf.cruise.activities.SplashScreen;
 import com.bbf.cruise.adapters.DrawerListAdapter;
 
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout mDrawerPane;
     private CharSequence mTitle;
     private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +92,22 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             selectItemFromDrawer(0);
         }
+
+        button = (Button) findViewById(R.id.mapButton);
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+//                openActivityOnButtonClick();
+            }
+        });
+
     }
+
+//    public void openActivityOnButtonClick() {
+//        Intent intent = new Intent(MainActivity.this, SplashScreen.class);
+//        startActivity(intent);
+//    }
 
     private void prepareMenu(ArrayList<NavItem> mNavItems ) {
         mNavItems.add(new NavItem(getString(R.string.ride_history), R.drawable.outline_history_24));
