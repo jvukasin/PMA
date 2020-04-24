@@ -1,9 +1,11 @@
 package com.bbf.cruise.activities;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Pair;
@@ -43,7 +45,7 @@ public class SplashScreen extends AppCompatActivity {
         large.setAnimation(bottAnim);
         small.setAnimation(bottAnim);
 
-        int SPLASH_TIME_OUT = 3000;
+        int SPLASH_TIME_OUT = 2500;
 
         new Handler().postDelayed(new Runnable() {
               @Override

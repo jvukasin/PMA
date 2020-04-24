@@ -14,11 +14,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="LoginTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme.NoBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorMenuText</item>
 
         <item name="android:windowContentTransitions">true</item>
     </style>

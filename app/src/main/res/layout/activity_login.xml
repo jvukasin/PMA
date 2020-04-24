@@ -31,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign in to continue"
+        android:transitionName="logo_desc"
         android:textSize="18sp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
@@ -46,12 +47,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/username"
-            android:hint="Username"
+            android:hint="Email"
+            android:transitionName="email_tran"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:id="@+id/enter_usrnm"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -60,12 +64,14 @@
             android:id="@+id/password"
             android:hint="Password"
             app:passwordToggleEnabled="true"
+            android:transitionName="password_tran"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword"
+                android:id="@+id/enter_pass"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -89,7 +95,8 @@
             android:backgroundTint="@color/colorMenuText"
             android:textColor="@color/colorBlack"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            android:transitionName="main_button_tran"/>
 
         <Button
             android:id="@+id/new_user"
@@ -101,7 +108,8 @@
             android:textColor="@color/colorPrimaryDark"
             android:layout_gravity="bottom"
             android:elevation="0dp"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            android:transitionName="bottom_button_tran"/>
 
     </LinearLayout>
 

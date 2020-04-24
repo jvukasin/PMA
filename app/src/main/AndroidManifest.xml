@@ -9,20 +9,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".activities.Register" android:theme="@style/AppTheme.NoBar" />
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activities.SplashScreen"
-            android:theme="@style/LoginTheme">
+            android:theme="@style/AppTheme.NoBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activities.Login" android:theme="@style/LoginTheme"/>
+        <activity
+            android:name=".activities.Login"
+            android:theme="@style/AppTheme.NoBar" />
     </application>
 
 </manifest>
