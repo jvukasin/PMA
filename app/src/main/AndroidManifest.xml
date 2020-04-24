@@ -15,14 +15,14 @@
 
         <activity
             android:name=".activities.SplashScreen"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+            android:theme="@style/LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.Login" />
+        <activity android:name=".activities.Login" android:theme="@style/LoginTheme"/>
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bbf.cruise.activities.Login;
 import com.bbf.cruise.activities.SplashScreen;
 import com.bbf.cruise.adapters.DrawerListAdapter;
 
@@ -98,16 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-//                openActivityOnButtonClick();
+//                Intent intent = new Intent(MainActivity.this, Login.class);
+//                startActivity(intent);
             }
         });
 
     }
-
-//    public void openActivityOnButtonClick() {
-//        Intent intent = new Intent(MainActivity.this, SplashScreen.class);
-//        startActivity(intent);
-//    }
 
     private void prepareMenu(ArrayList<NavItem> mNavItems ) {
         mNavItems.add(new NavItem(getString(R.string.ride_history), R.drawable.outline_history_24));
