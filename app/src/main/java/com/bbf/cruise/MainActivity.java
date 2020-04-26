@@ -11,11 +11,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bbf.cruise.activities.AboutUs;
 import com.bbf.cruise.activities.Login;
 import com.bbf.cruise.activities.SplashScreen;
 import com.bbf.cruise.adapters.DrawerListAdapter;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         //senka preko glavnog sadrzaja
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         //listener elemenata liste
-//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         // definisan adapter za drawer
         mDrawerList.setAdapter(adapter);
 
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         DrawerListAdapter LogOutAdapter = new DrawerListAdapter(this, navItem);
         logOutList.setAdapter(LogOutAdapter);
 
-//        logOutList.setOnItemClickListener(new DrawerItemClickListener());
+        logOutList.setOnItemClickListener(new LogOutItemClickListener());
 
     }
 
@@ -123,7 +125,13 @@ public class MainActivity extends AppCompatActivity {
         mNavItems.add(new NavItem(getString(R.string.wallet), R.drawable.outline_account_balance_wallet_24));
         mNavItems.add(new NavItem(getString(R.string.settings), R.drawable.outline_settings_24));
         mNavItems.add(new NavItem(getString(R.string.about_us), R.drawable.outline_info_24));
-//        mNavItems.add(new NavItem(getString(R.string.log_out), R.drawable.outline_reply_24));
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItemFromDrawer(position);
+        }
     }
 
     private void selectItemFromDrawer(int position) {
@@ -134,20 +142,30 @@ public class MainActivity extends AppCompatActivity {
         }else if(position == 2){
             //..
         }else if(position == 3){
-            //..
-        }else if(position == 4){
-            //..
-        }else if(position == 5){
-            //...
+            Intent intent = new Intent(MainActivity.this, AboutUs.class);
+            startActivity(intent);
         }else{
             Log.e("DRAWER", "Nesto van opsega!");
         }
 
         mDrawerList.setItemChecked(position, true);
-        if(position != 5) // za sve osim za sync
-        {
-            setTitle(mNavItems.get(position).getmTitle());
-        }
         mDrawerLayout.closeDrawer(mDrawerPane);
+    }
+
+    private class LogOutItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if(position == 0){
+                //TODO izloguje ga i odvede ga na login
+
+                Intent intent = new Intent(MainActivity.this, Login.class);
+                startActivity(intent);
+                finish();
+            }else{
+                Log.e("DRAWER", "Nesto van opsega!");
+            }
+
+            mDrawerLayout.closeDrawer(mDrawerPane);
+        }
     }
 }
