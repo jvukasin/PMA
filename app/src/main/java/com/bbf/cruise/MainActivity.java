@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         //senka preko glavnog sadrzaja
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         //listener elemenata liste
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         // definisan adapter za drawer
         mDrawerList.setAdapter(adapter);
 
