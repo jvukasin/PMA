@@ -10,8 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities.Register" android:theme="@style/AppTheme.NoBar" />
-
+        <activity android:name=".activities.AboutUs" android:theme="@style/AppTheme.NoActionBar" ></activity>
+        <activity
+            android:name=".activities.Register"
+            android:theme="@style/AppTheme.NoBar" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />

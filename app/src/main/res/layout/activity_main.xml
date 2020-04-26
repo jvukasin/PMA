@@ -109,7 +109,6 @@
                 android:choiceMode="singleChoice"
                 android:background="@color/colorGhostWhite" />
 
-
             <ListView
                 android:id="@+id/logoutListView"
                 android:layout_width="280dp"
