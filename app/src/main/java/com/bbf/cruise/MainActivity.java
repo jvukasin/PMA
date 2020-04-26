@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         mTitle = getTitle();
         mDrawerLayout = findViewById(R.id.drawerLayout);
         mDrawerList = findViewById(R.id.navList);
+        mDrawerList.setDivider(null);
+
         //TODO ovo se dobavlja iz baze za ulogovanog korisnika
         TextView usr = (TextView) findViewById(R.id.userName);
         usr.setText("BBF");
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle("iReviewer");
+                getSupportActionBar().setTitle("Cruise");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         mNavItems.add(new NavItem(getString(R.string.wallet), R.drawable.outline_account_balance_wallet_24));
         mNavItems.add(new NavItem(getString(R.string.settings), R.drawable.outline_settings_24));
         mNavItems.add(new NavItem(getString(R.string.about_us), R.drawable.outline_info_24));
-        mNavItems.add(new NavItem(getString(R.string.log_out), 0));
+        mNavItems.add(new NavItem(getString(R.string.log_out), R.drawable.outline_reply_24));
     }
 
     private void selectItemFromDrawer(int position) {

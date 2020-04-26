@@ -6,4 +6,5 @@
     <color name="colorMenuText">#efcd11</color>
     <color name="colorGhostWhite">#f8f8ff</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorLogOut">#CD0000</color>
 </resources>
