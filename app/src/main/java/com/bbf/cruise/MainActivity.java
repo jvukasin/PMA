@@ -106,6 +106,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //logout dugme na dnu
+        ListView logOutList = (ListView) findViewById(R.id.logoutListView);
+        logOutList.setDivider(null);
+        ArrayList<NavItem> navItem = new ArrayList<NavItem>();
+        navItem.add(new NavItem(getString(R.string.log_out), R.drawable.outline_reply_24));
+        DrawerListAdapter LogOutAdapter = new DrawerListAdapter(this, navItem);
+        logOutList.setAdapter(LogOutAdapter);
+
+//        logOutList.setOnItemClickListener(new DrawerItemClickListener());
+
     }
 
     private void prepareMenu(ArrayList<NavItem> mNavItems ) {
@@ -113,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         mNavItems.add(new NavItem(getString(R.string.wallet), R.drawable.outline_account_balance_wallet_24));
         mNavItems.add(new NavItem(getString(R.string.settings), R.drawable.outline_settings_24));
         mNavItems.add(new NavItem(getString(R.string.about_us), R.drawable.outline_info_24));
-        mNavItems.add(new NavItem(getString(R.string.log_out), R.drawable.outline_reply_24));
+//        mNavItems.add(new NavItem(getString(R.string.log_out), R.drawable.outline_reply_24));
     }
 
     private void selectItemFromDrawer(int position) {
