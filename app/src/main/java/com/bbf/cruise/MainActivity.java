@@ -16,9 +16,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbf.cruise.activities.AboutUs;
 import com.bbf.cruise.activities.Login;
+import com.bbf.cruise.activities.RideHistory;
 import com.bbf.cruise.activities.Settings;
 import com.bbf.cruise.activities.SplashScreen;
 import com.bbf.cruise.adapters.DrawerListAdapter;
@@ -26,6 +28,8 @@ import com.bbf.cruise.adapters.DrawerListAdapter;
 import java.util.ArrayList;
 
 import model.NavItem;
+
+import static android.app.PendingIntent.getActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -94,11 +98,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // Izborom na neki element iz liste, pokrecemo akciju
-        if (savedInstanceState == null) {
-            selectItemFromDrawer(0);
-        }
-
         button = (Button) findViewById(R.id.mapButton);
         button.setOnClickListener(new View.OnClickListener() {
 
@@ -146,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectItemFromDrawer(int position) {
         if(position == 0){
-            //FragmentTransition.to(MyFragment.newInstance(), this, false);
+            Intent intent = new Intent(MainActivity.this, RideHistory.class);
+            startActivity(intent);
         }else if(position == 1){
             //..
         }else if(position == 2){

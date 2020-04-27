@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".activities.Settings" android:theme="@style/AppTheme"></activity>
+        <activity android:name=".activities.RideHistory" android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".activities.AboutUs"
             android:theme="@style/AppTheme" />
