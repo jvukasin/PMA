@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.bbf.cruise.activities.AboutUs;
 import com.bbf.cruise.activities.Login;
+import com.bbf.cruise.activities.Settings;
 import com.bbf.cruise.activities.SplashScreen;
 import com.bbf.cruise.adapters.DrawerListAdapter;
 
@@ -118,6 +119,15 @@ public class MainActivity extends AppCompatActivity {
 
         logOutList.setOnItemClickListener(new LogOutItemClickListener());
 
+        TextView no_of_distance = (TextView) findViewById(R.id.no_of_distance);
+        TextView no_of_rides = (TextView) findViewById(R.id.no_of_rides);
+        TextView no_of_points = (TextView) findViewById(R.id.no_of_points);
+
+        //TODO ubaciti vrednosti izvucene iz baze za korisnika
+        no_of_distance.setText("58");
+        no_of_rides.setText("4");
+        no_of_points.setText("470");
+
     }
 
     private void prepareMenu(ArrayList<NavItem> mNavItems ) {
@@ -140,7 +150,8 @@ public class MainActivity extends AppCompatActivity {
         }else if(position == 1){
             //..
         }else if(position == 2){
-            //..
+            Intent intent = new Intent(MainActivity.this, Settings.class);
+            startActivity(intent);
         }else if(position == 3){
             Intent intent = new Intent(MainActivity.this, AboutUs.class);
             startActivity(intent);

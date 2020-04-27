@@ -9,4 +9,7 @@
     <string name="drawer_close">Close menu</string>
     <string name="cruise_logo">Cruise</string>
     <string name="showListOfCars">Show list of cars nearby</string>
+    <string name="distance">Distance</string>
+    <string name="rides">Rides</string>
+    <string name="points">Points</string>
 </resources>
