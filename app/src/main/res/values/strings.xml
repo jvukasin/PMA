@@ -12,4 +12,8 @@
     <string name="distance">Distance</string>
     <string name="rides">Rides</string>
     <string name="points">Points</string>
+    <string name="startDateLabel">Start date:</string>
+    <string name="endDateLabel">End date:</string>
+    <string name="distanceLabel">Distance:</string>
+    <string name="priceLabel">Price:</string>
 </resources>
