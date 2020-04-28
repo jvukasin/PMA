@@ -9,22 +9,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".activities.Settings" android:theme="@style/AppTheme"></activity>
-        <activity android:name=".activities.RideHistory" android:theme="@style/AppTheme"></activity>
+        <activity android:name=".activities.NearbyCarsActivity" android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.AboutUs"
-            android:theme="@style/AppTheme" />
+            android:name=".activities.SettingsActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.Register"
-            android:theme="@style/AppTheme.NoBar" />
+            android:name=".activities.RideHistoryActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.AboutUsActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:theme="@style/AppTheme.NoBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.SplashScreen"
+            android:name=".activities.SplashScreenActivity"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoBar">
+            android:theme="@style/AppTheme.NoBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,8 +42,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.Login"
-            android:theme="@style/AppTheme.NoBar" />
+            android:name=".activities.LoginActivity"
+            android:theme="@style/AppTheme.NoBar"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

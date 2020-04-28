@@ -4,10 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Pair;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,7 +15,7 @@ import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private Button log_in;
     private Button forgot_pass;
@@ -38,7 +36,7 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -56,7 +54,7 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this, Register.class);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 Pair[] pairs = new Pair[7];
 
                 pairs[0] = new Pair<View, String>(image, "logo_image");
@@ -67,7 +65,7 @@ public class Login extends AppCompatActivity {
                 pairs[5] = new Pair<View, String>(main_btn, "main_button_tran");
                 pairs[6] = new Pair<View, String>(bottom_btn, "bottom_button_tran");
 
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Login.this, pairs);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this, pairs);
                 startActivity(intent, options.toBundle());
             }
         });

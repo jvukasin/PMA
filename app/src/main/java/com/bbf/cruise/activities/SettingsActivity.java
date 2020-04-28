@@ -1,20 +1,21 @@
 package com.bbf.cruise.activities;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.bbf.cruise.R;
 
-public class RideHistory extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ride_history);
-        setTitle("Ride history");
+        setContentView(R.layout.activity_settings);
+        setTitle(R.string.settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override
@@ -24,7 +25,7 @@ public class RideHistory extends AppCompatActivity {
                 finish();
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
-
 }

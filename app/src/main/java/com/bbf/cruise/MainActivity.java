@@ -16,13 +16,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bbf.cruise.activities.AboutUs;
-import com.bbf.cruise.activities.Login;
-import com.bbf.cruise.activities.RideHistory;
-import com.bbf.cruise.activities.Settings;
-import com.bbf.cruise.activities.SplashScreen;
+import com.bbf.cruise.activities.AboutUsActivity;
+import com.bbf.cruise.activities.LoginActivity;
+import com.bbf.cruise.activities.NearbyCarsActivity;
+import com.bbf.cruise.activities.RideHistoryActivity;
+import com.bbf.cruise.activities.SettingsActivity;
 import com.bbf.cruise.adapters.DrawerListAdapter;
 
 import java.util.ArrayList;
@@ -103,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, Login.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, NearbyCarsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -145,15 +144,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectItemFromDrawer(int position) {
         if(position == 0){
-            Intent intent = new Intent(MainActivity.this, RideHistory.class);
+            Intent intent = new Intent(MainActivity.this, RideHistoryActivity.class);
             startActivity(intent);
         }else if(position == 1){
             //..
         }else if(position == 2){
-            Intent intent = new Intent(MainActivity.this, Settings.class);
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
         }else if(position == 3){
-            Intent intent = new Intent(MainActivity.this, AboutUs.class);
+            Intent intent = new Intent(MainActivity.this, AboutUsActivity.class);
             startActivity(intent);
         }else{
             Log.e("DRAWER", "Nesto van opsega!");
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             if(position == 0){
                 //TODO izloguje ga i odvede ga na login
 
-                Intent intent = new Intent(MainActivity.this, Login.class);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             }else{
