@@ -13,4 +13,22 @@
     <string name="rides">Rides</string>
     <string name="points">Points</string>
     <string name="nearByCars">Nearby cars</string>
+    <string name="user_info">User information</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="email">Email address</string>
+    <string name="phone_no">Phone number</string>
+    <string name="distance_default_value">Km</string>
+    
+    
+    <string-array name="pref_distance_entries">
+        <item>Kilometers</item>
+        <item>Miles</item>
+    </string-array>
+
+    <string-array name="pref_distance_values">
+        <item>Km</item>
+        <item>Mi</item>
+    </string-array>
+
 </resources>
