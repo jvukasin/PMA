@@ -23,6 +23,7 @@ import com.bbf.cruise.activities.Login;
 import com.bbf.cruise.activities.RideHistory;
 import com.bbf.cruise.activities.Settings;
 import com.bbf.cruise.activities.SplashScreen;
+import com.bbf.cruise.activities.Wallet;
 import com.bbf.cruise.adapters.DrawerListAdapter;
 
 import java.util.ArrayList;
@@ -148,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, RideHistory.class);
             startActivity(intent);
         }else if(position == 1){
-            //..
+            Intent intent = new Intent(MainActivity.this, Wallet.class);
+            startActivity(intent);
         }else if(position == 2){
             Intent intent = new Intent(MainActivity.this, Settings.class);
             startActivity(intent);

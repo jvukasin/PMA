@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:columnCount="2"
-    android:rowCount="1"
-    android:alignmentMode="alignMargins"
-    android:columnOrderPreserved="false"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ride_history_item_background"
+    android:orientation="horizontal"
     >
 
     <LinearLayout
@@ -14,8 +11,6 @@
         android:orientation="vertical"
         android:layout_width="250dp"
         android:layout_height="match_parent"
-        android:layout_column="0"
-        android:background="@color/colorPrimaryDark"
         >
         <TextView
             android:layout_width="match_parent"
@@ -24,8 +19,9 @@
             android:text="@string/startDateLabel"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
             android:id="@+id/startDate"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorMenuText"
             android:layout_width="match_parent"
             android:layout_height="20dp">
         </TextView>
@@ -37,8 +33,9 @@
             android:text="@string/endDateLabel"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
             android:id="@+id/endDate"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorMenuText"
             android:layout_width="match_parent"
             android:layout_height="20dp">
         </TextView>
@@ -50,8 +47,9 @@
             android:text="@string/distanceLabel"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
             android:id="@+id/distance"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorMenuText"
             android:layout_width="match_parent"
             android:layout_height="20dp">
         </TextView>
@@ -63,8 +61,9 @@
             android:text="@string/priceLabel"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
             android:id="@+id/price"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorMenuText"
             android:layout_width="match_parent"
             android:layout_height="20dp">
         </TextView>
@@ -73,24 +72,20 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_column="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/points_border"
+        android:gravity="bottom|center"
         android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
         <TextView
             android:id="@+id/points"
+            android:layout_weight="0"
+            android:textColor="@color/colorMenuText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="15dp"
-            android:background="@drawable/points_border"></TextView>
+            android:gravity="bottom|center">
+        </TextView>
     </LinearLayout>
 
 
-</GridLayout>
+</LinearLayout>

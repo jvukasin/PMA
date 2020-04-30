@@ -16,4 +16,5 @@
     <string name="endDateLabel">End date:</string>
     <string name="distanceLabel">Distance:</string>
     <string name="priceLabel">Price:</string>
+    <string name="balanceLabel">Balance</string>
 </resources>
