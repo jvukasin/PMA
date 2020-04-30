@@ -19,8 +19,6 @@
     <string name="email">Email address</string>
     <string name="phone_no">Phone number</string>
     <string name="distance_default_value">Km</string>
-    
-    
     <string-array name="pref_distance_entries">
         <item>Kilometers</item>
         <item>Miles</item>
@@ -30,5 +28,9 @@
         <item>Km</item>
         <item>Mi</item>
     </string-array>
-
+    <string name="startDateLabel">Start date:</string>
+    <string name="endDateLabel">End date:</string>
+    <string name="distanceLabel">Distance:</string>
+    <string name="priceLabel">Price:</string>
+    <string name="balanceLabel">Balance</string>
 </resources>

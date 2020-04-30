@@ -18,6 +18,8 @@
             android:name=".activities.RideHistoryActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activities.Wallet"
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".activities.AboutUsActivity"
             android:theme="@style/AppTheme"
