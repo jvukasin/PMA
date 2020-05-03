@@ -3,6 +3,7 @@ package com.bbf.cruise;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.CarItem;
 import model.RideHistoryItem;
 
 public class Mokap {
