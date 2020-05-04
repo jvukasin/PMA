@@ -1,100 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ride_history_item_background"
-    android:orientation="horizontal"
-    >
+    android:background="@android:color/transparent">
 
     <LinearLayout
-        android:paddingLeft="10dp"
-        android:orientation="vertical"
-        android:layout_width="240dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:textColor="@color/colorGhostWhite"
-            android:text="@string/startDateLabel"
-            />
-        <TextView
-            android:fontFamily="sans-serif-black"
-            android:id="@+id/startDate"
-            android:textColor="@color/colorMenuText"
-            android:layout_width="match_parent"
-            android:layout_height="20dp">
-        </TextView>
+        android:background="@drawable/ride_history_item_background"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
 
-        <TextView
-            android:textColor="@color/colorGhostWhite"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="@string/endDateLabel"
-            />
-        <TextView
-            android:fontFamily="sans-serif-black"
-            android:id="@+id/endDate"
-            android:textColor="@color/colorMenuText"
-            android:layout_width="match_parent"
-            android:layout_height="20dp">
-        </TextView>
+        <LinearLayout
+            android:paddingLeft="10dp"
+            android:orientation="vertical"
+            android:layout_width="230dp"
+            android:layout_height="match_parent"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:textColor="@color/colorGhostWhite"
+                android:text="@string/startDateLabel"
+                />
+            <TextView
+                android:fontFamily="sans-serif-black"
+                android:id="@+id/startDate"
+                android:textColor="@color/colorMenuText"
+                android:layout_width="match_parent"
+                android:layout_height="20dp">
+            </TextView>
 
-        <TextView
-            android:textColor="@color/colorGhostWhite"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="@string/distanceLabel"
-            />
-        <TextView
-            android:fontFamily="sans-serif-black"
-            android:id="@+id/distance"
-            android:textColor="@color/colorMenuText"
-            android:layout_width="match_parent"
-            android:layout_height="20dp">
-        </TextView>
+            <TextView
+                android:textColor="@color/colorGhostWhite"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="@string/endDateLabel"
+                />
+            <TextView
+                android:fontFamily="sans-serif-black"
+                android:id="@+id/endDate"
+                android:textColor="@color/colorMenuText"
+                android:layout_width="match_parent"
+                android:layout_height="20dp">
+            </TextView>
 
-        <TextView
-            android:textColor="@color/colorGhostWhite"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="@string/priceLabel"
-            />
-        <TextView
-            android:fontFamily="sans-serif-black"
-            android:id="@+id/price"
-            android:textColor="@color/colorMenuText"
-            android:layout_width="match_parent"
-            android:layout_height="20dp">
-        </TextView>
+            <TextView
+                android:textColor="@color/colorGhostWhite"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="@string/distanceLabel"
+                />
+            <TextView
+                android:fontFamily="sans-serif-black"
+                android:id="@+id/distance"
+                android:textColor="@color/colorMenuText"
+                android:layout_width="match_parent"
+                android:layout_height="20dp">
+            </TextView>
 
+            <TextView
+                android:textColor="@color/colorGhostWhite"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="@string/priceLabel"
+                />
+            <TextView
+                android:fontFamily="sans-serif-black"
+                android:id="@+id/price"
+                android:textColor="@color/colorMenuText"
+                android:layout_width="match_parent"
+                android:layout_height="20dp">
+            </TextView>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/points_border"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/points"
+                android:layout_weight="0"
+                android:textColor="@color/colorMenuText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-black"
+                android:textSize="16sp"
+                android:gravity="bottom|center"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:paddingLeft="5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/points"
+                android:fontFamily="sans-serif"
+                android:text="points"
+                android:textSize="14sp"
+                android:textColor="@color/colorGhostWhite"
+                android:layout_marginBottom="10dp"/>
+        </RelativeLayout>
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:paddingLeft="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/points_border"
-        android:gravity="bottom|center"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/points"
-            android:layout_weight="0"
-            android:textColor="@color/colorMenuText"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="bottom|center">
-        </TextView>
-        <TextView
-            android:paddingLeft="5dp"
-            android:layout_alignParentBottom="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/points"
-            android:text="points"
-            android:textColor="@color/colorMenuText"></TextView>
-    </RelativeLayout>
-
-
-</LinearLayout>
+</RelativeLayout>

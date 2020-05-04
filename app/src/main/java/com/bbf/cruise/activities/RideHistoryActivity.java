@@ -22,6 +22,7 @@ public class RideHistoryActivity extends AppCompatActivity {
         rideHistoryList = findViewById(R.id.rideHistoryItems);
         RideHistoryAdapter rideHistoryAdapter = new RideHistoryAdapter(this);
         rideHistoryList.setAdapter(rideHistoryAdapter);
+        rideHistoryList.setDivider(null);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
