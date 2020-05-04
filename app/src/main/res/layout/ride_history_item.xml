@@ -9,7 +9,7 @@
     <LinearLayout
         android:paddingLeft="10dp"
         android:orientation="vertical"
-        android:layout_width="250dp"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
         >
         <TextView
@@ -71,7 +71,8 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
+        android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/points_border"
@@ -81,11 +82,19 @@
             android:id="@+id/points"
             android:layout_weight="0"
             android:textColor="@color/colorMenuText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="bottom|center">
         </TextView>
-    </LinearLayout>
+        <TextView
+            android:paddingLeft="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/points"
+            android:text="points"
+            android:textColor="@color/colorMenuText"></TextView>
+    </RelativeLayout>
 
 
 </LinearLayout>

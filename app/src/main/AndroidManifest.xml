@@ -24,7 +24,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.Wallet"
+            android:name=".activities.WalletActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.AboutUsActivity"

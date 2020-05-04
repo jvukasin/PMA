@@ -11,7 +11,7 @@ import com.bbf.cruise.R;
 import com.bbf.cruise.dialogs.EditBalanceDialog;
 
 
-public class Wallet extends AppCompatActivity {
+public class WalletActivity extends AppCompatActivity {
 
     private Button button;
 
