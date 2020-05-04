@@ -2,8 +2,11 @@ package com.bbf.cruise.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.bbf.cruise.R;
@@ -29,6 +32,24 @@ public class NearbyCarsActivity extends AppCompatActivity {
         prepareList(cars);
         NearbyCarsAdapter adapter = new NearbyCarsAdapter(this, cars);
         listV.setAdapter(adapter);
+
+        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                CarItem item = cars.get(position);
+
+                Intent intent = new Intent(NearbyCarsActivity.this, CarDetailActivity.class);
+                intent.putExtra("name", item.getCarName());
+                intent.putExtra("avatar", item.getAvatar());
+                intent.putExtra("distance", item.getDistance());
+                intent.putExtra("fuel", item.getFuel_distance());
+                intent.putExtra("plate", item.getReg_number());
+                intent.putExtra("no_of_rides", item.getNo_of_rides());
+                intent.putExtra("rating", item.getRating());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -44,8 +65,9 @@ public class NearbyCarsActivity extends AppCompatActivity {
 
     private void prepareList(ArrayList<CarItem> list) {
         //TODO izvuci iz baze i sta sve treba
-        list.add(new CarItem("BMW", "320d", R.drawable.sedan_512, "NS 643SK", 1.3, 380));
-        list.add(new CarItem("Renault", "Clio", R.drawable.sedan_512, "NS 274DJ", 2.2, 322));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263));
+        list.add(new CarItem("BMW", "320d", R.drawable.sedan_512, "NS 643SK", 1.3, 380, 2, 5.0));
+        list.add(new CarItem("Renault", "Clio", R.drawable.sedan_512, "NS 274DJ", 2.2, 322, 4, 4.5));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
     }
+
 }

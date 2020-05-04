@@ -11,14 +11,18 @@ public class CarItem implements Parcelable {
     private String reg_number;
     private double distance;
     private int fuel_distance;
+    private int no_of_rides;
+    private double rating;
 
-    public CarItem(String brand, String model, int avatar, String reg_number, double distance, int fuel_distance) {
+    public CarItem(String brand, String model, int avatar, String reg_number, double distance, int fuel_distance, int no_of_rides, double rating) {
         this.brand = brand;
         this.model = model;
         this.avatar = avatar;
         this.reg_number = reg_number;
         this.distance = distance;
         this.fuel_distance = fuel_distance;
+        this.no_of_rides = no_of_rides;
+        this.rating = rating;
     }
 
     public String getCarName() {
@@ -73,6 +77,22 @@ public class CarItem implements Parcelable {
         this.fuel_distance = fuel_distance;
     }
 
+    public int getNo_of_rides() {
+        return no_of_rides;
+    }
+
+    public void setNo_of_rides(int no_of_rides) {
+        this.no_of_rides = no_of_rides;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -83,6 +103,8 @@ public class CarItem implements Parcelable {
         dest.writeString(brand + " " + model);
         dest.writeString(reg_number);
         dest.writeDouble(distance);
-        dest.writeDouble(fuel_distance);
+        dest.writeInt(fuel_distance);
+        dest.writeInt(no_of_rides);
+        dest.writeDouble(rating);
     }
 }
