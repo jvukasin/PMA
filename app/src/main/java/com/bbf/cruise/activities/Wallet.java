@@ -4,11 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.bbf.cruise.R;
+import com.bbf.cruise.dialogs.EditBalanceDialog;
 
 
 public class Wallet extends AppCompatActivity {
+
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +21,15 @@ public class Wallet extends AppCompatActivity {
         setContentView(R.layout.activity_wallet);
         setTitle("Wallet");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        button = (Button) findViewById(R.id.editBalanceButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+            }
+        });
+
     }
 
     @Override
@@ -26,6 +40,12 @@ public class Wallet extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void openDialog(){
+        EditBalanceDialog editBalanceDialog = new EditBalanceDialog();
+        editBalanceDialog.show(getSupportFragmentManager(), "Edit balance");
     }
 
 
