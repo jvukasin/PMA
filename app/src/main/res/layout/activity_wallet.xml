@@ -23,8 +23,10 @@
             android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
             android:text="@string/balanceLabel"
-            android:textSize="27dp">
+            android:textSize="27dp"
+            android:layout_marginBottom="5dp">
         </TextView>
 
         <LinearLayout
@@ -44,18 +46,21 @@
                 android:fontFamily="sans-serif-black"
                 android:text="EUR"
                 android:textSize="20dp"
-                android:textColor="@color/colorMenuText"></TextView>
+                android:textColor="@color/colorAccent"></TextView>
         </LinearLayout>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:padding="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/roundedbutton"
             android:text="@string/editBalanceButton"
             android:textColor="@color/colorPrimaryDark"
-            android:id="@+id/editBalanceButton" />
+            android:id="@+id/editBalanceButton"/>
 
     </LinearLayout>
 
