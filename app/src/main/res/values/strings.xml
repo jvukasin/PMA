@@ -25,7 +25,6 @@
     <string name="priceLabel">Price:</string>
     <string name="balanceLabel">Balance</string>
     <string name="carInfo">Car info</string>
-
     <string-array name="pref_distance_entries">
         <item>Kilometers</item>
         <item>Miles</item>
@@ -35,5 +34,5 @@
         <item>Km</item>
         <item>Mi</item>
     </string-array>
-
+    <string name="editBalanceButton">Edit balance</string>
 </resources>
