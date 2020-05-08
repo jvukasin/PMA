@@ -68,6 +68,19 @@ public class NearbyCarsActivity extends AppCompatActivity {
         list.add(new CarItem("BMW", "320d", R.drawable.sedan_512, "NS 643SK", 1.3, 380, 2, 5.0));
         list.add(new CarItem("Renault", "Clio", R.drawable.sedan_512, "NS 274DJ", 2.2, 322, 4, 4.5));
         list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
+        list.add(new CarItem("BMW", "320d", R.drawable.sedan_512, "NS 643SK", 1.3, 380, 2, 5.0));
+
     }
 
 }

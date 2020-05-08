@@ -6,20 +6,23 @@
 
         <EditTextPreference
             android:key="firstName"
-            android:title="@string/first_name"/>
+            android:title="@string/first_name"
+            android:inputType="text"/>
 
         <EditTextPreference
             android:key="lastName"
-            android:title="@string/last_name"/>
+            android:title="@string/last_name"
+            android:inputType="text"/>
 
         <EditTextPreference
             android:key="email"
-            android:title="@string/email"/>
+            android:title="@string/email"
+            android:inputType="textEmailAddress"/>
 
         <EditTextPreference
             android:key="phone"
             android:title="@string/phone_no"
-            />
+            android:inputType="number"/>
 
     </PreferenceCategory>
 
