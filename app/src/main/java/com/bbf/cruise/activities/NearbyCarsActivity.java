@@ -43,7 +43,7 @@ public class NearbyCarsActivity extends AppCompatActivity {
                 intent.putExtra("name", item.getCarName());
                 intent.putExtra("avatar", item.getAvatar());
                 intent.putExtra("distance", item.getDistance());
-                intent.putExtra("fuel", item.getFuel_distance());
+                intent.putExtra("fuel_distance", item.getFuel_distance());
                 intent.putExtra("plate", item.getReg_number());
                 intent.putExtra("no_of_rides", item.getNo_of_rides());
                 intent.putExtra("rating", item.getRating());

@@ -25,6 +25,29 @@ public class CarItem implements Parcelable {
         this.rating = rating;
     }
 
+    protected CarItem(Parcel in) {
+        brand = in.readString();
+        model = in.readString();
+        avatar = in.readInt();
+        reg_number = in.readString();
+        distance = in.readDouble();
+        fuel_distance = in.readInt();
+        no_of_rides = in.readInt();
+        rating = in.readDouble();
+    }
+
+    public static final Creator<CarItem> CREATOR = new Creator<CarItem>() {
+        @Override
+        public CarItem createFromParcel(Parcel in) {
+            return new CarItem(in);
+        }
+
+        @Override
+        public CarItem[] newArray(int size) {
+            return new CarItem[size];
+        }
+    };
+
     public String getCarName() {
         return brand + " " + model;
     }

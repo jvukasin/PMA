@@ -8,9 +8,57 @@
     android:orientation="vertical"
     android:background="@color/colorGhostWhite">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@color/colorAccent" />
+    <ImageView
+        android:id="@+id/logo_image"
+        android:layout_width="298dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cruise_splash"
+        android:transitionName="logo_image" />
+
+    <TextView
+        android:id="@+id/about_text1"
+        android:layout_width="342dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:fontFamily="sans-serif-black"
+        android:text="We are Cruise."
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        android:transitionName="logo_text" />
+    <TextView
+        android:id="@+id/about_text2"
+        android:layout_width="342dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="We provide fluid mobile rent-a-car service."
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        android:transitionName="logo_text" />
+
+
+    <TextView
+        android:id="@+id/about_contact"
+        android:layout_width="342dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Contact"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="22sp"
+        android:transitionName="logo_text" />
+
+    <TextView
+        android:id="@+id/about_email"
+        android:layout_width="342dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="sep.bbf@gmail.com"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        android:transitionName="logo_text" />
+
 
 </LinearLayout>
