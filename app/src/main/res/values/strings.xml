@@ -17,6 +17,8 @@
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="email">Email address</string>
+    <string name="password">Password</string>
+    <string name="repeatPassword">Repeat password</string>
     <string name="phone_no">Phone number</string>
     <string name="distance_default_value">Km</string>
     <string name="startDateLabel">Start date:</string>
@@ -25,6 +27,19 @@
     <string name="priceLabel">Price:</string>
     <string name="balanceLabel">Balance</string>
     <string name="carInfo">Car info</string>
+    <string name="loginHelloTitle">Hello there,\nWelcome to Cruise App</string>
+    <string name="loginSlogan">Sign in to continue</string>
+    <string name="loginForgotPass">Forgot your password?</string>
+    <string name="logIn">Log in</string>
+    <string name="loginNewUser">New user? Sign up</string>
+    <string name="welcome">Welcome</string>
+    <string name="registerSlogan">Sign up to start cruising</string>
+    <string name="signUp">Sign up</string>
+    <string name="registerHaveAcc">Already have an account? Log in</string>
+    <string name="sendEmailBtn">Send email</string>
+    <string name="forgotPassSlogan">Enter your email address below so we can send you an email to change it</string>
+    <string name="forgotPassTitle">Forgot your password?</string>
+
     <string-array name="pref_distance_entries">
         <item>Kilometers</item>
         <item>Miles</item>

@@ -42,6 +42,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        forgot_pass = (Button) findViewById(R.id.forgot_password);
+        forgot_pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
+
         new_user = (Button) findViewById(R.id.new_user);
         image = (ImageView) findViewById(R.id.logo_image);
         logoText = (TextView) findViewById(R.id.logo_name);
