@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.CarDetailActivity" android:screenOrientation="portrait"
+        <activity android:name=".activities.ForgotPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoBar"></activity>
+        <activity
+            android:name=".activities.CarDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.NearbyCarsActivity"
@@ -42,7 +47,7 @@
             android:name=".activities.SplashScreenActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoBar">
+            android:theme="@style/AppTheme.NoBarSS">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

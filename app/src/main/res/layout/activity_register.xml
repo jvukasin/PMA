@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.RegisterActivity"
-    android:orientation="vertical"
-    android:background="@color/colorGhostWhite">
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/logo_image_reg"
@@ -19,7 +18,7 @@
         android:id="@+id/logo_name_reg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome"
+        android:text="@string/welcome"
         android:transitionName="logo_text"
         android:textSize="30sp"
         android:layout_marginLeft="20dp"
@@ -31,7 +30,7 @@
         android:id="@+id/login_slogan_name_reg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign up to start cruising"
+        android:text="@string/registerSlogan"
         android:transitionName="logo_desc"
         android:textSize="18sp"
         android:fontFamily="sans-serif-condensed-medium"
@@ -61,7 +60,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/dummy"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="First name">
+                android:hint="@string/first_name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -78,7 +77,7 @@
                 android:layout_toRightOf="@+id/dummy"
                 android:weightSum="1"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Last name">
+                android:hint="@string/last_name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -95,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Email"
+            android:hint="@string/email"
             android:transitionName="email_tran">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -110,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Password"
+            android:hint="@string/password"
             app:passwordToggleEnabled="true"
             android:transitionName="password_tran">
 
@@ -126,7 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Repeat password"
+            android:hint="@string/repeatPassword"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -154,7 +153,7 @@
             android:id="@+id/sign_up_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign up"
+            android:text="@string/signUp"
             android:backgroundTint="@color/colorMenuText"
             android:textColor="@color/colorBlack"
             android:layout_marginTop="25dp"
@@ -164,7 +163,7 @@
             android:id="@+id/has_acc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Already have an account? Log in"
+            android:text="@string/registerHaveAcc"
             android:backgroundTint="@android:color/transparent"
             android:stateListAnimator="@null"
             android:textColor="@color/colorPrimaryDark"
