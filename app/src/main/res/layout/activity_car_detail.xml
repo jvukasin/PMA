@@ -169,6 +169,157 @@
             android:textColor="@color/colorPrimaryDark"
             android:fontFamily="sans-serif-condensed-medium"/>
     </LinearLayout>
+    <LinearLayout
+
+        android:id="@+id/otherInfoLine4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/otherInfoLine3"
+        android:layout_marginTop="20dp"
+        >
+        <TextView
+            android:id="@+id/textTp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="20sp"
+            android:text="Tyre Pressure: "
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:id="@+id/otherInfoLine5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/otherInfoLine4"
+        android:layout_marginTop="4dp"
+        >
+        <TextView
+            android:id="@+id/tpFlText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="18sp"
+            android:text="Front Left: "
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif"/>
+        <TextView
+            android:id="@+id/carTp_fl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="18sp"
+            android:text="2.0"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif-condensed-medium"/>
+
+    </LinearLayout>
+    <LinearLayout
+
+        android:id="@+id/otherInfoLine6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/otherInfoLine5"
+        android:layout_marginTop="3dp"
+        >
+        <TextView
+            android:id="@+id/tpFrText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="18sp"
+            android:text="Front Right: "
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif"/>
+        <TextView
+            android:id="@+id/carTp_fr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="18sp"
+            android:text="2.0"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif-condensed-medium"/>
+
+    </LinearLayout>
+    <LinearLayout
+
+        android:id="@+id/otherInfoLine7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/otherInfoLine6"
+        android:layout_marginTop="3dp"
+        >
+        <TextView
+            android:id="@+id/tpRlText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="18sp"
+            android:text="Rear Left: "
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif"/>
+        <TextView
+            android:id="@+id/carTp_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="18sp"
+            android:text="2.0"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif-condensed-medium"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:id="@+id/otherInfoLine8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/otherInfoLine7"
+        android:layout_marginTop="3dp"
+        >
+        <TextView
+            android:id="@+id/tpRrText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="18sp"
+            android:text="Rear Right: "
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif"/>
+        <TextView
+            android:id="@+id/carTp_rr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="18sp"
+            android:text="2.0"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif-condensed-medium"/>
+
+    </LinearLayout>
 
 
 

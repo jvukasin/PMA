@@ -42,6 +42,20 @@ public class CarDetailActivity extends AppCompatActivity {
 
         TextView carRides = (TextView) findViewById(R.id.carRides);
         carRides.setText(String.valueOf(getIntent().getIntExtra("no_of_rides", 0)));
+
+        TextView carTp_fl = (TextView) findViewById(R.id.carTp_fl);
+        carTp_fl.setText(String.valueOf(getIntent().getFloatExtra("tp_fl", 0.0f)));
+
+        TextView carTp_fr = (TextView) findViewById(R.id.carTp_fr);
+        carTp_fr.setText(String.valueOf(getIntent().getFloatExtra("tp_fr", 0.0f)));
+
+        TextView carTp_rl = (TextView) findViewById(R.id.carTp_rl);
+        carTp_rl.setText(String.valueOf(getIntent().getFloatExtra("tp_rl", 0.0f)));
+
+        TextView carTp_rr = (TextView) findViewById(R.id.carTp_rr);
+        carTp_rr.setText(String.valueOf(getIntent().getFloatExtra("tp_rr", 0.0f)));
+
+
     }
 
     @Override

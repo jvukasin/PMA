@@ -47,6 +47,10 @@ public class NearbyCarsActivity extends AppCompatActivity {
                 intent.putExtra("plate", item.getReg_number());
                 intent.putExtra("no_of_rides", item.getNo_of_rides());
                 intent.putExtra("rating", item.getRating());
+                intent.putExtra("tp_fl", item.getTp_fl());
+                intent.putExtra("tp_fr", item.getTp_fr());
+                intent.putExtra("tp_rl", item.getTp_rl());
+                intent.putExtra("tp_rr", item.getTp_rr());
                 startActivity(intent);
             }
         });
@@ -65,21 +69,9 @@ public class NearbyCarsActivity extends AppCompatActivity {
 
     private void prepareList(ArrayList<CarItem> list) {
         //TODO izvuci iz baze i sta sve treba
-        list.add(new CarItem("BMW", "320d", R.drawable.sedan_512, "NS 643SK", 1.3, 380, 2, 5.0));
-        list.add(new CarItem("Renault", "Clio", R.drawable.sedan_512, "NS 274DJ", 2.2, 322, 4, 4.5));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3));
-        list.add(new CarItem("BMW", "320d", R.drawable.sedan_512, "NS 643SK", 1.3, 380, 2, 5.0));
+        list.add(new CarItem("BMW", "320d", R.drawable.sedan_512, "NS 643SK", 1.3, 380, 2, 5.0, 2.3f, 2.2f, 2.2f, 2.3f));
+        list.add(new CarItem("Renault", "Clio", R.drawable.sedan_512, "NS 274DJ", 2.2, 322, 4, 4.5, 2.2f, 2.2f, 2.4f, 2.3f));
+        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3,  1.9f, 2.2f, 2.4f, 2.1f));
 
     }
 

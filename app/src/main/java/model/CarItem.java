@@ -13,17 +13,13 @@ public class CarItem implements Parcelable {
     private int fuel_distance;
     private int no_of_rides;
     private double rating;
+    private float tp_fl;
+    private float tp_fr;
+    private float tp_rl;
+    private float tp_rr;
 
-    public CarItem(String brand, String model, int avatar, String reg_number, double distance, int fuel_distance, int no_of_rides, double rating) {
-        this.brand = brand;
-        this.model = model;
-        this.avatar = avatar;
-        this.reg_number = reg_number;
-        this.distance = distance;
-        this.fuel_distance = fuel_distance;
-        this.no_of_rides = no_of_rides;
-        this.rating = rating;
-    }
+
+
 
     protected CarItem(Parcel in) {
         brand = in.readString();
@@ -34,6 +30,26 @@ public class CarItem implements Parcelable {
         fuel_distance = in.readInt();
         no_of_rides = in.readInt();
         rating = in.readDouble();
+        tp_fl = in.readFloat();
+        tp_fr = in.readFloat();
+        tp_rl = in.readFloat();
+        tp_rr = in.readFloat();
+
+    }
+
+    public CarItem(String brand, String model, int avatar, String reg_number, double distance, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr) {
+        this.brand = brand;
+        this.model = model;
+        this.avatar = avatar;
+        this.reg_number = reg_number;
+        this.distance = distance;
+        this.fuel_distance = fuel_distance;
+        this.no_of_rides = no_of_rides;
+        this.rating = rating;
+        this.tp_fl = tp_fl;
+        this.tp_fr = tp_fr;
+        this.tp_rl = tp_rl;
+        this.tp_rr = tp_rr;
     }
 
     public static final Creator<CarItem> CREATOR = new Creator<CarItem>() {
@@ -112,6 +128,38 @@ public class CarItem implements Parcelable {
         return rating;
     }
 
+    public float getTp_fl() {
+        return tp_fl;
+    }
+
+    public void setTp_fl(float tp_fl) {
+        this.tp_fl = tp_fl;
+    }
+
+    public float getTp_fr() {
+        return tp_fr;
+    }
+
+    public void setTp_fr(float tp_fr) {
+        this.tp_fr = tp_fr;
+    }
+
+    public float getTp_rl() {
+        return tp_rl;
+    }
+
+    public void setTp_rl(float tp_rl) {
+        this.tp_rl = tp_rl;
+    }
+
+    public float getTp_rr() {
+        return tp_rr;
+    }
+
+    public void setTp_rr(float tp_rr) {
+        this.tp_rr = tp_rr;
+    }
+
     public void setRating(double rating) {
         this.rating = rating;
     }
@@ -129,5 +177,10 @@ public class CarItem implements Parcelable {
         dest.writeInt(fuel_distance);
         dest.writeInt(no_of_rides);
         dest.writeDouble(rating);
+        dest.writeFloat(tp_fl);
+        dest.writeFloat(tp_rr);
+        dest.writeFloat(tp_rl);
+        dest.writeFloat(tp_rr);
+
     }
 }

@@ -10,10 +10,11 @@
 
     <ImageView
         android:id="@+id/logo_image"
-        android:layout_width="298dp"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
         android:src="@drawable/cruise_splash"
-        android:transitionName="logo_image" />
+        android:transitionName="logo_image"
+        android:layout_marginLeft="-26dp"/>
 
     <TextView
         android:id="@+id/about_text1"
