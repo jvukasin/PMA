@@ -23,6 +23,16 @@ public class FragmentTransition {
         transaction.commit();
     }
 
+    public static void add(Fragment newFragment, FragmentActivity activity, boolean addToBackstack)
+    {
+        FragmentTransaction transaction = activity.getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .add(R.id.mainContent, newFragment);
+        if(addToBackstack) transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     public static void remove(FragmentActivity activity)
     {
         activity.getSupportFragmentManager().popBackStack();

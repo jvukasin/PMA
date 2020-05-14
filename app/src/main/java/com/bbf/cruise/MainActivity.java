@@ -30,11 +30,12 @@ import com.bbf.cruise.activities.WalletActivity;
 import com.bbf.cruise.adapters.DrawerListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.bbf.cruise.fragments.MapFragment;
+import com.bbf.cruise.tools.FragmentTransition;
 
 import java.util.ArrayList;
 
 import model.NavItem;
-import model.User;
 
 import static android.app.PendingIntent.getActivity;
 
@@ -136,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
         no_of_distance.setText("58");
         no_of_rides.setText("4");
         no_of_points.setText("470");
+
+        //TODO dodati mapu ovde
+        FragmentTransition.to(MapFragment.newInstance(), this, false);
+
 
     }
 
