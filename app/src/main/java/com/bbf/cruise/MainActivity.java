@@ -25,6 +25,8 @@ import com.bbf.cruise.activities.SettingsActivity;
 
 import com.bbf.cruise.activities.WalletActivity;
 import com.bbf.cruise.adapters.DrawerListAdapter;
+import com.bbf.cruise.fragments.MapFragment;
+import com.bbf.cruise.tools.FragmentTransition;
 
 import java.util.ArrayList;
 
@@ -127,6 +129,10 @@ public class MainActivity extends AppCompatActivity {
         no_of_distance.setText("58");
         no_of_rides.setText("4");
         no_of_points.setText("470");
+
+        //TODO dodati mapu ovde
+        FragmentTransition.to(MapFragment.newInstance(), this, false);
+
 
     }
 
