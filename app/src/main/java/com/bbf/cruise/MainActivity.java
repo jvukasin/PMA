@@ -7,7 +7,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbf.cruise.activities.AboutUsActivity;
 import com.bbf.cruise.activities.LoginActivity;
@@ -25,10 +28,13 @@ import com.bbf.cruise.activities.SettingsActivity;
 
 import com.bbf.cruise.activities.WalletActivity;
 import com.bbf.cruise.adapters.DrawerListAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 import model.NavItem;
+import model.User;
 
 import static android.app.PendingIntent.getActivity;
 
@@ -42,10 +48,14 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
     private Button button;
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
 
         prepareMenu(mNavItems);
 
@@ -56,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO ovo se dobavlja iz baze za ulogovanog korisnika
         TextView usr = (TextView) findViewById(R.id.userName);
-        usr.setText("BBF");
+        usr.setText(sharedPreferences.getString("firstName", "User"));
 
         mDrawerPane = findViewById(R.id.drawerPane);
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
@@ -75,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setIcon(R.drawable.ic_launcher);
             actionBar.setHomeAsUpIndicator(R.drawable.outline_menu_24);
             actionBar.setHomeButtonEnabled(true);
         }
@@ -171,9 +180,12 @@ public class MainActivity extends AppCompatActivity {
             if(position == 0){
                 //TODO izloguje ga i odvede ga na login
 
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(MainActivity.this, "Logged out!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                finish();
             }else{
                 Log.e("DRAWER", "Nesto van opsega!");
             }

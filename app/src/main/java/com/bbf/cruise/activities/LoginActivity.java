@@ -1,44 +1,61 @@
 package com.bbf.cruise.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
+import com.bbf.cruise.tools.LoadingDialog;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
     private Button log_in;
     private Button forgot_pass;
     private Button new_user;
+    private ImageView image;
+    private TextView logoText, sloganText;
+    private TextInputEditText email, password;
+    private Button main_btn, bottom_btn;
 
-    ImageView image;
-    TextView logoText, sloganText;
-    TextInputEditText email, password;
-    Button main_btn, bottom_btn;
+    private FirebaseAuth auth;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        auth = FirebaseAuth.getInstance();
+        sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+
         log_in = (Button) findViewById(R.id.log_in);
         log_in.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                String str_email = email.getText().toString();
+                String str_pass = password.getText().toString();
+                if(!checkFields(str_email, str_pass)) {
+                    loginUser(str_email, str_pass);
+                }
             }
         });
 
@@ -56,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         logoText = (TextView) findViewById(R.id.logo_name);
         sloganText = (TextView) findViewById(R.id.login_slogan_name);
         email = (TextInputEditText) findViewById(R.id.enter_usrnm);
+        email.setText(sharedPreferences.getString("email", ""));
         password = (TextInputEditText) findViewById(R.id.enter_pass);
         main_btn = (Button) findViewById(R.id.log_in);
         bottom_btn = (Button) findViewById(R.id.new_user);
@@ -79,5 +97,37 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean checkFields(String str_email, String str_pass) {
+        boolean hasErr = false;
+        if(TextUtils.isEmpty(email.getText().toString())) {
+            email.setError("Email field cannot be empty");
+            hasErr = true;
+        }
+        if(TextUtils.isEmpty(password.getText().toString())) {
+            password.setError("Password field cannot be empty");
+            hasErr = true;
+        }
+
+        return hasErr;
+    }
+
+    private void loginUser(String str_email, String str_pass) {
+        final LoadingDialog loadingDialog = new LoadingDialog(LoginActivity.this);
+        loadingDialog.startLoadingDialog();
+        auth.signInWithEmailAndPassword(str_email, str_pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                loadingDialog.dismissDialog();
+                if(task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }

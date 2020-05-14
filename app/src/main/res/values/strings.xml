@@ -39,6 +39,12 @@
     <string name="sendEmailBtn">Send email</string>
     <string name="forgotPassSlogan">Enter your email address below so we can send you an email to change it</string>
     <string name="forgotPassTitle">Forgot your password?</string>
+    <string name="empty_firstname">First name field cannot be empty</string>
+    <string name="empty_lastname">Last name field cannot be empty</string>
+    <string name="empty_email">Eamil field cannot be empty</string>
+    <string name="empty_password">Password field cannot be empty</string>
+    <string name="empty_phone">Phone number field cannot be empty</string>
+    <string name="loading">Loading...</string>
 
     <string-array name="pref_distance_entries">
         <item>Kilometers</item>
