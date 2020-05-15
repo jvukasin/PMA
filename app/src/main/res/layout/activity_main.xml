@@ -139,6 +139,7 @@
                                     android:layout_gravity="center_horizontal"/>
 
                                 <TextView
+                                    android:id="@+id/distanceMode"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/distance"

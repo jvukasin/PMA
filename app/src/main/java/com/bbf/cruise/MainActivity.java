@@ -33,6 +33,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.bbf.cruise.fragments.MapFragment;
 import com.bbf.cruise.tools.FragmentTransition;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import model.NavItem;
@@ -64,10 +66,6 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = findViewById(R.id.drawerLayout);
         mDrawerList = findViewById(R.id.navList);
         mDrawerList.setDivider(null);
-
-        //TODO ovo se dobavlja iz baze za ulogovanog korisnika
-        TextView usr = (TextView) findViewById(R.id.userName);
-        usr.setText(sharedPreferences.getString("firstName", "User"));
 
         mDrawerPane = findViewById(R.id.drawerPane);
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
@@ -129,19 +127,35 @@ public class MainActivity extends AppCompatActivity {
 
         logOutList.setOnItemClickListener(new LogOutItemClickListener());
 
+        //TODO dodati mapu ovde
+        FragmentTransition.to(MapFragment.newInstance(), this, false);
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         TextView no_of_distance = (TextView) findViewById(R.id.no_of_distance);
         TextView no_of_rides = (TextView) findViewById(R.id.no_of_rides);
         TextView no_of_points = (TextView) findViewById(R.id.no_of_points);
+
+        TextView usr = (TextView) findViewById(R.id.userName);
+        usr.setText(sharedPreferences.getString("firstName", "User"));
+
+        TextView disMode = (TextView) findViewById(R.id.distanceMode);
+        if(sharedPreferences.getString("distanceMode", "").equals("mi")) {
+            disMode.setText("Miles");
+        } else {
+            disMode.setText("Kilometers");
+        }
+
 
         //TODO ubaciti vrednosti izvucene iz baze za korisnika
         no_of_distance.setText("58");
         no_of_rides.setText("4");
         no_of_points.setText("470");
-
-        //TODO dodati mapu ovde
-        FragmentTransition.to(MapFragment.newInstance(), this, false);
-
-
     }
 
     private void prepareMenu(ArrayList<NavItem> mNavItems ) {

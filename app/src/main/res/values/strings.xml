@@ -20,7 +20,7 @@
     <string name="password">Password</string>
     <string name="repeatPassword">Repeat password</string>
     <string name="phone_no">Phone number</string>
-    <string name="distance_default_value">Km</string>
+    <string name="distance_default_value">km</string>
     <string name="startDateLabel">Start date:</string>
     <string name="endDateLabel">End date:</string>
     <string name="distanceLabel">Distance:</string>
@@ -52,8 +52,8 @@
     </string-array>
 
     <string-array name="pref_distance_values">
-        <item>Km</item>
-        <item>Mi</item>
+        <item>km</item>
+        <item>mi</item>
     </string-array>
     <string name="editBalanceButton">Edit balance</string>
 </resources>

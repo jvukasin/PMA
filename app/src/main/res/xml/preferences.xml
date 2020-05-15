@@ -30,7 +30,7 @@
         android:title="Other">
 
         <ListPreference
-            android:key="prefDistance"
+            android:key="distanceMode"
             android:title="Show distance in"
             android:entries="@array/pref_distance_entries"
             android:entryValues="@array/pref_distance_values"
