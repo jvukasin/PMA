@@ -124,14 +124,15 @@ public class RegisterActivity extends AppCompatActivity {
                     editor.putString("lastName", lastName.getText().toString());
                     editor.putString("email", email.getText().toString());
                     editor.putString("phone", phoneNo.getText().toString());
+                    editor.putFloat("wallet", 0);
                     editor.putString("distanceMode", "km");
                     editor.commit();
 
-                    //adding User to database for info - NECE
-                    User user = new User(firstName.getText().toString(), lastName.getText().toString(), password.getText().toString(), email.getText().toString(), phoneNo.getText().toString());
+                    //adding User to database for info
+                    User user = new User(firstName.getText().toString(), lastName.getText().toString(), password.getText().toString(), email.getText().toString(), phoneNo.getText().toString(), 0);
                     rootNode = FirebaseDatabase.getInstance();
-                    reference = rootNode.getReference("Users");
-                    reference.child(phoneNo.getText().toString()).setValue(user);
+                    reference = rootNode.getReference();
+                    reference.child("Users").child(phoneNo.getText().toString()).setValue(user);
 
                     loadingDialog.dismissDialog();
                     Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();

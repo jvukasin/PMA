@@ -7,13 +7,23 @@ public class User {
     private String password;
     private String email;
     private String phoneNumber;
+    private double wallet;
 
-    public User(String firstName, String lastName, String password, String email, String phoneNumber) {
+    public User(String firstName, String lastName, String password, String email, String phoneNumber, double wallet) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.wallet = wallet;
+    }
+
+    public double getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(double wallet) {
+        this.wallet = wallet;
     }
 
     public String getFirstName() {
