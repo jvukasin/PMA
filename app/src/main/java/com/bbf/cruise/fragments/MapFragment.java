@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bbf.cruise.R;
+import com.bbf.cruise.dialogs.LocationDialog;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -89,7 +90,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     private void showLocatonDialog() {
         if (dialog == null) {
-            //dialog = new LocationDialog(getActivity()).prepareDialog();
+            dialog = new LocationDialog(getActivity()).prepareDialog();
         } else {
             if (dialog.isShowing()) {
                 dialog.dismiss();
@@ -144,10 +145,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
      * */
     @Override
     public void onLocationChanged(Location location) {
-        Toast.makeText(getActivity(), "NEW LOCATION", Toast.LENGTH_SHORT).show();
-        if (map != null) {
-            addMarker(location);
-        }
+        //TODO kada prevlaci preko mape da ga ne vraca na marker
+//        Toast.makeText(getActivity(), "NEW LOCATION", Toast.LENGTH_SHORT).show();
+//        if (map != null) {
+//            addMarker(location);
+//        }
     }
 
     @Override
@@ -257,68 +259,76 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         map = googleMap;
         Location location = null;
 
-        if (checkLocationPermission()) {
-            if (ContextCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean wifi = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-                //Request location updates:
-                location = locationManager.getLastKnownLocation(provider);
-            }else if(ContextCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (!gps && !wifi) {
+            showLocatonDialog();
+        } else {
 
-                //Request location updates:
-                location = locationManager.getLastKnownLocation(provider);
-            }
-        }
+            if (checkLocationPermission()) {
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-        //ako zelimo da rucno postavljamo markere to radimo
-        //dodavajuci click listener
-        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                map.addMarker(new MarkerOptions()
-                        .title("YOUR_POSITON")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                        .position(latLng));
-                home.setFlat(true);
+                    //Request location updates:
+                    location = locationManager.getLastKnownLocation(provider);
+                } else if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng).zoom(14).build();
-
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        });
-
-        //ako zelmo da reagujemo na klik markera koristimo marker click listener
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
-        //ako je potrebno da reagujemo na pomeranje markera koristimo marker drag listener
-        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-                Toast.makeText(getActivity(), "Drag started", Toast.LENGTH_SHORT).show();
+                    //Request location updates:
+                    location = locationManager.getLastKnownLocation(provider);
+                }
             }
 
-            @Override
-            public void onMarkerDrag(Marker marker) {
-                Toast.makeText(getActivity(), "Dragging", Toast.LENGTH_SHORT).show();
-                map.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
-            }
+            // ako zelimo da rucno postavljamo markere to radimo
+            // dodavajuci click listener
+            map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    map.addMarker(new MarkerOptions()
+                            .title("YOUR_POSITON")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                            .position(latLng));
+                    home.setFlat(true);
 
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
-                Toast.makeText(getActivity(), "Drag ended", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(latLng).zoom(14).build();
 
-        if (location != null) {
-            addMarker(location);
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+            });
+
+            // ako zelmo da reagujemo na klik markera koristimo marker click listener
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+
+            // ako je potrebno da reagujemo na pomeranje markera koristimo marker drag listener
+            map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+                    Toast.makeText(getActivity(), "Drag started", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onMarkerDrag(Marker marker) {
+                    Toast.makeText(getActivity(), "Dragging", Toast.LENGTH_SHORT).show();
+                    map.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+                }
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+                    Toast.makeText(getActivity(), "Drag ended", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            if (location != null) {
+                addMarker(location);
+            }
         }
     }
 
