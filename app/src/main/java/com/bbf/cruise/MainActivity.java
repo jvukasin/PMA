@@ -218,8 +218,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if(position == 0){
-                //TODO izloguje ga i odvede ga na login
-
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(MainActivity.this, "Logged out!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);

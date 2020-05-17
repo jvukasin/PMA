@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.activities.WalletActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -27,6 +28,7 @@ public class EditBalanceDialog extends AppCompatDialogFragment {
     SharedPreferences sharedPreferences;
     FirebaseDatabase rootNode;
     DatabaseReference reference;
+    FirebaseAuth auth;
 
     @NonNull
     @Override
@@ -34,6 +36,7 @@ public class EditBalanceDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_edit_balance, null);
+        auth = FirebaseAuth.getInstance();
         builder.setView(view)
                 .setTitle("Add funds")
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -53,10 +56,10 @@ public class EditBalanceDialog extends AppCompatDialogFragment {
                         editor.putFloat("wallet", Float.parseFloat(funds));
                         editor.apply();
                         // azuriraj u bazi
-                        String phone = sharedPreferences.getString("phone", "phone");
+                        String firebaseUserUID = auth.getCurrentUser().getUid();
                         rootNode = FirebaseDatabase.getInstance();
                         reference = rootNode.getReference("Users");
-                        reference.child(phone).child("wallet").setValue(Float.parseFloat(funds));
+                        reference.child(firebaseUserUID).child("wallet").setValue(Float.parseFloat(funds));
 
                         TextView walletBalance = getActivity().findViewById(R.id.walletBalance);
                         walletBalance.setText(String.valueOf(Float.parseFloat(funds)));

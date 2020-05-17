@@ -4,18 +4,46 @@ public class User {
 
     private String firstName;
     private String lastName;
-    private String password;
     private String email;
     private String phoneNumber;
     private double wallet;
+    private int totalRides;
+    private double totalDistance;
+    private int bonusPoints;
 
-    public User(String firstName, String lastName, String password, String email, String phoneNumber, double wallet) {
+    public User(String firstName, String lastName, String email, String phoneNumber, double wallet, int totalRides, double totalDistance, int bonusPoints) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.wallet = wallet;
+        this.totalRides = totalRides;
+        this.totalDistance = totalDistance;
+        this.bonusPoints = bonusPoints;
+    }
+
+    public int getTotalRides() {
+        return totalRides;
+    }
+
+    public void setTotalRides(int totalRides) {
+        this.totalRides = totalRides;
+    }
+
+    public double getTotalDistance() {
+        return totalDistance;
+    }
+
+    public void setTotalDistance(double totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
+    public int getBonusPoints() {
+        return bonusPoints;
+    }
+
+    public void setBonusPoints(int bonusPoints) {
+        this.bonusPoints = bonusPoints;
     }
 
     public double getWallet() {
@@ -40,14 +68,6 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {

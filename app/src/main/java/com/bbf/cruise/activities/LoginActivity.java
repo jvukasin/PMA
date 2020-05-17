@@ -114,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser(String str_email, String str_pass) {
+        //TODO DA LI U ASYNCTASK?
         final LoadingDialog loadingDialog = new LoadingDialog(LoginActivity.this);
         loadingDialog.startLoadingDialog();
         auth.signInWithEmailAndPassword(str_email, str_pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -121,7 +122,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 loadingDialog.dismissDialog();
                 if(task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 } else {

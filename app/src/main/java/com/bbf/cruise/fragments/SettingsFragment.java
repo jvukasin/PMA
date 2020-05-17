@@ -11,12 +11,16 @@ import androidx.annotation.Nullable;
 import androidx.preference.EditTextPreference;
 
 import com.bbf.cruise.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Preference pref;
     private String summaryStr;
     private SharedPreferences sharedPref;
+    private FirebaseAuth auth;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,6 +28,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         addPreferencesFromResource(R.xml.preferences);
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
         sharedPref = this.getActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+        auth = FirebaseAuth.getInstance();
 
         putUserValues();
     }
@@ -68,19 +73,25 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         String prefixStr = sharedPreferences.getString(key, "");
         pref.setSummary(prefixStr); //novi
 
+        //TODO DA LI U ASYNCTASK?
+        String firebaseUserUID = auth.getCurrentUser().getUid();
+        FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
+        DatabaseReference reference = rootNode.getReference("Users");
+
         SharedPreferences.Editor editor = sharedPref.edit();
         if(key.equals("firstName")) {
             editor.putString("firstName", prefixStr);
+            reference.child(firebaseUserUID).child("firstName").setValue(prefixStr);
         } else if (key.equals("lastName")) {
             editor.putString("lastName", prefixStr);
+            reference.child(firebaseUserUID).child("lastName").setValue(prefixStr);
         }  else if (key.equals("phone")) {
             editor.putString("phone", prefixStr);
+            reference.child(firebaseUserUID).child("phoneNumber").setValue(prefixStr);
         }  else if (key.equals("distanceMode")) {
             editor.putString("distanceMode", prefixStr);
         }
-        editor.commit();
-
-        //TODO sacuvati i u bazi promene
+        editor.apply();
 
     }
 }
