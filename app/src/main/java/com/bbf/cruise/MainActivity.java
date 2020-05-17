@@ -2,14 +2,21 @@ package com.bbf.cruise;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +35,7 @@ import com.bbf.cruise.activities.SettingsActivity;
 
 import com.bbf.cruise.activities.WalletActivity;
 import com.bbf.cruise.adapters.DrawerListAdapter;
+import com.bbf.cruise.dialogs.LocationDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.bbf.cruise.fragments.MapFragment;
@@ -51,7 +59,11 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
     private Button button;
 
+    private AlertDialog locationAlertDialog;
+
     SharedPreferences sharedPreferences;
+
+    private static final String LOCATION_DISABLED_ACTION = "android.location.PROVIDERS_CHANGED";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,12 +142,21 @@ public class MainActivity extends AppCompatActivity {
         //TODO dodati mapu ovde
         FragmentTransition.to(MapFragment.newInstance(), this, false);
 
+        FragmentTransition.to(MapFragment.newInstance(), this, false);
 
+        IntentFilter intentFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
+        this.registerReceiver(locationDisabledReceiver, intentFilter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if(locationAlertDialog != null){
+            locationAlertDialog.dismiss();
+        }
+        IntentFilter intentFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
+        this.registerReceiver(locationDisabledReceiver, intentFilter);
 
         TextView no_of_distance = (TextView) findViewById(R.id.no_of_distance);
         TextView no_of_rides = (TextView) findViewById(R.id.no_of_rides);
@@ -213,4 +234,17 @@ public class MainActivity extends AppCompatActivity {
             mDrawerLayout.closeDrawer(mDrawerPane);
         }
     }
+
+    private final BroadcastReceiver locationDisabledReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            boolean gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if(LOCATION_DISABLED_ACTION.equals(intent.getAction()) && !gpsEnabled){
+                unregisterReceiver(locationDisabledReceiver);
+                locationAlertDialog = new LocationDialog(MainActivity.this).prepareDialog();
+                locationAlertDialog.show();
+            }
+        }
+    };
 }

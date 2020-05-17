@@ -24,6 +24,7 @@
 
         <!-- MAPE -->
 
+
         <activity android:name=".activities.ForgotPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoBar"></activity>
