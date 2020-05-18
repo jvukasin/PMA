@@ -1,330 +1,331 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
     android:background="@color/colorGhostWhite"
-    android:layout_marginBottom="5dp">
+    android:fillViewport="true">
 
-    <LinearLayout
-        android:id="@+id/carBasicInfo"
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp">
 
-        <TextView
-            android:id="@+id/carRating"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/circle"
-            android:gravity="center"
-            android:shadowRadius="10.0"
-            android:text="4.5"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            android:fontFamily="sans-serif-condensed-medium"/>
         <LinearLayout
-            android:id="@+id/linFirst"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/carRating"
-            android:layout_toEndOf="@id/carRating"
-            android:orientation="vertical">
+            android:id="@+id/carBasicInfo"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/carName"
+                android:id="@+id/carRating"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:shadowRadius="10.0"
+                android:text="4.5"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:fontFamily="sans-serif-condensed-medium"/>
+            <LinearLayout
+                android:id="@+id/linFirst"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="27sp"
-                android:text="Volkswagen Polo"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorPrimaryDark"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:layout_alignParentTop="true"/>
+                android:layout_toRightOf="@id/carRating"
+                android:layout_toEndOf="@id/carRating"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/carPlate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:text="NS 123NS"
-                android:gravity="center_vertical"
-                android:fontFamily="sans-serif"
-                android:textColor="@color/colorPrimaryDark"
-                android:paddingTop="2dp"/>
+                <TextView
+                    android:id="@+id/carName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="27sp"
+                    android:text="Volkswagen Polo"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:layout_alignParentTop="true"/>
+
+                <TextView
+                    android:id="@+id/carPlate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:text="NS 123NS"
+                    android:gravity="center_vertical"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingTop="2dp"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/otherInfoLine1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/carBasicInfo"
+            android:layout_marginTop="15dp"
+            >
 
-    <LinearLayout
-        android:id="@+id/otherInfoLine1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/carBasicInfo"
-        android:layout_marginTop="15dp"
-        >
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/fuel_icon"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
 
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/fuel_icon"
+                />
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="Fuel left: "
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"/>
+
+
+            <TextView
+                android:id="@+id/carFuel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="282 km"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif-condensed-medium"/>
+        </LinearLayout>
+        <LinearLayout
+
+            android:id="@+id/otherInfoLine2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/otherInfoLine1"
+            android:layout_marginTop="2dp"
+            >
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="Distance from you: "
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"/>
+
+
+            <TextView
+                android:id="@+id/carDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="120 km"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif-condensed-medium"/>
+        </LinearLayout>
+        <LinearLayout
+
+            android:id="@+id/otherInfoLine3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/otherInfoLine2"
+            android:layout_marginTop="2dp"
+            >
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="Total rides: "
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"/>
+
+
+            <TextView
+                android:id="@+id/carRides"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="2"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif-condensed-medium"/>
+        </LinearLayout>
+        <LinearLayout
+
+            android:id="@+id/otherInfoLine4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/otherInfoLine3"
+            android:layout_marginTop="20dp"
+            >
+            <TextView
+                android:id="@+id/textTp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="20sp"
+                android:text="Tyre Pressure: "
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:id="@+id/otherInfoLine5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/otherInfoLine4"
+            android:layout_marginTop="4dp"
+            >
+            <TextView
+                android:id="@+id/tpFlText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="Front Left: "
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"/>
+            <TextView
+                android:id="@+id/carTp_fl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="2.0"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif-condensed-medium"/>
+
+        </LinearLayout>
+        <LinearLayout
+
+            android:id="@+id/otherInfoLine6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/otherInfoLine5"
             android:layout_marginTop="3dp"
-            android:layout_marginRight="3dp"
+            >
+            <TextView
+                android:id="@+id/tpFrText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="Front Right: "
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"/>
+            <TextView
+                android:id="@+id/carTp_fr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="2.0"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif-condensed-medium"/>
 
-            />
+        </LinearLayout>
+        <LinearLayout
 
-        <TextView
-            android:id="@+id/text1"
-            android:layout_width="wrap_content"
+            android:id="@+id/otherInfoLine7"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="Fuel left: "
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif"/>
+            android:layout_below="@id/otherInfoLine6"
+            android:layout_marginTop="3dp"
+            >
+            <TextView
+                android:id="@+id/tpRlText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="Rear Left: "
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"/>
+            <TextView
+                android:id="@+id/carTp_rl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="2.0"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif-condensed-medium"/>
 
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/carFuel"
-            android:layout_width="wrap_content"
+        <LinearLayout
+
+            android:id="@+id/otherInfoLine8"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="282 km"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif-condensed-medium"/>
-    </LinearLayout>
-    <LinearLayout
+            android:layout_below="@id/otherInfoLine7"
+            android:layout_marginTop="3dp"
+            >
+            <TextView
+                android:id="@+id/tpRrText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="Rear Right: "
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"/>
+            <TextView
+                android:id="@+id/carTp_rr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="2.0"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif-condensed-medium"/>
 
-        android:id="@+id/otherInfoLine2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/otherInfoLine1"
-        android:layout_marginTop="2dp"
-        >
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="Distance from you: "
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif"/>
+    </RelativeLayout>
 
-
-        <TextView
-            android:id="@+id/carDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="120 km"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif-condensed-medium"/>
-    </LinearLayout>
-    <LinearLayout
-
-        android:id="@+id/otherInfoLine3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/otherInfoLine2"
-        android:layout_marginTop="2dp"
-        >
-
-        <TextView
-            android:id="@+id/text3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="Total rides: "
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif"/>
-
-
-        <TextView
-            android:id="@+id/carRides"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="2"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif-condensed-medium"/>
-    </LinearLayout>
-    <LinearLayout
-
-        android:id="@+id/otherInfoLine4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/otherInfoLine3"
-        android:layout_marginTop="20dp"
-        >
-        <TextView
-            android:id="@+id/textTp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="20sp"
-            android:text="Tyre Pressure: "
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-
-        android:id="@+id/otherInfoLine5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/otherInfoLine4"
-        android:layout_marginTop="4dp"
-        >
-        <TextView
-            android:id="@+id/tpFlText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="Front Left: "
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif"/>
-        <TextView
-            android:id="@+id/carTp_fl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="2.0"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif-condensed-medium"/>
-
-    </LinearLayout>
-    <LinearLayout
-
-        android:id="@+id/otherInfoLine6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/otherInfoLine5"
-        android:layout_marginTop="3dp"
-        >
-        <TextView
-            android:id="@+id/tpFrText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="Front Right: "
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif"/>
-        <TextView
-            android:id="@+id/carTp_fr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="2.0"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif-condensed-medium"/>
-
-    </LinearLayout>
-    <LinearLayout
-
-        android:id="@+id/otherInfoLine7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/otherInfoLine6"
-        android:layout_marginTop="3dp"
-        >
-        <TextView
-            android:id="@+id/tpRlText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="Rear Left: "
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif"/>
-        <TextView
-            android:id="@+id/carTp_rl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="2.0"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif-condensed-medium"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-
-        android:id="@+id/otherInfoLine8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/otherInfoLine7"
-        android:layout_marginTop="3dp"
-        >
-        <TextView
-            android:id="@+id/tpRrText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="Rear Right: "
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif"/>
-        <TextView
-            android:id="@+id/carTp_rr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="18sp"
-            android:text="2.0"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryDark"
-            android:fontFamily="sans-serif-condensed-medium"/>
-
-    </LinearLayout>
-
-
-
-
-
-
-
-</RelativeLayout>
+</ScrollView>
