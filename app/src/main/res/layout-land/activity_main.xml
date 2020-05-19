@@ -66,13 +66,13 @@
             <RelativeLayout
                 android:id="@+id/profileBox"
                 android:layout_width="match_parent"
-                android:layout_height="175dp"
+                android:layout_height="120dp"
                 android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginRight="13dp"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical">
@@ -81,7 +81,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginBottom="20dp">
+                        android:layout_marginBottom="10dp">
 
                         <TextView
                             android:id="@+id/helloMenu"
@@ -117,13 +117,6 @@
                                 android:orientation="vertical"
                                 android:layout_marginRight="30dp">
 
-                                <ImageView
-                                    android:id="@+id/distance_icon"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/road"
-                                    android:layout_marginLeft="5dp"/>
-
                                 <TextView
                                     android:id="@+id/no_of_distance"
                                     android:layout_width="wrap_content"
@@ -153,11 +146,6 @@
                                 android:layout_marginRight="30dp"
                                 android:layout_marginLeft="1dp">
 
-                                <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/car"/>
-
                                 <TextView
                                     android:id="@+id/no_of_rides"
                                     android:layout_width="wrap_content"
@@ -184,12 +172,6 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
                                 android:layout_marginLeft="2dp">
-
-                                <ImageView
-                                    android:id="@+id/bonus_icon"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/bonus" />
 
                                 <TextView
                                     android:id="@+id/no_of_points"
@@ -226,6 +208,7 @@
                 android:layout_width="240dp"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/profileBox"
+                android:paddingBottom="50dp"
                 android:choiceMode="singleChoice"
                 android:background="@color/colorGhostWhite" />
 
