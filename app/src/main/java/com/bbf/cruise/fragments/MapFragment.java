@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -34,6 +35,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import model.Car;
+import model.CarItem;
+import model.LocationObject;
 
 public class MapFragment extends Fragment implements LocationListener, OnMapReadyCallback {
 
@@ -45,6 +58,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private AlertDialog dialog;
     private Marker home;
     private GoogleMap map;
+    private DatabaseReference databaseReference;
+    private List<Car> cars = new ArrayList<>();
 
     public static MapFragment newInstance() {
 
@@ -60,6 +75,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        databaseReference = FirebaseDatabase.getInstance().getReference("cars");
     }
 
     /**
@@ -329,6 +345,23 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             if (location != null) {
                 addMarker(location);
             }
+
+            //TODO dodati sva kola na mapu
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    cars.clear();
+                    for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
+                        cars.add(carSnapshot.getValue(Car.class));
+                    }
+                    positionCarMarkers();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
@@ -348,6 +381,22 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(loc).zoom(14).build();
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    private void positionCarMarkers(){
+        for(Car car: cars){
+            addCarMarker(car.getLocation());
+        }
+    }
+
+    private void addCarMarker(LocationObject location){
+        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+
+        home = map.addMarker(new MarkerOptions()
+                .title("CAR")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                .position(loc));
+        home.setFlat(true);
     }
 
     /**
