@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:title="@string/user_info">
@@ -22,7 +23,16 @@
         <EditTextPreference
             android:key="phone"
             android:title="@string/phone_no"
-            android:inputType="number"/>
+            android:inputType="phone"/>
+
+        <Preference
+            android:title="@string/changePassword">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.bbf.cruise"
+                android:targetClass="com.bbf.cruise.activities.ChangePasswordActivity"
+                />
+        </Preference>
 
     </PreferenceCategory>
 

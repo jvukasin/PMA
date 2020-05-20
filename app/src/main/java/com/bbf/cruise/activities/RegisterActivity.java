@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -111,6 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
+        //TODO DA LI U ASYNCTASK?
         String str_email = email.getText().toString();
         String str_pass = password.getText().toString();
         final LoadingDialog loadingDialog = new LoadingDialog(RegisterActivity.this);
@@ -129,10 +131,11 @@ public class RegisterActivity extends AppCompatActivity {
                     editor.commit();
 
                     //adding User to database for info
-                    User user = new User(firstName.getText().toString(), lastName.getText().toString(), password.getText().toString(), email.getText().toString(), phoneNo.getText().toString(), 0);
+                    User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), phoneNo.getText().toString(), 0, 0,0,0);
+                    String firebaseUserUID = auth.getCurrentUser().getUid();
                     rootNode = FirebaseDatabase.getInstance();
                     reference = rootNode.getReference();
-                    reference.child("Users").child(phoneNo.getText().toString()).setValue(user);
+                    reference.child("Users").child(firebaseUserUID).setValue(user);
 
                     loadingDialog.dismissDialog();
                     Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();

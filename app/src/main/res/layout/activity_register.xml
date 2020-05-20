@@ -1,184 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.RegisterActivity"
-    android:orientation="vertical">
-
-    <ImageView
-        android:id="@+id/logo_image_reg"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:src="@drawable/cruise_splash"
-        android:transitionName="logo_image"/>
-
-    <TextView
-        android:id="@+id/logo_name_reg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/welcome"
-        android:transitionName="logo_text"
-        android:textSize="30sp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="-15dp"
-        android:fontFamily="sans-serif-black"
-        android:textColor="@color/colorPrimaryDark"/>
-
-    <TextView
-        android:id="@+id/login_slogan_name_reg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/registerSlogan"
-        android:transitionName="logo_desc"
-        android:textSize="18sp"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:layout_marginLeft="20dp"/>
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical"
-        android:layout_margin="20dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        //first and last name
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/logo_image_reg"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:src="@drawable/cruise_splash"
+            android:transitionName="logo_image"/>
 
-            <View android:id="@+id/dummy"
-                android:layout_height="0dp"
-                android:layout_width="0dp"
-                android:layout_centerInParent="true"/>
+        <TextView
+            android:id="@+id/logo_name_reg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome"
+            android:transitionName="logo_text"
+            android:textSize="30sp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="-15dp"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@color/colorPrimaryDark"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/register_firstname_lay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/dummy"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="@string/first_name">
+        <TextView
+            android:id="@+id/login_slogan_name_reg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/registerSlogan"
+            android:transitionName="logo_desc"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:layout_marginLeft="20dp"/>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapSentences"
-                    android:id="@+id/register_firstname"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/register_lastname_lay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/dummy"
-                android:weightSum="1"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="@string/last_name">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapSentences"
-                    android:id="@+id/register_lastname"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </RelativeLayout>
-
-        //email
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/register_email_lay"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="@string/email"
-            android:transitionName="email_tran">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:id="@+id/register_email"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        //password
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/register_password_lay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="@string/password"
-            app:passwordToggleEnabled="true"
-            android:transitionName="password_tran">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:id="@+id/register_password"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        //repeat password
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/register_password_repeat_lay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="@string/repeatPassword"
-            app:passwordToggleEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:id="@+id/register_password_repeat"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        //phone number
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/register_phone_lay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Phone number (with country code)">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="phone"
-                android:id="@+id/register_phone"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/sign_up_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/signUp"
-            android:backgroundTint="@color/colorMenuText"
-            android:textColor="@color/colorBlack"
-            android:layout_marginTop="25dp"
-            android:transitionName="main_button_tran"/>
-
-        <Button
-            android:id="@+id/has_acc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/registerHaveAcc"
-            android:backgroundTint="@android:color/transparent"
-            android:stateListAnimator="@null"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_gravity="bottom"
-            android:elevation="0dp"
             android:layout_marginTop="10dp"
-            android:transitionName="bottom_button_tran"/>
+            android:orientation="vertical"
+            android:layout_margin="20dp">
+
+            //first and last name
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View android:id="@+id/dummy"
+                    android:layout_height="0dp"
+                    android:layout_width="0dp"
+                    android:layout_centerInParent="true"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/register_firstname_lay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/dummy"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="@string/first_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapSentences"
+                        android:id="@+id/register_firstname"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/register_lastname_lay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@+id/dummy"
+                    android:weightSum="1"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="@string/last_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapSentences"
+                        android:id="@+id/register_lastname"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+            //email
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_email_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="@string/email"
+                android:transitionName="email_tran">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:id="@+id/register_email"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            //password
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_password_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="@string/password"
+                app:passwordToggleEnabled="true"
+                android:transitionName="password_tran">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:id="@+id/register_password"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            //repeat password
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_password_repeat_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="@string/repeatPassword"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:id="@+id/register_password_repeat"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            //phone number
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_phone_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="Phone number (with country code)">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:id="@+id/register_phone"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/sign_up_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/signUp"
+                android:backgroundTint="@color/colorMenuText"
+                android:textColor="@color/colorBlack"
+                android:layout_marginTop="25dp"
+                android:transitionName="main_button_tran"/>
+
+            <Button
+                android:id="@+id/has_acc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/registerHaveAcc"
+                android:backgroundTint="@android:color/transparent"
+                android:stateListAnimator="@null"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_gravity="bottom"
+                android:elevation="0dp"
+                android:layout_marginTop="10dp"
+                android:transitionName="bottom_button_tran"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-
-</LinearLayout>
+</ScrollView>
