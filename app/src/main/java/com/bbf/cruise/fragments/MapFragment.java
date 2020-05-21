@@ -27,8 +27,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.dialogs.LocationDialog;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,22 +37,16 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import model.Car;
-import model.CarItem;
-import model.CarMarker;
-import model.LocationObject;
-import util.ClusterManagerRenderer;
 
 public class MapFragment extends Fragment implements LocationListener, OnMapReadyCallback {
 
@@ -69,10 +61,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private DatabaseReference databaseReference;
     private List<Car> cars = new ArrayList<>();
 
-    // renderovanje custom markera
-    private ClusterManager clusterManager;
-    private ClusterManagerRenderer clusterManagerRenderer;
-    private ArrayList<CarMarker> carMarkers  = new ArrayList<>();
 
     public static MapFragment newInstance() {
 
