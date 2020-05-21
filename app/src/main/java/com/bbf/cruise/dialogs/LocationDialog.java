@@ -15,7 +15,7 @@ public class LocationDialog extends AlertDialog.Builder{
 	}
 
 	private void setUpDialog(){
-		setMessage("Your location seems to be disabled, do you want to enable it?");
+		setMessage("Your location seems to be disabled, please enable it so you can use the app.");
 		setCancelable(false);
 
 		setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -24,13 +24,6 @@ public class LocationDialog extends AlertDialog.Builder{
 				dialog.dismiss();
 			}
 		});
-
-		setNegativeButton("No", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
-
 	}
 
 	public AlertDialog prepareDialog(){

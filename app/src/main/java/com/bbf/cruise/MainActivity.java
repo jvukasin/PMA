@@ -17,7 +17,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +38,7 @@ import com.bbf.cruise.activities.SettingsActivity;
 
 import com.bbf.cruise.activities.WalletActivity;
 import com.bbf.cruise.adapters.DrawerListAdapter;
+import com.bbf.cruise.dialogs.InternetConnectionDialog;
 import com.bbf.cruise.dialogs.LocationDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -48,6 +52,7 @@ import java.util.ArrayList;
 import model.NavItem;
 
 import static android.app.PendingIntent.getActivity;
+import static android.net.ConnectivityManager.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,10 +65,12 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
 
     private AlertDialog locationAlertDialog;
+    private AlertDialog internetConnectionAlertDialog;
 
     SharedPreferences sharedPreferences;
 
     private static final String LOCATION_DISABLED_ACTION = "android.location.PROVIDERS_CHANGED";
+    private static final String INTERNET_CONNECTION_CHANGED_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,8 +151,10 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentTransition.to(MapFragment.newInstance(), this, false);
 
-        IntentFilter intentFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
-        this.registerReceiver(locationDisabledReceiver, intentFilter);
+        IntentFilter locationChangedFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
+        this.registerReceiver(locationDisabledReceiver, locationChangedFilter);
+        IntentFilter internetConnectionChangedFilter = new IntentFilter(INTERNET_CONNECTION_CHANGED_ACTION);
+        this.registerReceiver(internetConnectionChangedReceiver, internetConnectionChangedFilter);
     }
 
     @Override
@@ -155,8 +164,14 @@ public class MainActivity extends AppCompatActivity {
         if(locationAlertDialog != null){
             locationAlertDialog.dismiss();
         }
-        IntentFilter intentFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
-        this.registerReceiver(locationDisabledReceiver, intentFilter);
+        if(internetConnectionAlertDialog != null){
+            internetConnectionAlertDialog.dismiss();
+        }
+
+        IntentFilter locationChangedFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
+        this.registerReceiver(locationDisabledReceiver, locationChangedFilter);
+        IntentFilter internetConnectionChangedFilter = new IntentFilter(INTERNET_CONNECTION_CHANGED_ACTION);
+        this.registerReceiver(internetConnectionChangedReceiver, internetConnectionChangedFilter);
 
         TextView no_of_distance = (TextView) findViewById(R.id.no_of_distance);
         TextView no_of_rides = (TextView) findViewById(R.id.no_of_rides);
@@ -177,6 +192,13 @@ public class MainActivity extends AppCompatActivity {
         no_of_distance.setText("58");
         no_of_rides.setText("4");
         no_of_points.setText("470");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(internetConnectionChangedReceiver);
+        unregisterReceiver(locationDisabledReceiver);
     }
 
     private void prepareMenu(ArrayList<NavItem> mNavItems ) {
@@ -239,10 +261,30 @@ public class MainActivity extends AppCompatActivity {
             LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             boolean gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
             if(LOCATION_DISABLED_ACTION.equals(intent.getAction()) && !gpsEnabled){
-                unregisterReceiver(locationDisabledReceiver);
                 locationAlertDialog = new LocationDialog(MainActivity.this).prepareDialog();
                 locationAlertDialog.show();
             }
         }
     };
+
+    // PROVERITI OVO JOS
+    private final BroadcastReceiver internetConnectionChangedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(INTERNET_CONNECTION_CHANGED_ACTION.equals(intent.getAction())){
+                ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                if(info != null) {
+                    if(info.getType() == TYPE_MOBILE && info.getState() == NetworkInfo.State.DISCONNECTED){
+                        internetConnectionAlertDialog = new InternetConnectionDialog(MainActivity.this).prepareDialog();
+                        internetConnectionAlertDialog.show();
+                    }
+                }else{
+                    internetConnectionAlertDialog = new InternetConnectionDialog(MainActivity.this).prepareDialog();
+                    internetConnectionAlertDialog.show();
+                }
+            }
+        }
+    };
+
 }
