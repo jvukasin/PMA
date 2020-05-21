@@ -392,8 +392,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     private void addCarMarker(Car car){
         LatLng loc = new LatLng(car.getLocation().getLatitude(), car.getLocation().getLongitude());
-        int height = 115;
-        int width = 100;
+        int height = 100;
+        int width = 70;
         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car_map_pin);
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
