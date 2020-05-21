@@ -4,6 +4,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,6 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -40,13 +45,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import model.Car;
 import model.CarItem;
+import model.CarMarker;
 import model.LocationObject;
+import util.ClusterManagerRenderer;
 
 public class MapFragment extends Fragment implements LocationListener, OnMapReadyCallback {
 
@@ -60,6 +68,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private GoogleMap map;
     private DatabaseReference databaseReference;
     private List<Car> cars = new ArrayList<>();
+
+    // renderovanje custom markera
+    private ClusterManager clusterManager;
+    private ClusterManagerRenderer clusterManagerRenderer;
+    private ArrayList<CarMarker> carMarkers  = new ArrayList<>();
 
     public static MapFragment newInstance() {
 
@@ -385,18 +398,32 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     private void positionCarMarkers(){
         for(Car car: cars){
-            addCarMarker(car.getLocation());
+            addCarMarker(car);
         }
     }
 
-    private void addCarMarker(LocationObject location){
-        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-
+    private void addCarMarker(Car car){
+        LatLng loc = new LatLng(car.getLocation().getLatitude(), car.getLocation().getLongitude());
+        int height = 115;
+        int width = 100;
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car_map_pin);
+        Bitmap b=bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
         home = map.addMarker(new MarkerOptions()
-                .title("CAR")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                .title(car.getBrand() + " " + car.getModel())
+                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
                 .position(loc));
         home.setFlat(true);
+    }
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorsId){
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorsId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     /**

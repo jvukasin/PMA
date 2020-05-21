@@ -55,6 +55,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/showListOfCars"
+                android:alpha="0.85"
                 android:textColor="@color/colorPrimaryDark" />
 
         </FrameLayout>
