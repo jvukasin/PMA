@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
     private Button button;
 
+    private boolean isMapEnabled = false;
+
     private AlertDialog locationAlertDialog;
     private AlertDialog internetConnectionAlertDialog;
 
@@ -147,8 +149,6 @@ public class MainActivity extends AppCompatActivity {
         logOutList.setOnItemClickListener(new LogOutItemClickListener());
 
         //TODO dodati mapu ovde
-        FragmentTransition.to(MapFragment.newInstance(), this, false);
-
         FragmentTransition.to(MapFragment.newInstance(), this, false);
 
         IntentFilter locationChangedFilter = new IntentFilter(LOCATION_DISABLED_ACTION);

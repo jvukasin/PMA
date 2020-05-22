@@ -75,8 +75,15 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         databaseReference = FirebaseDatabase.getInstance().getReference("cars");
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -394,7 +401,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         LatLng loc = new LatLng(car.getLocation().getLatitude(), car.getLocation().getLongitude());
         int height = 100;
         int width = 70;
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car_map_pin);
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car_map_pin_no_border_yellow);
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
         home = map.addMarker(new MarkerOptions()
