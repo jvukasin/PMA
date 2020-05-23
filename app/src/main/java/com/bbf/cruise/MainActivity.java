@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
 
         logOutList.setOnItemClickListener(new LogOutItemClickListener());
 
-        //TODO dodati mapu ovde
         FragmentTransition.to(MapFragment.newInstance(), this, false);
 
         IntentFilter locationChangedFilter = new IntentFilter(LOCATION_DISABLED_ACTION);

@@ -69,9 +69,9 @@ public class NearbyCarsActivity extends AppCompatActivity {
 
     private void prepareList(ArrayList<CarItem> list) {
         //TODO izvuci iz baze i sta sve treba
-        list.add(new CarItem("BMW", "320d", R.drawable.sedan_512, "NS 643SK", 1.3, 380, 2, 5.0, 2.3f, 2.2f, 2.2f, 2.3f));
-        list.add(new CarItem("Renault", "Clio", R.drawable.sedan_512, "NS 274DJ", 2.2, 322, 4, 4.5, 2.2f, 2.2f, 2.4f, 2.3f));
-        list.add(new CarItem("Opel", "Astra", R.drawable.sedan_512, "NS 486BR", 2.5, 263, 3, 4.3,  1.9f, 2.2f, 2.4f, 2.1f));
+        list.add(new CarItem("BMW", "320d", R.drawable.car_icon, "NS 643SK", 1.3, 380, 2, 5.0, 2.3f, 2.2f, 2.2f, 2.3f));
+        list.add(new CarItem("Renault", "Clio", R.drawable.car_icon, "NS 274DJ", 2.2, 322, 4, 4.5, 2.2f, 2.2f, 2.4f, 2.3f));
+        list.add(new CarItem("Opel", "Astra", R.drawable.car_icon, "NS 486BR", 2.5, 263, 3, 4.3,  1.9f, 2.2f, 2.4f, 2.1f));
 
     }
 
