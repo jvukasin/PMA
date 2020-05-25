@@ -17,9 +17,8 @@ import android.widget.Toast;
 
 import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
-import com.bbf.cruise.tools.LoadingDialog;
+import com.bbf.cruise.dialogs.LoadingDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;

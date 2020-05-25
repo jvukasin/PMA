@@ -1,4 +1,4 @@
-package com.bbf.cruise.tools;
+package com.bbf.cruise.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
