@@ -164,7 +164,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     /**
-     * Svaki put kada uredjaj dobijee novu informaciju o lokaciji ova metoda se poziva
+     * Svaki put kada uredjaj dobije novu informaciju o lokaciji ova metoda se poziva
      * i prosledjuje joj se nova informacija o kordinatamad
      * */
     @Override

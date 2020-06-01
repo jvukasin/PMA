@@ -186,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
             disMode.setText("Kilometers");
         }
 
-
         //TODO ubaciti vrednosti izvucene iz baze za korisnika
         no_of_distance.setText("58");
         no_of_rides.setText("4");
