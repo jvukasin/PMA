@@ -18,6 +18,8 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -64,7 +66,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private GoogleMap map;
     private DatabaseReference databaseReference;
     private List<Car> cars = new ArrayList<>();
-
+    private Button centreButton;
 
     public static MapFragment newInstance() {
 
@@ -79,6 +81,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Toast.makeText(getActivity(), "Finding cars...", Toast.LENGTH_SHORT).show();
+
         // sacuvace stanje fragmenta prilikom promene konfiguracije, npr: promena orijentacije ekrana
         setRetainInstance(true);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -161,7 +165,15 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     public View onCreateView(LayoutInflater inflater, ViewGroup vg, Bundle data) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.map_layout, vg, false);
-
+        centreButton = view.findViewById(R.id.centreButton);
+        centreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(home.getPosition()).zoom(14).build();
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        });
         return view;
     }
 
