@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,12 +14,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -43,6 +46,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,10 +79,10 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // sacuvace stanje fragmenta prilikom promene konfiguracije, npr: promena orijentacije ekrana
+        setRetainInstance(true);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         databaseReference = FirebaseDatabase.getInstance().getReference("cars");
-
     }
 
     @Override
@@ -142,13 +146,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
                     //Request location updates:
                     locationManager.requestLocationUpdates(provider, 0, 0, this);
-                    Toast.makeText(getContext(), "ACCESS_FINE_LOCATION", Toast.LENGTH_SHORT).show();
                 }else if(ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
                     //Request location updates:
                     locationManager.requestLocationUpdates(provider, 0, 0, this);
-                    Toast.makeText(getContext(), "ACCESS_COARSE_LOCATION", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -273,7 +275,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         }
     }
 
-
     /**
      * KAda je mapa spremna mozemo da radimo sa njom.
      * Mozemo reagovati na razne dogadjaje dodavanje markera, pomeranje markera,klik na mapu,...
@@ -318,7 +319,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                     CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(latLng).zoom(14).build();
 
-                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             });
 
@@ -341,7 +342,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 @Override
                 public void onMarkerDrag(Marker marker) {
                     Toast.makeText(getActivity(), "Dragging", Toast.LENGTH_SHORT).show();
-                    map.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+                    map.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
                 }
 
                 @Override
@@ -388,7 +389,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(loc).zoom(14).build();
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     private void positionCarMarkers(){

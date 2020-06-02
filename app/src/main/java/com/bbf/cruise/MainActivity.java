@@ -1,5 +1,6 @@
 package com.bbf.cruise;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
@@ -143,15 +146,18 @@ public class MainActivity extends AppCompatActivity {
 
         logOutList.setOnItemClickListener(new LogOutItemClickListener());
 
-        FragmentTransition.to(MapFragment.newInstance(), this, false);
+        if(savedInstanceState == null){
+            FragmentTransition.to(MapFragment.newInstance(), this, false);
+        }
 
         IntentFilter locationChangedFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
         registerReceiver(locationDisabledReceiver, locationChangedFilter);
         IntentFilter internetConnectionChangedFilter = new IntentFilter();
         internetConnectionChangedFilter.addAction(INTERNET_CONNECTION_CHANGED_ACTION);
-        //internetConnectionChangedFilter.addAction(WIFI_CONNECTION_CHANGED_ACTION);
         registerReceiver(internetConnectionChangedReceiver, internetConnectionChangedFilter);
     }
+
+
 
     @Override
     protected void onResume() {
