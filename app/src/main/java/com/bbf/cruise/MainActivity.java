@@ -5,25 +5,20 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,22 +39,14 @@ import com.bbf.cruise.adapters.DrawerListAdapter;
 import com.bbf.cruise.dialogs.InternetConnectionDialog;
 import com.bbf.cruise.dialogs.LocationDialog;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 import com.bbf.cruise.fragments.MapFragment;
 import com.bbf.cruise.tools.FragmentTransition;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.CompletableFuture;
 
 import model.NavItem;
 
 import static android.app.PendingIntent.getActivity;
-import static android.net.ConnectivityManager.*;
-import static android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -173,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         if(locationAlertDialog != null){
             locationAlertDialog.dismiss();
         }
+
         if(internetConnectionAlertDialog != null){
             internetConnectionAlertDialog.dismiss();
         }
@@ -207,6 +195,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(internetConnectionChangedReceiver);
         unregisterReceiver(locationDisabledReceiver);
+        if(locationAlertDialog != null){
+            locationAlertDialog.dismiss();
+        }
     }
 
     private void prepareMenu(ArrayList<NavItem> mNavItems ) {
@@ -269,8 +260,10 @@ public class MainActivity extends AppCompatActivity {
             LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             boolean gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
             if(LOCATION_DISABLED_ACTION.equals(intent.getAction()) && !gpsEnabled){
-                locationAlertDialog = new LocationDialog(MainActivity.this).prepareDialog();
-                locationAlertDialog.show();
+                if(locationAlertDialog == null){
+                    locationAlertDialog = new LocationDialog(MainActivity.this).prepareDialog();
+                    locationAlertDialog.show();
+                }
             }
         }
     };

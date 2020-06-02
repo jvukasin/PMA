@@ -411,16 +411,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         home.setFlat(true);
     }
 
-    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorsId){
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorsId);
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        vectorDrawable.draw(canvas);
-
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
-
     /**
      *
      * Rad sa lokacja izuzetno trosi bateriju.Obavezno osloboditi kada vise ne koristmo
