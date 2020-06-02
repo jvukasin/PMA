@@ -20,8 +20,6 @@ public class CarDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initTextFields();
-
-
     }
 
     private void initTextFields() {

@@ -1,12 +1,16 @@
 package com.bbf.cruise.fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -16,6 +20,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,9 +29,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bbf.cruise.R;
+import com.bbf.cruise.activities.CarDetailActivity;
 import com.bbf.cruise.dialogs.LocationDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +50,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +70,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private GoogleMap map;
     private DatabaseReference databaseReference;
     private List<Car> cars = new ArrayList<>();
+    private Dialog mDialog;
 
 
     public static MapFragment newInstance() {
@@ -78,6 +89,10 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         databaseReference = FirebaseDatabase.getInstance().getReference("cars");
+        mDialog = new Dialog(getActivity());
+        mDialog.setContentView(R.layout.map_marker_dialog);
+        mDialog.setCancelable(true);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     }
 
@@ -326,7 +341,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+                    getCarDialog(getActivity(), marker);
+//                    Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });
@@ -371,6 +387,33 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 }
             });
         }
+    }
+
+    private void getCarDialog(final FragmentActivity activity, final Marker marker) {
+        //TODO namestiti mozda da povuce iz baze kola u listu prilikom pokretanja, pa onda iz te liste uzivati ove vrednosti a ne stalno pozivati bazu
+        TextView name = (TextView) mDialog.findViewById(R.id.carName);
+        name.setText(marker.getTitle());
+        Button viewBtn = (Button) mDialog.findViewById(R.id.markerViewBtn);
+        viewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO proslediti sve podatke
+                Intent intent = new Intent(activity, CarDetailActivity.class);
+                intent.putExtra("name", marker.getTitle());
+//                intent.putExtra("distance", item.getDistance());
+//                intent.putExtra("fuel_distance", item.getFuel_distance());
+                intent.putExtra("plate", "NS123NS");
+//                intent.putExtra("no_of_rides", item.getNo_of_rides());
+//                intent.putExtra("rating", item.getRating());
+//                intent.putExtra("tp_fl", item.getTp_fl());
+//                intent.putExtra("tp_fr", item.getTp_fr());
+//                intent.putExtra("tp_rl", item.getTp_rl());
+//                intent.putExtra("tp_rr", item.getTp_rr());
+                startActivity(intent);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.show();
     }
 
     private void addMarker(Location location) {
