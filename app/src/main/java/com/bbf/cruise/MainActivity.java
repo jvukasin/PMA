@@ -18,8 +18,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -48,11 +51,15 @@ import com.bbf.cruise.tools.FragmentTransition;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.CompletableFuture;
 
 import model.NavItem;
 
 import static android.app.PendingIntent.getActivity;
 import static android.net.ConnectivityManager.*;
+import static android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String LOCATION_DISABLED_ACTION = "android.location.PROVIDERS_CHANGED";
     private static final String INTERNET_CONNECTION_CHANGED_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
+    private static final String WIFI_CONNECTION_CHANGED_ACTION = "android.net.wifi.STATE_CHANGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,9 +160,11 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransition.to(MapFragment.newInstance(), this, false);
 
         IntentFilter locationChangedFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
-        this.registerReceiver(locationDisabledReceiver, locationChangedFilter);
-        IntentFilter internetConnectionChangedFilter = new IntentFilter(INTERNET_CONNECTION_CHANGED_ACTION);
-        this.registerReceiver(internetConnectionChangedReceiver, internetConnectionChangedFilter);
+        registerReceiver(locationDisabledReceiver, locationChangedFilter);
+        IntentFilter internetConnectionChangedFilter = new IntentFilter();
+        internetConnectionChangedFilter.addAction(INTERNET_CONNECTION_CHANGED_ACTION);
+        //internetConnectionChangedFilter.addAction(WIFI_CONNECTION_CHANGED_ACTION);
+        registerReceiver(internetConnectionChangedReceiver, internetConnectionChangedFilter);
     }
 
     @Override
@@ -271,17 +281,28 @@ public class MainActivity extends AppCompatActivity {
     private final BroadcastReceiver internetConnectionChangedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(INTERNET_CONNECTION_CHANGED_ACTION.equals(intent.getAction())){
+            if(INTERNET_CONNECTION_CHANGED_ACTION.equals(intent.getAction()) || WIFI_CONNECTION_CHANGED_ACTION.equals(intent.getAction())){
                 ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                final Context ctx = context;
                 NetworkInfo info = cm.getActiveNetworkInfo();
-                if(info != null) {
-                    if(info.getType() == TYPE_MOBILE && info.getState() == NetworkInfo.State.DISCONNECTED){
+                if(info != null){
+                    if(!info.isConnectedOrConnecting()){
                         internetConnectionAlertDialog = new InternetConnectionDialog(MainActivity.this).prepareDialog();
                         internetConnectionAlertDialog.show();
                     }
                 }else{
-                    internetConnectionAlertDialog = new InternetConnectionDialog(MainActivity.this).prepareDialog();
-                    internetConnectionAlertDialog.show();
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo info = cm.getActiveNetworkInfo();
+                            if(info == null){
+                                internetConnectionAlertDialog = new InternetConnectionDialog(MainActivity.this).prepareDialog();
+                                internetConnectionAlertDialog.show();
+                            }
+                        }
+                    }, 3000);
+
                 }
             }
         }
