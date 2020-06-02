@@ -13,8 +13,8 @@
             android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
             android:id="@+id/centreButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:background="@drawable/recenter_icon">
         </Button>
 
