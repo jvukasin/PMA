@@ -19,7 +19,15 @@ public class InternetConnectionDialog extends AlertDialog.Builder {
         setMessage("Your internet connection seems to be disabled, please enable it so you can use the app.");
         setCancelable(false);
 
-        setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+        setNeutralButton("Enable wifi", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getContext().startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                dialog.dismiss();
+            }
+        });
+
+        setPositiveButton("Enable mobile data", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 getContext().startActivity(new Intent(Settings.ACTION_DATA_USAGE_SETTINGS));
                 dialog.dismiss();
