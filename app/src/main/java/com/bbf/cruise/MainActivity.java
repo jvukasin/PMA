@@ -40,6 +40,7 @@ import com.bbf.cruise.activities.WalletActivity;
 import com.bbf.cruise.adapters.DrawerListAdapter;
 import com.bbf.cruise.dialogs.InternetConnectionDialog;
 import com.bbf.cruise.dialogs.LocationDialog;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.bbf.cruise.fragments.MapFragment;
 import com.bbf.cruise.tools.FragmentTransition;
@@ -152,9 +153,8 @@ public class MainActivity extends AppCompatActivity {
 
         IntentFilter locationChangedFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
         registerReceiver(locationDisabledReceiver, locationChangedFilter);
-        IntentFilter internetConnectionChangedFilter = new IntentFilter();
-        internetConnectionChangedFilter.addAction(INTERNET_CONNECTION_CHANGED_ACTION);
-        registerReceiver(internetConnectionChangedReceiver, internetConnectionChangedFilter);
+
+        NetworkUtil.isConnected(MainActivity.this);
     }
 
 
@@ -173,8 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
         IntentFilter locationChangedFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
         this.registerReceiver(locationDisabledReceiver, locationChangedFilter);
-        IntentFilter internetConnectionChangedFilter = new IntentFilter(INTERNET_CONNECTION_CHANGED_ACTION);
-        this.registerReceiver(internetConnectionChangedReceiver, internetConnectionChangedFilter);
 
         TextView no_of_distance = (TextView) findViewById(R.id.no_of_distance);
         TextView no_of_rides = (TextView) findViewById(R.id.no_of_rides);
@@ -199,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(internetConnectionChangedReceiver);
         unregisterReceiver(locationDisabledReceiver);
         if(locationAlertDialog != null){
             locationAlertDialog.dismiss();
@@ -274,35 +271,13 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // PROVERITI OVO JOS
-    private final BroadcastReceiver internetConnectionChangedReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(INTERNET_CONNECTION_CHANGED_ACTION.equals(intent.getAction()) || WIFI_CONNECTION_CHANGED_ACTION.equals(intent.getAction())){
-                ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                final Context ctx = context;
-                NetworkInfo info = cm.getActiveNetworkInfo();
-                if(info != null){
-                    if(!info.isConnectedOrConnecting()){
-                        internetConnectionAlertDialog = new InternetConnectionDialog(MainActivity.this).prepareDialog();
-                        internetConnectionAlertDialog.show();
-                    }
-                }else{
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-                            NetworkInfo info = cm.getActiveNetworkInfo();
-                            if(info == null){
-                                internetConnectionAlertDialog = new InternetConnectionDialog(MainActivity.this).prepareDialog();
-                                internetConnectionAlertDialog.show();
-                            }
-                        }
-                    }, 3000);
-
-                }
-            }
-        }
-    };
+//    private final BroadcastReceiver internetConnectionChangedReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if(INTERNET_CONNECTION_CHANGED_ACTION.equals(intent.getAction()) || WIFI_CONNECTION_CHANGED_ACTION.equals(intent.getAction())){
+//                NetworkUtil.isConnected(context);
+//            }
+//        }
+//    };
 
 }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.adapters.RideHistoryAdapter;
+import com.bbf.cruise.tools.NetworkUtil;
 
 public class RideHistoryActivity extends AppCompatActivity {
 
@@ -25,6 +26,8 @@ public class RideHistoryActivity extends AppCompatActivity {
         rideHistoryList.setDivider(null);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NetworkUtil.isConnected(RideHistoryActivity.this);
     }
 
     @Override

@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.activities.WalletActivity;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -48,6 +49,9 @@ public class EditBalanceDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if(!NetworkUtil.isConnected(getActivity())){
+                            return;
+                        }
                         addFundsEditText = view.findViewById(R.id.addFundsEdit);
                         String funds = addFundsEditText.getText().toString();
                         // azuriraj stanje za shared

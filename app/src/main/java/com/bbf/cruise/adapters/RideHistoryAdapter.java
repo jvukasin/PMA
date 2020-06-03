@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.bbf.cruise.Mokap;
 import com.bbf.cruise.R;
+import com.bbf.cruise.tools.NetworkUtil;
 
 import org.w3c.dom.Text;
 
