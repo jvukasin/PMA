@@ -144,8 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/otherInfoLine2"
-            android:layout_marginTop="2dp"
-            >
+            android:layout_marginTop="2dp">
 
             <TextView
                 android:id="@+id/text3"
@@ -172,126 +171,60 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:fontFamily="sans-serif-condensed-medium"/>
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/otherInfoLine4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/otherInfoLine3"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp">
-            <TextView
-                android:id="@+id/textTp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textSize="20sp"
-                android:text="Tyre Pressure: "
-                android:gravity="center_vertical"
-                android:textColor="@color/colorPrimaryDark"
-                android:fontFamily="sans-serif"/>
-
-        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/otherInfoLine4">
+            android:layout_below="@id/otherInfoLine3"
+            android:id="@+id/tyre_pressure">
 
             <LinearLayout
-                android:id="@+id/otherInfoLine5"
-                android:layout_width="wrap_content"
+                android:id="@+id/otherInfoLine4"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp">
 
                 <TextView
-                    android:id="@+id/tpFlText"
+                    android:id="@+id/textTp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:textSize="18sp"
-                    android:text="Front Left: "
+                    android:textSize="20sp"
+                    android:text="Tyre Pressure: "
                     android:gravity="center_vertical"
                     android:textColor="@color/colorPrimaryDark"
                     android:fontFamily="sans-serif"/>
-                <TextView
-                    android:id="@+id/carTp_fl"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:textSize="18sp"
-                    android:text="2.0"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:fontFamily="sans-serif-condensed-medium"/>
-
-            </LinearLayout>
-            <LinearLayout
-
-                android:id="@+id/otherInfoLine6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/otherInfoLine5"
-                android:layout_alignParentRight="true"
-                android:gravity="right"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="3dp">
-                <TextView
-                    android:id="@+id/tpFrText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:textSize="18sp"
-                    android:text="Front Right: "
-                    android:gravity="center_vertical"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:fontFamily="sans-serif"/>
-                <TextView
-                    android:id="@+id/carTp_fr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:textSize="18sp"
-                    android:text="2.0"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:fontFamily="sans-serif-condensed-medium"/>
 
             </LinearLayout>
 
             <RelativeLayout
-                android:id="@+id/rear_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/otherInfoLine5"
-                android:layout_marginBottom="70dp">
+                android:layout_below="@id/otherInfoLine4">
 
                 <LinearLayout
-                    android:id="@+id/otherInfoLine7"
+                    android:id="@+id/otherInfoLine5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginLeft="25dp">
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginBottom="10dp">
 
                     <TextView
-                        android:id="@+id/tpRlText"
+                        android:id="@+id/tpFlText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:textSize="18sp"
-                        android:text="Rear Left: "
+                        android:text="Front Left: "
                         android:gravity="center_vertical"
                         android:textColor="@color/colorPrimaryDark"
                         android:fontFamily="sans-serif"/>
                     <TextView
-                        android:id="@+id/carTp_rl"
+                        android:id="@+id/carTp_fl"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -303,29 +236,28 @@
                         android:fontFamily="sans-serif-condensed-medium"/>
 
                 </LinearLayout>
-
                 <LinearLayout
-                    android:id="@+id/otherInfoLine8"
+                    android:id="@+id/otherInfoLine6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/otherInfoLine7"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_toRightOf="@id/otherInfoLine5"
                     android:layout_alignParentRight="true"
-                    android:gravity="right">
+                    android:gravity="right"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="3dp">
                     <TextView
-                        android:id="@+id/tpRrText"
+                        android:id="@+id/tpFrText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:textSize="18sp"
-                        android:text="Rear Right: "
+                        android:text="Front Right: "
                         android:gravity="center_vertical"
                         android:textColor="@color/colorPrimaryDark"
                         android:fontFamily="sans-serif"/>
                     <TextView
-                        android:id="@+id/carTp_rr"
+                        android:id="@+id/carTp_fr"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -338,18 +270,97 @@
 
                 </LinearLayout>
 
-            </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/otherInfoLine5"
+                    android:layout_marginBottom="5dp">
+
+                    <LinearLayout
+                        android:id="@+id/otherInfoLine7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="25dp">
+
+                        <TextView
+                            android:id="@+id/tpRlText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:textSize="18sp"
+                            android:text="Rear Left: "
+                            android:gravity="center_vertical"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:fontFamily="sans-serif"/>
+                        <TextView
+                            android:id="@+id/carTp_rl"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:textSize="18sp"
+                            android:text="2.0"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:fontFamily="sans-serif-condensed-medium"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/otherInfoLine8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/otherInfoLine7"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_alignParentRight="true"
+                        android:gravity="right">
+                        <TextView
+                            android:id="@+id/tpRrText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:textSize="18sp"
+                            android:text="Rear Right: "
+                            android:gravity="center_vertical"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:fontFamily="sans-serif"/>
+                        <TextView
+                            android:id="@+id/carTp_rr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:textSize="18sp"
+                            android:text="2.0"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:fontFamily="sans-serif-condensed-medium"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
 
         </RelativeLayout>
 
-        <RelativeLayout
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/howmuchkm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/fromYou">
+            android:orientation="horizontal"
+            android:layout_below="@id/tyre_pressure"
+            android:gravity="center"
+            android:layout_marginBottom="60dp">
 
             <TextView
                 android:id="@+id/dis_from_me"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2.5 km"
                 android:textColor="@color/colorAccent"
@@ -357,25 +368,22 @@
                 android:textSize="24sp"
                 android:gravity="center"/>
 
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/fromYou"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/buttons"
-            android:layout_marginBottom="25dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  "/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/from_you"
                 android:textSize="18sp"
+                android:paddingTop="5dp"
                 android:gravity="center"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/colorPrimaryDark"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/buttons"
