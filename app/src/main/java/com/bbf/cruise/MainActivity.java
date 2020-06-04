@@ -192,9 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO ubaciti vrednosti izvucene iz baze za korisnika
         no_of_distance.setText("58");
-//        no_of_rides.setText("4");
-        int temp = sharedPreferences.getInt("radius", 30);
-        no_of_rides.setText(Integer.toString(temp));
+        no_of_rides.setText("4");
         no_of_points.setText("470");
     }
 

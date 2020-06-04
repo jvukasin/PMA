@@ -1,14 +1,12 @@
 package model;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class Car {
 
     private String brand;
     private String model;
     private int avatar;
     private String reg_number;
-    private double distance;
+    private double mileage;
     private int fuel_distance;
     private int no_of_rides;
     private double rating;
@@ -22,12 +20,12 @@ public class Car {
 
     }
 
-    public Car(String brand, String model, int avatar, String reg_number, double distance, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, LocationObject location) {
+    public Car(String brand, String model, int avatar, String reg_number, double mileage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, LocationObject location) {
         this.brand = brand;
         this.model = model;
         this.avatar = avatar;
         this.reg_number = reg_number;
-        this.distance = distance;
+        this.mileage = mileage;
         this.fuel_distance = fuel_distance;
         this.no_of_rides = no_of_rides;
         this.rating = rating;
@@ -78,12 +76,12 @@ public class Car {
         this.reg_number = reg_number;
     }
 
-    public double getDistance() {
-        return distance;
+    public double getMileage() {
+        return mileage;
     }
 
-    public void setDistance(double distance) {
-        this.distance = distance;
+    public void setMileage(double mileage) {
+        this.mileage = mileage;
     }
 
     public int getFuel_distance() {

@@ -7,29 +7,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -44,7 +38,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -55,8 +48,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.io.Serializable;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -342,7 +333,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 @Override
                 public void onMapClick(LatLng latLng) {
                     map.addMarker(new MarkerOptions()
-                            .title("YOUR_POSITON")
+                            .title("YOUR_POSITION")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                             .position(latLng));
                     home.setFlat(true);
@@ -358,8 +349,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    getCarDialog(getActivity(), marker);
-//                    Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+                    if(marker.getTitle().equals("YOUR_POSITION")) {
+                        Toast.makeText(getActivity(), "You are here", Toast.LENGTH_SHORT).show();
+                    } else {
+                        getCarDialog(getActivity(), marker.getTitle());
+                    }
                     return true;
                 }
             });
@@ -406,26 +400,49 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         }
     }
 
-    private void getCarDialog(final FragmentActivity activity, final Marker marker) {
+    private void getCarDialog(final FragmentActivity activity, final String markerTitle) {
         //TODO namestiti mozda da povuce iz baze kola u listu prilikom pokretanja, pa onda iz te liste uzivati ove vrednosti a ne stalno pozivati bazu
         TextView name = (TextView) mDialog.findViewById(R.id.carName);
-        name.setText(marker.getTitle());
+        TextView model = (TextView) mDialog.findViewById(R.id.carModel);
+        TextView carRating = (TextView) mDialog.findViewById(R.id.carRatingDialog);
+        TextView carPlate = (TextView) mDialog.findViewById(R.id.carPlate);
+        TextView carRides = (TextView) mDialog.findViewById(R.id.carRides);
+        TextView carFuel = (TextView) mDialog.findViewById(R.id.carFuel);
+        TextView carDistance = (TextView) mDialog.findViewById(R.id.carDistance);
+        carPlate.setText(markerTitle);
+
+        Car car = new Car();
+        for(Car c : cars) {
+            if(c.getReg_number().equals(markerTitle)) {
+                car = c;
+            }
+        }
+
+        name.setText(car.getBrand());
+        model.setText(car.getModel());
+        carRating.setText(Double.toString(car.getRating()));
+        carRides.setText(Integer.toString(car.getNo_of_rides()));
+        carFuel.setText(Integer.toString(car.getFuel_distance()).concat(" km"));
+        final double dist = calculateDistance(home.getPosition().latitude, home.getPosition().longitude, car.getLocation().getLatitude(), car.getLocation().getLongitude());
+        carDistance.setText(String.format("%.2f", dist).concat(" km"));
+
         Button viewBtn = (Button) mDialog.findViewById(R.id.markerViewBtn);
+        final Car finalCar = car;
         viewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO proslediti sve podatke
                 Intent intent = new Intent(activity, CarDetailActivity.class);
-                intent.putExtra("name", marker.getTitle());
-//                intent.putExtra("distance", item.getDistance());
-//                intent.putExtra("fuel_distance", item.getFuel_distance());
-                intent.putExtra("plate", "NS123NS");
-//                intent.putExtra("no_of_rides", item.getNo_of_rides());
-//                intent.putExtra("rating", item.getRating());
-//                intent.putExtra("tp_fl", item.getTp_fl());
-//                intent.putExtra("tp_fr", item.getTp_fr());
-//                intent.putExtra("tp_rl", item.getTp_rl());
-//                intent.putExtra("tp_rr", item.getTp_rr());
+                intent.putExtra("name", finalCar.getBrand() + " " + finalCar.getModel());
+                intent.putExtra("mileage", String.format("%.1f", finalCar.getMileage()));
+                intent.putExtra("distance_from_me", String.format("%.2f", dist));
+                intent.putExtra("fuel_distance", Integer.toString(finalCar.getFuel_distance()));
+                intent.putExtra("plate", markerTitle);
+                intent.putExtra("no_of_rides", finalCar.getNo_of_rides());
+                intent.putExtra("rating", finalCar.getRating());
+                intent.putExtra("tp_fl", finalCar.getTp_fl());
+                intent.putExtra("tp_fr", finalCar.getTp_fr());
+                intent.putExtra("tp_rl", finalCar.getTp_rl());
+                intent.putExtra("tp_rr", finalCar.getTp_rr());
                 startActivity(intent);
                 mDialog.dismiss();
             }
@@ -441,7 +458,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         }
 
         home = map.addMarker(new MarkerOptions()
-                .title("YOUR_POSITON")
+                .title("YOUR_POSITION")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                 .position(loc));
         home.setFlat(true);
@@ -455,7 +472,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         int radius = sharedPreferences.getInt("radius", 30);
         for(Car car: cars){
-            int distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
+            double distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
                     car.getLocation().getLatitude(), car.getLocation().getLongitude());
             if(distance <= radius){
                 addCarMarker(car);
@@ -470,11 +487,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car_map_pin_no_border_yellow);
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-        home = map.addMarker(new MarkerOptions()
-                .title(car.getBrand() + " " + car.getModel())
+        map.addMarker(new MarkerOptions()
+                .title(car.getReg_number())
                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-                .position(loc));
-        home.setFlat(true);
+                .position(loc))
+                .setFlat(true);
     }
 
     /**
@@ -488,7 +505,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         locationManager.removeUpdates(this);
     }
 
-    private int calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
+    private double calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
 
         double latDistance = Math.toRadians(userLat - venueLat);
         double lngDistance = Math.toRadians(userLng - venueLng);
@@ -501,7 +518,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        return (int) (Math.round(AVERAGE_RADIUS_OF_EARTH * c));
+        return (AVERAGE_RADIUS_OF_EARTH * c);
 
     }
 }

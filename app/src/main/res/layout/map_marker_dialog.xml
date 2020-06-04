@@ -19,16 +19,25 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp">
 
+            <View
+                android:id="@+id/dummy2"
+                android:layout_height="0dp"
+                android:layout_width="0dp"
+                android:layout_centerInParent="true"/>
+
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="-35dp"
+                android:layout_toLeftOf="@+id/dummy2">
 
                 <TextView
                     android:id="@+id/carName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
-                    android:text="Volkswagen"
+                    android:text="BMW"
                     android:layout_centerHorizontal="true"
                     android:textColor="@color/colorPrimaryDark"
                     android:fontFamily="sans-serif-condensed-medium"/>
@@ -39,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
                     android:layout_marginTop="25dp"
-                    android:text="Polo"
+                    android:text="X3"
                     android:layout_centerInParent="true"
                     android:textColor="@color/colorPrimaryDark"
                     android:fontFamily="sans-serif-condensed-medium"
@@ -47,6 +56,12 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/dummy2">
                 <TextView
                     android:id="@+id/carPlate"
                     android:layout_width="wrap_content"
@@ -55,9 +70,11 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:text="NS 123NS"
-                    android:layout_centerVertical="true"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimaryDark"/>
+            </RelativeLayout>
+
+
 
         </RelativeLayout>
 
@@ -184,7 +201,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/carRating"
+        android:id="@+id/carRatingDialog"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:background="@drawable/circle"

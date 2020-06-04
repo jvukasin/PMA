@@ -2,6 +2,7 @@ package com.bbf.cruise.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ public class CarDetailActivity extends AppCompatActivity {
         initTextFields();
     }
 
+    @SuppressLint("SetTextI18n")
     private void initTextFields() {
         TextView carName = (TextView) findViewById(R.id.carName);
         carName.setText(getIntent().getStringExtra("name"));
@@ -33,10 +35,10 @@ public class CarDetailActivity extends AppCompatActivity {
         carRating.setText(String.valueOf(getIntent().getDoubleExtra("rating", 0.0)));
 
         TextView carFuel = (TextView) findViewById(R.id.carFuel);
-        carFuel.setText(String.valueOf(getIntent().getDoubleExtra("fuel_distance", 0.0)) + " km");
+        carFuel.setText(getIntent().getStringExtra("fuel_distance") + " km");
 
-        TextView carDistance = (TextView) findViewById(R.id.carDistance);
-        carDistance.setText(String.valueOf(getIntent().getDoubleExtra("distance", 0.0)) + " km");
+        TextView carMileage = (TextView) findViewById(R.id.carDistance);
+        carMileage.setText(getIntent().getStringExtra("mileage") + " km");
 
         TextView carRides = (TextView) findViewById(R.id.carRides);
         carRides.setText(String.valueOf(getIntent().getIntExtra("no_of_rides", 0)));
@@ -53,6 +55,8 @@ public class CarDetailActivity extends AppCompatActivity {
         TextView carTp_rr = (TextView) findViewById(R.id.carTp_rr);
         carTp_rr.setText(String.valueOf(getIntent().getFloatExtra("tp_rr", 0.0f)));
 
+        TextView dis_from_me = (TextView) findViewById(R.id.dis_from_me);
+        dis_from_me.setText(getIntent().getStringExtra("distance_from_me") + " km");
 
     }
 

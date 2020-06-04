@@ -9,7 +9,7 @@ public class CarItem implements Parcelable {
     private String model;
     private int avatar;
     private String reg_number;
-    private double distance;
+    private double milage;
     private int fuel_distance;
     private int no_of_rides;
     private double rating;
@@ -26,7 +26,7 @@ public class CarItem implements Parcelable {
         model = in.readString();
         avatar = in.readInt();
         reg_number = in.readString();
-        distance = in.readDouble();
+        milage = in.readDouble();
         fuel_distance = in.readInt();
         no_of_rides = in.readInt();
         rating = in.readDouble();
@@ -37,12 +37,12 @@ public class CarItem implements Parcelable {
 
     }
 
-    public CarItem(String brand, String model, int avatar, String reg_number, double distance, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr) {
+    public CarItem(String brand, String model, int avatar, String reg_number, double milage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr) {
         this.brand = brand;
         this.model = model;
         this.avatar = avatar;
         this.reg_number = reg_number;
-        this.distance = distance;
+        this.milage = milage;
         this.fuel_distance = fuel_distance;
         this.no_of_rides = no_of_rides;
         this.rating = rating;
@@ -100,12 +100,12 @@ public class CarItem implements Parcelable {
         this.reg_number = reg_number;
     }
 
-    public double getDistance() {
-        return distance;
+    public double getMilage() {
+        return milage;
     }
 
-    public void setDistance(double distance) {
-        this.distance = distance;
+    public void setMilage(double milage) {
+        this.milage = milage;
     }
 
     public double getFuel_distance() {
@@ -173,7 +173,7 @@ public class CarItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(brand + " " + model);
         dest.writeString(reg_number);
-        dest.writeDouble(distance);
+        dest.writeDouble(milage);
         dest.writeInt(fuel_distance);
         dest.writeInt(no_of_rides);
         dest.writeDouble(rating);

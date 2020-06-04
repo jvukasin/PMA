@@ -42,8 +42,10 @@ public class NearbyCarsActivity extends AppCompatActivity {
                 Intent intent = new Intent(NearbyCarsActivity.this, CarDetailActivity.class);
                 intent.putExtra("name", item.getCarName());
                 intent.putExtra("avatar", item.getAvatar());
-                intent.putExtra("distance", item.getDistance());
-                intent.putExtra("fuel_distance", item.getFuel_distance());
+                intent.putExtra("mileage", String.format("%.1f", item.getMilage()));
+                //TODO izracunati distancu izmedju nas i auta i ubaciti u distance_from_me
+                intent.putExtra("distance_from_me", "2.2");
+                intent.putExtra("fuel_distance", Double.toString(item.getFuel_distance()));
                 intent.putExtra("plate", item.getReg_number());
                 intent.putExtra("no_of_rides", item.getNo_of_rides());
                 intent.putExtra("rating", item.getRating());
@@ -69,9 +71,9 @@ public class NearbyCarsActivity extends AppCompatActivity {
 
     private void prepareList(ArrayList<CarItem> list) {
         //TODO izvuci iz baze i sta sve treba
-        list.add(new CarItem("BMW", "320d", R.drawable.car_icon, "NS 643SK", 1.3, 380, 2, 5.0, 2.3f, 2.2f, 2.2f, 2.3f));
-        list.add(new CarItem("Renault", "Clio", R.drawable.car_icon, "NS 274DJ", 2.2, 322, 4, 4.5, 2.2f, 2.2f, 2.4f, 2.3f));
-        list.add(new CarItem("Opel", "Astra", R.drawable.car_icon, "NS 486BR", 2.5, 263, 3, 4.3,  1.9f, 2.2f, 2.4f, 2.1f));
+        list.add(new CarItem("BMW", "320d", R.drawable.car_icon, "NS 643SK", 130, 380, 2, 5.0, 2.3f, 2.2f, 2.2f, 2.3f));
+        list.add(new CarItem("Renault", "Clio", R.drawable.car_icon, "NS 274DJ", 4346, 322, 4, 4.5, 2.2f, 2.2f, 2.4f, 2.3f));
+        list.add(new CarItem("Opel", "Astra", R.drawable.car_icon, "NS 486BR", 10774, 263, 3, 4.3,  1.9f, 2.2f, 2.4f, 2.1f));
 
     }
 
