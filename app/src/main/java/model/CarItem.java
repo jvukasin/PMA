@@ -17,7 +17,7 @@ public class CarItem implements Parcelable {
     private float tp_fr;
     private float tp_rl;
     private float tp_rr;
-
+    private double distanceFromMe;
 
     protected CarItem(Parcel in) {
         brand = in.readString();
