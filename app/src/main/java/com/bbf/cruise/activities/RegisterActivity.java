@@ -132,7 +132,6 @@ public class RegisterActivity extends AppCompatActivity {
                     rootNode = FirebaseDatabase.getInstance();
                     reference = rootNode.getReference();
                     reference.child("Users").child(firebaseUserUID).setValue(user);
-
                     loadingDialog.dismissDialog();
                     Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
