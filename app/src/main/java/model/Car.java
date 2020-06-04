@@ -1,6 +1,11 @@
 package model;
 
-public class Car {
+
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.Serializable;
+
+public class Car implements Serializable {
 
     private String brand;
     private String model;

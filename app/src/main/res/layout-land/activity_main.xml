@@ -45,18 +45,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/mapButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
-                android:layout_marginBottom="35dp"
-                android:background="@drawable/roundedbutton"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/showListOfCars"
-                android:alpha="0.85"
-                android:textColor="@color/colorPrimaryDark" />
+<!--            <Button-->
+<!--                android:id="@+id/mapButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="bottom|center"-->
+<!--                android:layout_marginBottom="35dp"-->
+<!--                android:background="@drawable/roundedbutton"-->
+<!--                android:paddingLeft="10dp"-->
+<!--                android:paddingRight="10dp"-->
+<!--                android:text="@string/showListOfCars"-->
+<!--                android:alpha="0.85"-->
+<!--                android:textColor="@color/colorPrimaryDark" />-->
 
         </FrameLayout>
 
