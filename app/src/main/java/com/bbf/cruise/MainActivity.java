@@ -127,15 +127,15 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        button = (Button) findViewById(R.id.mapButton);
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, NearbyCarsActivity.class);
-                startActivity(intent);
-            }
-        });
+//        button = (Button) findViewById(R.id.mapButton);
+//        button.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, NearbyCarsActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         //logout dugme na dnu
         ListView logOutList = (ListView) findViewById(R.id.logoutListView);

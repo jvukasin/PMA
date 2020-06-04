@@ -1,6 +1,8 @@
 package model;
 
-public class LocationObject {
+import java.io.Serializable;
+
+public class LocationObject implements Serializable {
 
     private double longitude;
     private double latitude;

@@ -53,20 +53,25 @@ public class EditBalanceDialog extends AppCompatDialogFragment {
                             return;
                         }
                         addFundsEditText = view.findViewById(R.id.addFundsEdit);
+                        sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+                        String phone = sharedPreferences.getString("phone", "");
+                        float balance = sharedPreferences.getFloat("wallet", 0);
                         String funds = addFundsEditText.getText().toString();
+                        float addedFunds = Float.parseFloat(funds);
+                        balance += addedFunds;
                         // azuriraj stanje za shared
                         sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putFloat("wallet", Float.parseFloat(funds));
+                        editor.putFloat("wallet", balance);
                         editor.apply();
                         // azuriraj u bazi
                         String firebaseUserUID = auth.getCurrentUser().getUid();
                         rootNode = FirebaseDatabase.getInstance();
                         reference = rootNode.getReference("Users");
-                        reference.child(firebaseUserUID).child("wallet").setValue(Float.parseFloat(funds));
+                        reference.child(phone).child("wallet").setValue(balance);
 
                         TextView walletBalance = getActivity().findViewById(R.id.walletBalance);
-                        walletBalance.setText(String.valueOf(Float.parseFloat(funds)));
+                        walletBalance.setText(String.valueOf(balance));
                     }
                 });
         return builder.create();

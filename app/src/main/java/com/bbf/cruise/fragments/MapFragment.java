@@ -39,6 +39,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.activities.CarDetailActivity;
+import com.bbf.cruise.activities.NearbyCarsActivity;
 import com.bbf.cruise.dialogs.LocationDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,6 +61,8 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import model.Car;
 
@@ -78,6 +81,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private DatabaseReference databaseReference;
     private List<Car> cars = new ArrayList<>();
     private Button centreButton;
+    private Button nearbyButton;
     private Dialog mDialog;
 
     public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
@@ -106,6 +110,29 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         mDialog.setContentView(R.layout.map_marker_dialog);
         mDialog.setCancelable(true);
         mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        // osvezi markere na mapi na svakih 10 sekudni
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        cars.clear();
+                        for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
+                            cars.add(carSnapshot.getValue(Car.class));
+                        }
+                        positionCarMarkers();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }, 0,10000);
+
     }
 
     @Override
@@ -193,6 +220,19 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
+
+        nearbyButton = view.findViewById(R.id.mapButton);
+        nearbyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),NearbyCarsActivity.class);
+                intent.putExtra("cars", (Serializable) cars);
+                intent.putExtra("myLat", home.getPosition().latitude);
+                intent.putExtra("myLng", home.getPosition().longitude);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -202,11 +242,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
      * */
     @Override
     public void onLocationChanged(Location location) {
-        //TODO kada prevlaci preko mape da ga ne vraca na marker
-//        Toast.makeText(getActivity(), "NEW LOCATION", Toast.LENGTH_SHORT).show();
-//        if (map != null) {
-//            addMarker(location);
-//        }
+        if (map != null) {
+            addMarker(location);
+        }
     }
 
     @Override
@@ -387,7 +425,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 addMarker(location);
             }
 
-            //TODO dodati sva kola na mapu
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -470,11 +507,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car_map_pin_no_border_yellow);
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-        home = map.addMarker(new MarkerOptions()
+        map.addMarker(new MarkerOptions()
                 .title(car.getBrand() + " " + car.getModel())
                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-                .position(loc));
-        home.setFlat(true);
+                .position(loc))
+                .setFlat(true);
     }
 
     /**

@@ -1,8 +1,13 @@
 package model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
-public class Car {
+import java.io.Serializable;
+
+public class Car implements Serializable {
 
     private String brand;
     private String model;

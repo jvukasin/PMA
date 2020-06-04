@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.adapters.NearbyCarsAdapter;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,11 @@ public class NearbyCarsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listV = (ListView) findViewById(R.id.nearbycars_listview);
-        prepareList(cars);
+
+        double myLat = getIntent().getDoubleExtra("myLat", 0);
+        double myLng = getIntent().getDoubleExtra("myLng", 0);
+        cars = (ArrayList<CarItem>) getIntent().getSerializableExtra("cars");
+        //prepareList(cars);
         NearbyCarsAdapter adapter = new NearbyCarsAdapter(this, cars);
         listV.setAdapter(adapter);
 

@@ -41,7 +41,7 @@ public class WalletActivity extends AppCompatActivity {
         // postavi vrednost za balance
         walletBalance = (TextView) findViewById(R.id.walletBalance);
         sharedPreferences = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-        float balance = sharedPreferences.getFloat("wallet", 1);
+        float balance = sharedPreferences.getFloat("wallet", 0);
         walletBalance = findViewById(R.id.walletBalance);
         walletBalance.setText(String.valueOf(balance));
     }
