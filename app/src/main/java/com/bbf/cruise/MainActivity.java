@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout mDrawerPane;
     private CharSequence mTitle;
     private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
-    private Button button;
 
     private boolean isMapEnabled = false;
 
@@ -126,16 +125,6 @@ public class MainActivity extends AppCompatActivity {
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
-
-        button = (Button) findViewById(R.id.mapButton);
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, NearbyCarsActivity.class);
-                startActivity(intent);
-            }
-        });
 
         //logout dugme na dnu
         ListView logOutList = (ListView) findViewById(R.id.logoutListView);

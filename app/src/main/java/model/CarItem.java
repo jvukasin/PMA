@@ -17,9 +17,12 @@ public class CarItem implements Parcelable {
     private float tp_fr;
     private float tp_rl;
     private float tp_rr;
+    private double distanceFromMe;
 
-
-
+    public CarItem(Car car){
+        this(car.getBrand(), car.getModel(), car.getAvatar(), car.getReg_number(), car.getMileage(), car.getFuel_distance(), car.getNo_of_rides(), car.getRating(),
+                car.getTp_fl(), car.getTp_fr(), car.getTp_rl(), car.getTp_rr(), 0);
+    }
 
     protected CarItem(Parcel in) {
         brand = in.readString();
@@ -34,10 +37,10 @@ public class CarItem implements Parcelable {
         tp_fr = in.readFloat();
         tp_rl = in.readFloat();
         tp_rr = in.readFloat();
-
+        distanceFromMe = in.readDouble();
     }
 
-    public CarItem(String brand, String model, int avatar, String reg_number, double milage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr) {
+    public CarItem(String brand, String model, int avatar, String reg_number, double milage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, double distanceFromMe) {
         this.brand = brand;
         this.model = model;
         this.avatar = avatar;
@@ -50,6 +53,7 @@ public class CarItem implements Parcelable {
         this.tp_fr = tp_fr;
         this.tp_rl = tp_rl;
         this.tp_rr = tp_rr;
+        this.distanceFromMe = distanceFromMe;
     }
 
     public static final Creator<CarItem> CREATOR = new Creator<CarItem>() {
@@ -63,6 +67,14 @@ public class CarItem implements Parcelable {
             return new CarItem[size];
         }
     };
+
+    public double getDistanceFromMe() {
+        return distanceFromMe;
+    }
+
+    public void setDistanceFromMe(double distanceFromMe) {
+        this.distanceFromMe = distanceFromMe;
+    }
 
     public String getCarName() {
         return brand + " " + model;
@@ -181,6 +193,6 @@ public class CarItem implements Parcelable {
         dest.writeFloat(tp_rr);
         dest.writeFloat(tp_rl);
         dest.writeFloat(tp_rr);
-
+        dest.writeDouble(distanceFromMe);
     }
 }

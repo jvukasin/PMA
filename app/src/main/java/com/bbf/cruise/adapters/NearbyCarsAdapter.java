@@ -53,11 +53,11 @@ public class NearbyCarsAdapter extends BaseAdapter {
         TextView distance = (TextView) vi.findViewById(R.id.carItemFromMeDis);
 
         name.setText(list.get(position).getCarName());
-        icon.setImageResource(list.get(position).getAvatar());
+        icon.setImageResource(R.drawable.car_icon);
         plate.setText(list.get(position).getReg_number());
         fuel.setText(list.get(position).getFuel_distance() + " km");
         //TODO izracunati razdaljinu nas i auta i to postaviti u distance
-        distance.setText("2.2" + " km");
+        distance.setText(String.valueOf(list.get(position).getDistanceFromMe()));
 
         return vi;
     }
