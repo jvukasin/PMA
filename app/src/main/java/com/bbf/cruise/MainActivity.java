@@ -180,17 +180,21 @@ public class MainActivity extends AppCompatActivity {
 
         TextView usr = (TextView) findViewById(R.id.userName);
         usr.setText(sharedPreferences.getString("firstName", "User"));
-
         TextView disMode = (TextView) findViewById(R.id.distanceMode);
-        if(sharedPreferences.getString("distanceMode", "").equals("mi")) {
-            disMode.setText("Miles");
-        } else {
-            disMode.setText("Kilometers");
-        }
+        disMode.setText("Kilometers");
+
+        //Ako zelimo da menja iz km u mi
+//        if(sharedPreferences.getString("distanceMode", "").equals("mi")) {
+//            disMode.setText("Miles");
+//        } else {
+//            disMode.setText("Kilometers");
+//        }
 
         //TODO ubaciti vrednosti izvucene iz baze za korisnika
         no_of_distance.setText("58");
-        no_of_rides.setText("4");
+//        no_of_rides.setText("4");
+        int temp = sharedPreferences.getInt("radius", 30);
+        no_of_rides.setText(Integer.toString(temp));
         no_of_points.setText("470");
     }
 

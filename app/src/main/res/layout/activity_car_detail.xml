@@ -293,13 +293,12 @@
         </LinearLayout>
 
         <LinearLayout
-
             android:id="@+id/otherInfoLine8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/otherInfoLine7"
             android:layout_marginTop="3dp"
-            >
+            android:layout_marginBottom="55dp">
             <TextView
                 android:id="@+id/tpRrText"
                 android:layout_width="wrap_content"
@@ -324,6 +323,39 @@
                 android:fontFamily="sans-serif-condensed-medium"/>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true">
+
+            <View android:id="@+id/dummy"
+                android:layout_height="0dp"
+                android:layout_width="10dp"
+                android:layout_centerInParent="true"/>
+
+            <Button
+                android:id="@+id/reserveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/dummy"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/roundedbutton"
+                android:text="Reserve"/>
+
+            <Button
+                android:id="@+id/rentBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/dummy"
+                android:background="@drawable/roundedbutton"
+                android:layout_marginRight="10dp"
+                android:text="Rent"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

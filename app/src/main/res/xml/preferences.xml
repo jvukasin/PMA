@@ -39,12 +39,21 @@
     <PreferenceCategory
         android:title="Other">
 
-        <ListPreference
-            android:key="distanceMode"
-            android:title="Show distance in"
-            android:entries="@array/pref_distance_entries"
-            android:entryValues="@array/pref_distance_values"
-            android:defaultValue="@string/distance_default_value"/>
+<!--        <ListPreference-->
+<!--            android:key="distanceMode"-->
+<!--            android:title="Show distance in"-->
+<!--            android:entries="@array/pref_distance_entries"-->
+<!--            android:entryValues="@array/pref_distance_values"-->
+<!--            android:defaultValue="@string/distance_default_value"/>-->
+
+        <SeekBarPreference
+            android:key="slider"
+            android:title="@string/slider"
+            android:max="100"
+            app:showSeekBarValue="true"
+            app:updatesContinuously="true"
+            app:defaultValue="30"/>
+
 
     </PreferenceCategory>
 

@@ -47,8 +47,14 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         Preference phone = findPreference("phone");
         phone.setSummary(sharedPref.getString("phone", ""));
 
-        Preference distance = findPreference("distanceMode");
-        distance.setSummary(sharedPref.getString("distanceMode", "km"));
+        Preference slide = findPreference("slider");
+        int val = sharedPref.getInt("radius", 30);
+        String sVal = Integer.toString(val) + " km";
+        slide.setSummary(sVal);
+
+        //Ako zelimo km u mi
+//        Preference distance = findPreference("distanceMode");
+//        distance.setSummary(sharedPref.getString("distanceMode", "km"));
     }
 
     @Override
@@ -67,31 +73,40 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        pref = findPreference(key);
-        summaryStr = (String) pref.getSummary(); //stari
-
-        String prefixStr = sharedPreferences.getString(key, "");
-        pref.setSummary(prefixStr); //novi
-
-        //TODO DA LI U ASYNCTASK?
-        String firebaseUserUID = auth.getCurrentUser().getUid();
-        FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
-        DatabaseReference reference = rootNode.getReference("Users");
 
         SharedPreferences.Editor editor = sharedPref.edit();
-        if(key.equals("firstName")) {
-            editor.putString("firstName", prefixStr);
-            reference.child(firebaseUserUID).child("firstName").setValue(prefixStr);
-        } else if (key.equals("lastName")) {
-            editor.putString("lastName", prefixStr);
-            reference.child(firebaseUserUID).child("lastName").setValue(prefixStr);
-        }  else if (key.equals("phone")) {
-            editor.putString("phone", prefixStr);
-            reference.child(firebaseUserUID).child("phoneNumber").setValue(prefixStr);
-        }  else if (key.equals("distanceMode")) {
-            editor.putString("distanceMode", prefixStr);
+        if(key.equals("slider")) {
+            pref = findPreference(key);
+            int num = sharedPreferences.getInt(key, 30);
+            pref.setSummary(String.format("%d km", num));
+            editor.putInt("radius", num);
+        } else  {
+            pref = findPreference(key);
+            summaryStr = (String) pref.getSummary(); //stari
+
+            String prefixStr = sharedPreferences.getString(key, "");
+            pref.setSummary(prefixStr); //novi
+
+            //TODO DA LI U ASYNCTASK?
+            String firebaseUserUID = auth.getCurrentUser().getUid();
+            FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
+            DatabaseReference reference = rootNode.getReference("Users");
+
+            if(key.equals("firstName")) {
+                editor.putString("firstName", prefixStr);
+                reference.child(firebaseUserUID).child("firstName").setValue(prefixStr);
+            } else if (key.equals("lastName")) {
+                editor.putString("lastName", prefixStr);
+                reference.child(firebaseUserUID).child("lastName").setValue(prefixStr);
+            }  else if (key.equals("phone")) {
+                editor.putString("phone", prefixStr);
+                reference.child(firebaseUserUID).child("phoneNumber").setValue(prefixStr);
+            }
+//        Ako zelimo da menja iz km u mi
+//        else if (key.equals("distanceMode")) {
+//            editor.putString("distanceMode", prefixStr);
+//        }
         }
         editor.apply();
-
     }
 }

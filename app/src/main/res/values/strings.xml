@@ -49,6 +49,8 @@
     <string name="currentPass">Current password</string>
     <string name="newPass">New password</string>
     <string name="repeatNewPass">Repeat news password</string>
+    <string name="view">View</string>
+    <string name="slider">Distance radius</string>
 
     <string-array name="pref_distance_entries">
         <item>Kilometers</item>
