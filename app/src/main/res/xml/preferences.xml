@@ -52,7 +52,9 @@
             android:max="100"
             app:showSeekBarValue="true"
             app:updatesContinuously="true"
-            app:defaultValue="30"/>
+            app:defaultValue="30"
+            android:progress="30"
+            />
 
 
     </PreferenceCategory>

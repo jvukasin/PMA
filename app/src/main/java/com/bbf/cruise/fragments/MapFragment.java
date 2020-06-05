@@ -76,6 +76,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private Button centreButton;
     private Button nearbyCarsButton;
     private Dialog mDialog;
+    private SharedPreferences sharedPreferences;
+    private TextView name, model, carRating, carPlate, carRides, carFuel, carDistance;
 
     public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
 
@@ -99,9 +101,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         databaseReference = FirebaseDatabase.getInstance().getReference("cars");
         mDialog = new Dialog(getActivity());
-        mDialog.setContentView(R.layout.map_marker_dialog);
-        mDialog.setCancelable(true);
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        initializeCarInfoDialog();
+        sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", MODE_PRIVATE);
 
         // osvezi markere na mapi na svakih 10 sekudni
         new Timer().scheduleAtFixedRate(new TimerTask() {
@@ -125,6 +126,20 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             }
         }, 0,10000);
 
+    }
+
+    private void initializeCarInfoDialog() {
+        mDialog.setContentView(R.layout.map_marker_dialog);
+        mDialog.setCancelable(true);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        name = (TextView) mDialog.findViewById(R.id.carName);
+        model = (TextView) mDialog.findViewById(R.id.carModel);
+        carRating = (TextView) mDialog.findViewById(R.id.carRatingDialog);
+        carPlate = (TextView) mDialog.findViewById(R.id.carPlate);
+        carRides = (TextView) mDialog.findViewById(R.id.carRides);
+        carFuel = (TextView) mDialog.findViewById(R.id.carFuel);
+        carDistance = (TextView) mDialog.findViewById(R.id.carDistance);
     }
 
     @Override
@@ -188,7 +203,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
                     //Request location updates:
                     locationManager.requestLocationUpdates(provider, 0, 0, this);
-                }else if(ContextCompat.checkSelfPermission(getContext(),
+                } else if(ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
                     //Request location updates:
@@ -439,14 +454,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     private void getCarDialog(final FragmentActivity activity, final String markerTitle) {
-        //TODO namestiti mozda da povuce iz baze kola u listu prilikom pokretanja, pa onda iz te liste uzivati ove vrednosti a ne stalno pozivati bazu
-        TextView name = (TextView) mDialog.findViewById(R.id.carName);
-        TextView model = (TextView) mDialog.findViewById(R.id.carModel);
-        TextView carRating = (TextView) mDialog.findViewById(R.id.carRatingDialog);
-        TextView carPlate = (TextView) mDialog.findViewById(R.id.carPlate);
-        TextView carRides = (TextView) mDialog.findViewById(R.id.carRides);
-        TextView carFuel = (TextView) mDialog.findViewById(R.id.carFuel);
-        TextView carDistance = (TextView) mDialog.findViewById(R.id.carDistance);
         carPlate.setText(markerTitle);
 
         Car car = new Car();
@@ -507,14 +514,17 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     private void positionCarMarkers(){
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        //TODO VLADA ovde izbaci exception prilikom log out-a, mislim da i dalje iscrtava mapu(jer me nije locirao) a ovaj promeni aktivnost i izadje i onda se dobije "not attaached to a context"
         int radius = sharedPreferences.getInt("radius", 30);
         for(Car car: cars){
-            double distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
-                    car.getLocation().getLatitude(), car.getLocation().getLongitude());
-            if(distance <= radius){
-                addCarMarker(car);
-            }
+            //TODO ovde izbaci exception prilikom ulaska u app, opet mislim da je jer ne moze da me locira pa je home null...
+//            double distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
+//                    car.getLocation().getLatitude(), car.getLocation().getLongitude());
+//            if(distance <= radius){
+//                addCarMarker(car);
+//            }
+            //TODO ovu liniju ispod obrisati, ostavljena je samo da bi app mogla da se pokrene
+            addCarMarker(car);
         }
     }
 

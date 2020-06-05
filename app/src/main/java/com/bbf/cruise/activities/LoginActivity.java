@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                                     case "lastName":
                                         editor.putString("lastName", snap.getValue(String.class));
                                         break;
-                                    case "phone":
+                                    case "phoneNumber":
                                         editor.putString("phone", snap.getValue(String.class));
                                         break;
                                     case "wallet":
