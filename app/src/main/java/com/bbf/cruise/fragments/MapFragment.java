@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,13 +72,12 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private Marker home;
     private GoogleMap map;
     private DatabaseReference databaseReference;
-    private List<Car> cars = new ArrayList<>();
+    private ArrayList<Car> cars = new ArrayList<>();
     private Button centreButton;
-    private Button nearbyButton;
+    private Button nearbyCarsButton;
     private Dialog mDialog;
 
     public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
-
 
     public static MapFragment newInstance() {
 
@@ -204,6 +204,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.map_layout, vg, false);
         centreButton = view.findViewById(R.id.centreButton);
+        nearbyCarsButton = view.findViewById(R.id.mapButton);
         centreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,11 +214,10 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             }
         });
 
-        nearbyButton = view.findViewById(R.id.mapButton);
-        nearbyButton.setOnClickListener(new View.OnClickListener() {
+        nearbyCarsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),NearbyCarsActivity.class);
+                Intent intent = new Intent(getActivity(), NearbyCarsActivity.class);
                 intent.putExtra("cars", (Serializable) cars);
                 intent.putExtra("myLat", home.getPosition().latitude);
                 intent.putExtra("myLng", home.getPosition().longitude);
@@ -543,7 +543,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         locationManager.removeUpdates(this);
     }
 
-    private double calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
+    public static double calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
 
         double latDistance = Math.toRadians(userLat - venueLat);
         double lngDistance = Math.toRadians(userLng - venueLng);

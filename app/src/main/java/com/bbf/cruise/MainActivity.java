@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout mDrawerPane;
     private CharSequence mTitle;
     private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
-    private Button button;
 
     private boolean isMapEnabled = false;
 

@@ -3,6 +3,7 @@ package com.bbf.cruise.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,9 +13,11 @@ import android.widget.ListView;
 import com.bbf.cruise.R;
 import com.bbf.cruise.adapters.NearbyCarsAdapter;
 import com.google.android.gms.maps.model.LatLng;
+import com.bbf.cruise.fragments.MapFragment;
 
 import java.util.ArrayList;
 
+import model.Car;
 import model.CarItem;
 
 public class NearbyCarsActivity extends AppCompatActivity {
@@ -31,10 +34,11 @@ public class NearbyCarsActivity extends AppCompatActivity {
 
         listV = (ListView) findViewById(R.id.nearbycars_listview);
 
-        double myLat = getIntent().getDoubleExtra("myLat", 0);
-        double myLng = getIntent().getDoubleExtra("myLng", 0);
-        cars = (ArrayList<CarItem>) getIntent().getSerializableExtra("cars");
-        //prepareList(cars);
+        ArrayList<Car> carArrayList = (ArrayList<Car>) getIntent().getSerializableExtra("cars");
+        double lat = getIntent().getDoubleExtra("myLat", 0);
+        double lng = getIntent().getDoubleExtra("myLng", 0);
+        prepareList(carArrayList, lat, lng);
+
         NearbyCarsAdapter adapter = new NearbyCarsAdapter(this, cars);
         listV.setAdapter(adapter);
 
@@ -49,7 +53,7 @@ public class NearbyCarsActivity extends AppCompatActivity {
                 intent.putExtra("avatar", item.getAvatar());
                 intent.putExtra("mileage", String.format("%.1f", item.getMilage()));
                 //TODO izracunati distancu izmedju nas i auta i ubaciti u distance_from_me
-                intent.putExtra("distance_from_me", "2.2");
+                intent.putExtra("distance_from_me", item.getDistanceFromMe());
                 intent.putExtra("fuel_distance", Double.toString(item.getFuel_distance()));
                 intent.putExtra("plate", item.getReg_number());
                 intent.putExtra("no_of_rides", item.getNo_of_rides());
@@ -74,12 +78,17 @@ public class NearbyCarsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void prepareList(ArrayList<CarItem> list) {
-        //TODO izvuci iz baze i sta sve treba
-        list.add(new CarItem("BMW", "320d", R.drawable.car_icon, "NS 643SK", 130, 380, 2, 5.0, 2.3f, 2.2f, 2.2f, 2.3f));
-        list.add(new CarItem("Renault", "Clio", R.drawable.car_icon, "NS 274DJ", 4346, 322, 4, 4.5, 2.2f, 2.2f, 2.4f, 2.3f));
-        list.add(new CarItem("Opel", "Astra", R.drawable.car_icon, "NS 486BR", 10774, 263, 3, 4.3,  1.9f, 2.2f, 2.4f, 2.1f));
-
+    private void prepareList(ArrayList<Car> list, double lat, double lng) {
+        SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        int radius = sharedPreferences.getInt("radius", 30);
+        for(Car car: list){
+            double distance = Math.round(MapFragment.calculateDistance(lat, lng, car.getLocation().getLatitude(), car.getLocation().getLongitude()) * 100.0) / 100.0;
+            if(distance <= 30){
+                CarItem carItem = new CarItem(car);
+                carItem.setDistanceFromMe(distance);
+                cars.add(carItem);
+            }
+        }
     }
 
 }
