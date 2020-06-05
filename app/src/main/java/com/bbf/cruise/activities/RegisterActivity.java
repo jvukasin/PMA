@@ -122,8 +122,9 @@ public class RegisterActivity extends AppCompatActivity {
                     editor.putString("lastName", lastName.getText().toString());
                     editor.putString("email", email.getText().toString());
                     editor.putString("phone", phoneNo.getText().toString());
+                    editor.putInt("radius", 30);
                     editor.putFloat("wallet", 0);
-                    editor.putString("distanceMode", "km");
+//                    editor.putString("distanceMode", "km");
                     editor.commit();
 
                     //adding User to database for info
