@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "171849710371-g4ahqqndlejkmo0avsko5snjdskqdvnj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bbf.cruise",
+            "certificate_hash": "02453b0a4e5192b3fe6bae3789f87e8afdcbfc8d"
+          }
+        },
+        {
           "client_id": "171849710371-rfbts4u91s0p2crm50gnmohjreqef1a4.apps.googleusercontent.com",
           "client_type": 3
         }

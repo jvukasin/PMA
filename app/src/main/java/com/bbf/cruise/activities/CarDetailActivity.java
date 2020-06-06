@@ -6,12 +6,17 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
 
 public class CarDetailActivity extends AppCompatActivity {
+
+    Button rentBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +24,15 @@ public class CarDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_car_detail);
         setTitle(R.string.carInfo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        rentBtn = (Button) findViewById(R.id.rentBtn);
+        rentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initQRScanner();
+            }
+        });
 
         initTextFields();
     }
@@ -69,5 +83,10 @@ public class CarDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initQRScanner() {
+        Intent intent = new Intent(CarDetailActivity.this, QRScannerActivity.class);
+        startActivity(intent);
     }
 }
