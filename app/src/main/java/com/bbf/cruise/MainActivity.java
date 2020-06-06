@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bbf.cruise.activities.AboutUsActivity;
+import com.bbf.cruise.activities.FavoriteActivity;
 import com.bbf.cruise.activities.LoginActivity;
 import com.bbf.cruise.activities.NearbyCarsActivity;
 import com.bbf.cruise.activities.RideHistoryActivity;
@@ -205,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareMenu(ArrayList<NavItem> mNavItems ) {
+        mNavItems.add(new NavItem(getString(R.string.favorites), R.drawable.outline_star_border_24));
         mNavItems.add(new NavItem(getString(R.string.ride_history), R.drawable.outline_history_24));
         mNavItems.add(new NavItem(getString(R.string.wallet), R.drawable.outline_account_balance_wallet_24));
         mNavItems.add(new NavItem(getString(R.string.settings), R.drawable.outline_settings_24));
@@ -219,19 +221,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectItemFromDrawer(int position) {
-        if(position == 0){
+        if(position == 0) {
+            Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+            startActivity(intent);
+        } else if(position == 1){
             Intent intent = new Intent(MainActivity.this, RideHistoryActivity.class);
             startActivity(intent);
-        }else if(position == 1){
+        } else if(position == 2){
             Intent intent = new Intent(MainActivity.this, WalletActivity.class);
             startActivity(intent);
-        }else if(position == 2){
+        } else if(position == 3){
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
-        }else if(position == 3){
+        } else if(position == 4){
             Intent intent = new Intent(MainActivity.this, AboutUsActivity.class);
             startActivity(intent);
-        }else{
+        } else {
             Log.e("DRAWER", "Nesto van opsega!");
         }
 

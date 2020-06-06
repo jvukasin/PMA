@@ -234,6 +234,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NearbyCarsActivity.class);
                 intent.putExtra("cars", (Serializable) cars);
+
                 intent.putExtra("myLat", home.getPosition().latitude);
                 intent.putExtra("myLng", home.getPosition().longitude);
                 startActivity(intent);

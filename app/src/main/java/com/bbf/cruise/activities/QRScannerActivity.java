@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -41,6 +42,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},
                     50); }
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Programmatically initialize the scanner view
         mScannerView = new ZXingScannerView(this);
         // Set the scanner view as the content view
@@ -54,6 +56,16 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
         mScannerView.setResultHandler(this);
         // Start camera on resume
         mScannerView.startCamera();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

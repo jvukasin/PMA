@@ -68,7 +68,7 @@ public class EditBalanceDialog extends AppCompatDialogFragment {
                         String firebaseUserUID = auth.getCurrentUser().getUid();
                         rootNode = FirebaseDatabase.getInstance();
                         reference = rootNode.getReference("Users");
-                        reference.child(phone).child("wallet").setValue(balance);
+                        reference.child(firebaseUserUID).child("wallet").setValue(balance);
 
                         TextView walletBalance = getActivity().findViewById(R.id.walletBalance);
                         walletBalance.setText(String.valueOf(balance));

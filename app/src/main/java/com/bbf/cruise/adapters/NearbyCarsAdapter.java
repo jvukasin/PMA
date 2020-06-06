@@ -56,8 +56,7 @@ public class NearbyCarsAdapter extends BaseAdapter {
         icon.setImageResource(R.drawable.car_icon);
         plate.setText(list.get(position).getReg_number());
         fuel.setText(list.get(position).getFuel_distance() + " km");
-        //TODO izracunati razdaljinu nas i auta i to postaviti u distance
-        distance.setText(String.valueOf(list.get(position).getDistanceFromMe()));
+        distance.setText(String.valueOf(list.get(position).getDistanceFromMe()) + " km");
 
         return vi;
     }

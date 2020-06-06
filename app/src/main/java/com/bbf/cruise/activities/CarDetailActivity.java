@@ -70,7 +70,7 @@ public class CarDetailActivity extends AppCompatActivity {
         carTp_rr.setText(String.valueOf(getIntent().getFloatExtra("tp_rr", 0.0f)));
 
         TextView dis_from_me = (TextView) findViewById(R.id.dis_from_me);
-        dis_from_me.setText(String.valueOf(getIntent().getDoubleExtra("distance_from_me", 0)) + " km");
+        dis_from_me.setText(getIntent().getStringExtra("distance_from_me") + " km");
 
     }
 
