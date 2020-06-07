@@ -23,6 +23,10 @@ public class FavoriteCarsAdapter extends BaseAdapter {
         this.list = list;
     }
 
+    public ArrayList<CarItem> getData() {
+        return list;
+    }
+
     @Override
     public int getCount() {
         return list.size();

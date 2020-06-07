@@ -45,6 +45,12 @@ import com.bbf.cruise.tools.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.bbf.cruise.fragments.MapFragment;
 import com.bbf.cruise.tools.FragmentTransition;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -191,6 +197,22 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
         //TODO ubaciti vrednosti izvucene iz baze za korisnika
+
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
+//                    plates.add(carSnapshot.getKey());
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
         no_of_distance.setText("58");
         no_of_rides.setText("4");
         no_of_points.setText("470");

@@ -133,6 +133,7 @@
                                     android:fontFamily="sans-serif-black"
                                     android:textColor="@color/colorMenuText"
                                     android:textSize="18sp"
+                                    android:text="0"
                                     android:layout_marginTop="5dp"
                                     android:layout_marginBottom="4dp"
                                     android:layout_gravity="center_horizontal"/>
@@ -166,6 +167,7 @@
                                     android:layout_height="wrap_content"
                                     android:fontFamily="sans-serif-black"
                                     android:textColor="@color/colorMenuText"
+                                    android:text="0"
                                     android:textSize="18sp"
                                     android:layout_marginTop="5dp"
                                     android:layout_marginBottom="4dp"
@@ -200,6 +202,7 @@
                                     android:fontFamily="sans-serif-black"
                                     android:textColor="@color/colorMenuText"
                                     android:textSize="18sp"
+                                    android:text="0"
                                     android:layout_marginTop="5dp"
                                     android:layout_marginBottom="4dp"
                                     android:layout_gravity="center_horizontal"/>

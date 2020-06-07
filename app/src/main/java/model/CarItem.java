@@ -19,6 +19,10 @@ public class CarItem implements Parcelable {
     private float tp_rr;
     private double distanceFromMe;
 
+    public CarItem() {
+
+    }
+
     public CarItem(Car car){
         this(car.getBrand(), car.getModel(), car.getAvatar(), car.getReg_number(), car.getMileage(), car.getFuel_distance(), car.getNo_of_rides(), car.getRating(),
                 car.getTp_fl(), car.getTp_fr(), car.getTp_rl(), car.getTp_rr(), 0);

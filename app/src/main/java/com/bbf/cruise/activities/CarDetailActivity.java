@@ -22,6 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import model.Car;
+
 public class CarDetailActivity extends AppCompatActivity {
 
     private Button rentBtn;
@@ -29,6 +31,7 @@ public class CarDetailActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private Button favButton;
     private String plateNo;
+    private Car car;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +90,6 @@ public class CarDetailActivity extends AppCompatActivity {
         TextView dis_from_me = (TextView) findViewById(R.id.dis_from_me);
         TextView from_you = (TextView) findViewById(R.id.from_you_str);
         if(getIntent().getStringExtra("distance_from_me") == null) {
-
             dis_from_me.setVisibility(View.INVISIBLE);
             from_you.setVisibility(View.INVISIBLE);
         } else {

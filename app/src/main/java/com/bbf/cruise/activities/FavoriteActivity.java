@@ -54,8 +54,6 @@ public class FavoriteActivity extends AppCompatActivity {
         referencePlates = FirebaseDatabase.getInstance().getReference("Favorites").child(firebaseUser.getUid());
         referenceCars = FirebaseDatabase.getInstance().getReference("cars");
 
-        adapter = new FavoriteCarsAdapter(thisActivity, favoriteCars);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -86,34 +84,35 @@ public class FavoriteActivity extends AppCompatActivity {
         referencePlates.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                plates.clear();
-                for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
-                    plates.add(carSnapshot.getKey());
+                favoriteCars.clear();
+                for(DataSnapshot carSnapshot: dataSnapshot.getChildren()) {
+                    String plts = carSnapshot.getKey();
+                    referenceCars.child(plts).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            CarItem ci = new CarItem(dataSnapshot.getValue(Car.class));
+                            favoriteCars.add(ci);
+                            adapter.notifyDataSetChanged();
+                            if(favoriteCars.isEmpty()) {
+                                emptyListView.setVisibility(View.VISIBLE);
+                            } else {
+                                emptyListView.setVisibility(View.INVISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
+                adapter = new FavoriteCarsAdapter(thisActivity, favoriteCars);
+                listView.setAdapter(adapter);
                 if(plates.isEmpty()) {
                     emptyListView.setVisibility(View.VISIBLE);
                 } else {
                     emptyListView.setVisibility(View.INVISIBLE);
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        referenceCars.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                favoriteCars.clear();
-                for(DataSnapshot snap : dataSnapshot.getChildren()) {
-                    if(plates.contains(snap.getKey())) {
-                        CarItem ci = new CarItem(snap.getValue(Car.class));
-                        favoriteCars.add(ci);
-                    }
-                }
-                listView.setAdapter(adapter);
             }
 
             @Override
@@ -133,4 +132,5 @@ public class FavoriteActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
