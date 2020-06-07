@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,11 @@ import com.bbf.cruise.R;
 import com.bbf.cruise.activities.CarDetailActivity;
 import com.bbf.cruise.activities.NearbyCarsActivity;
 import com.bbf.cruise.dialogs.LocationDialog;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +51,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -80,6 +87,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private TextView name, model, carRating, carPlate, carRides, carFuel, carDistance;
 
     public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
+    private static long UPDATE_INTERVAL = 10 * 1000;
+    private static long FASTEST_INTERVAL = 2000;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationCallback locationCallback;
+    private LocationRequest locationRequest;
 
     public static MapFragment newInstance() {
 
@@ -104,28 +116,22 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         initializeCarInfoDialog();
         sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", MODE_PRIVATE);
 
-        // osvezi markere na mapi na svakih 10 sekudni
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        locationCallback = new LocationCallback() {
             @Override
-            public void run() {
-                databaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        cars.clear();
-                        for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
-                            cars.add(carSnapshot.getValue(Car.class));
-                        }
-                        positionCarMarkers();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+            public void onLocationResult(LocationResult locationResult) {
+                if(locationResult == null){
+                    return;
+                }
+                positionCarMarkers();
             }
-        }, 0,10000);
+        };
 
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
     }
 
     private void initializeCarInfoDialog() {
@@ -194,6 +200,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean wifi = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+
         if (!gps && !wifi) {
             showLocatonDialog();
         } else {
@@ -202,12 +213,12 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
                     //Request location updates:
-                    locationManager.requestLocationUpdates(provider, 0, 0, this);
+                    fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                 } else if(ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
                     //Request location updates:
-                    locationManager.requestLocationUpdates(provider, 0, 0, this);
+                    fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                 }
             }
         }
@@ -315,6 +326,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+
+
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -328,7 +341,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                             == PackageManager.PERMISSION_GRANTED) {
 
                         //Request location updates:
-                        locationManager.requestLocationUpdates(provider, 0, 0, this);
+                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                     }
 
                 } else if (grantResults.length > 0
@@ -341,7 +354,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                             == PackageManager.PERMISSION_GRANTED) {
 
                         //Request location updates:
-                        locationManager.requestLocationUpdates(provider, 0, 0, this);
+                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                     }
 
                 }
@@ -358,7 +371,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        Location location = null;
+        Location myLocation = null;
 
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean wifi = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -371,13 +384,27 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if (ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                    //Request location updates:
-                    location = locationManager.getLastKnownLocation(provider);
+                    //Request myLocation updates:
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if(location != null){
+                                addMarker(location);
+                            }
+                        }
+                    });
                 } else if (ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                    //Request location updates:
-                    location = locationManager.getLastKnownLocation(provider);
+                    //Request myLocation updates:
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if(location != null){
+                                addMarker(location);
+                            }
+                        }
+                    });
                 }
             }
 
@@ -431,9 +458,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 }
             });
 
-            if (location != null) {
-                addMarker(location);
-            }
 
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -514,17 +538,13 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     private void positionCarMarkers(){
-        //TODO VLADA ovde izbaci exception prilikom log out-a, mislim da i dalje iscrtava mapu(jer me nije locirao) a ovaj promeni aktivnost i izadje i onda se dobije "not attaached to a context"
         int radius = sharedPreferences.getInt("radius", 30);
         for(Car car: cars){
-            //TODO ovde izbaci exception prilikom ulaska u app, opet mislim da je jer ne moze da me locira pa je home null...
-//            double distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
-//                    car.getLocation().getLatitude(), car.getLocation().getLongitude());
-//            if(distance <= radius){
-//                addCarMarker(car);
-//            }
-            //TODO ovu liniju ispod obrisati, ostavljena je samo da bi app mogla da se pokrene
-            addCarMarker(car);
+            double distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
+                    car.getLocation().getLatitude(), car.getLocation().getLongitude());
+            if(distance <= radius){
+                addCarMarker(car);
+            }
         }
     }
 
@@ -549,8 +569,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public void onPause() {
         super.onPause();
-
-        locationManager.removeUpdates(this);
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     public static double calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
