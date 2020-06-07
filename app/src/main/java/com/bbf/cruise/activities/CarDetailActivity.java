@@ -89,15 +89,18 @@ public class CarDetailActivity extends AppCompatActivity {
 
         TextView dis_from_me = (TextView) findViewById(R.id.dis_from_me);
         TextView from_you = (TextView) findViewById(R.id.from_you_str);
-        if(getIntent().getStringExtra("distance_from_me") == null) {
-            dis_from_me.setVisibility(View.INVISIBLE);
-            from_you.setVisibility(View.INVISIBLE);
-        } else {
-            dis_from_me.setText(getIntent().getStringExtra("distance_from_me") + " km");
-            dis_from_me.setVisibility(View.VISIBLE);
-            from_you.setVisibility(View.VISIBLE);
-        }
 
+        //TODO srediti
+//        if(getIntent().getStringExtra("distance_from_me") == null) {
+//            dis_from_me.setVisibility(View.INVISIBLE);
+//            from_you.setVisibility(View.INVISIBLE);
+//        } else {
+//            dis_from_me.setText(getIntent().getStringExtra("distance_from_me") + " km");
+//            dis_from_me.setVisibility(View.VISIBLE);
+//            from_you.setVisibility(View.VISIBLE);
+//        }
+
+        dis_from_me.setText(String.valueOf(getIntent().getDoubleExtra("distance_from_me",0)) + " km");
         favButton = (Button) findViewById(R.id.favBtn);
         favButton.setOnClickListener(new View.OnClickListener() {
             @Override

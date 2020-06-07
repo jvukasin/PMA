@@ -80,7 +80,7 @@ public class NearbyCarsActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         int radius = sharedPreferences.getInt("radius", 30);
         for(Car car: list){
-            double distance = Math.round(MapFragment.calculateDistance(lat, lng, car.getLocation().getLatitude(), car.getLocation().getLongitude()) * 100.0) / 100.0;
+            double distance = Math.round(MapFragment.calculateDistance(lat, lng, car.getLocation().getLatitude(), car.getLocation().getLongitude()) * 10.0) / 10.0;
             if(distance <= 30){
                 CarItem carItem = new CarItem(car);
                 carItem.setDistanceFromMe(distance);

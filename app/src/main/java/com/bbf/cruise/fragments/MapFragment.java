@@ -132,6 +132,23 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(UPDATE_INTERVAL);
         locationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                cars.clear();
+                for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
+                    cars.add(carSnapshot.getValue(Car.class));
+                }
+                //positionCarMarkers();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void initializeCarInfoDialog() {
@@ -261,9 +278,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
      * */
     @Override
     public void onLocationChanged(Location location) {
-        if (map != null) {
-            addMarker(location);
-        }
+//        if (map != null) {
+//            addMarker(location);
+//        }
     }
 
     @Override
@@ -391,6 +408,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                         public void onSuccess(Location location) {
                             if(location != null){
                                 addMarker(location);
+                                positionCarMarkers();
                             }
                         }
                     });
@@ -403,6 +421,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                         public void onSuccess(Location location) {
                             if(location != null){
                                 addMarker(location);
+                                positionCarMarkers();
                             }
                         }
                     });
@@ -417,8 +436,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                     map.addMarker(new MarkerOptions()
                             .title("YOUR_POSITION")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                            .position(latLng));
-                    home.setFlat(true);
+                            .position(latLng))
+                            .setFlat(true);
 
                     CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(latLng).zoom(14).build();
@@ -460,21 +479,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             });
 
 
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    cars.clear();
-                    for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
-                        cars.add(carSnapshot.getValue(Car.class));
-                    }
-                    positionCarMarkers();
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
         }
     }
 
@@ -493,8 +498,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         carRating.setText(Double.toString(car.getRating()));
         carRides.setText(Integer.toString(car.getNo_of_rides()));
         carFuel.setText(Integer.toString(car.getFuel_distance()).concat(" km"));
-        final double dist = calculateDistance(home.getPosition().latitude, home.getPosition().longitude, car.getLocation().getLatitude(), car.getLocation().getLongitude());
-        carDistance.setText(String.format("%.2f", dist).concat(" km"));
+        final double dist = Math.round((calculateDistance(home.getPosition().latitude, home.getPosition().longitude, car.getLocation().getLatitude(), car.getLocation().getLongitude()) * 10.0)) / 10.0;
+        carDistance.setText(String.valueOf(dist).concat(" km"));
 
         Button viewBtn = (Button) mDialog.findViewById(R.id.markerViewBtn);
         final Car finalCar = car;
@@ -504,7 +509,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 Intent intent = new Intent(activity, CarDetailActivity.class);
                 intent.putExtra("name", finalCar.getBrand() + " " + finalCar.getModel());
                 intent.putExtra("mileage", String.format("%.1f", finalCar.getMileage()));
-                intent.putExtra("distance_from_me", String.format("%.2f", dist));
+                intent.putExtra("distance_from_me", dist);
                 intent.putExtra("fuel_distance", Integer.toString(finalCar.getFuel_distance()));
                 intent.putExtra("plate", markerTitle);
                 intent.putExtra("no_of_rides", finalCar.getNo_of_rides());
