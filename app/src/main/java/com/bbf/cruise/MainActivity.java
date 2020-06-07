@@ -180,9 +180,9 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter locationChangedFilter = new IntentFilter(LOCATION_DISABLED_ACTION);
         this.registerReceiver(locationDisabledReceiver, locationChangedFilter);
 
-        TextView no_of_distance = (TextView) findViewById(R.id.no_of_distance);
-        TextView no_of_rides = (TextView) findViewById(R.id.no_of_rides);
-        TextView no_of_points = (TextView) findViewById(R.id.no_of_points);
+        final TextView no_of_distance = (TextView) findViewById(R.id.no_of_distance);
+        final TextView no_of_rides = (TextView) findViewById(R.id.no_of_rides);
+        final TextView no_of_points = (TextView) findViewById(R.id.no_of_points);
 
         TextView usr = (TextView) findViewById(R.id.userName);
         usr.setText(sharedPreferences.getString("firstName", "User"));
@@ -196,26 +196,31 @@ public class MainActivity extends AppCompatActivity {
 //            disMode.setText("Kilometers");
 //        }
 
-        //TODO ubaciti vrednosti izvucene iz baze za korisnika
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot carSnapshot: dataSnapshot.getChildren()) {
+                    switch (carSnapshot.getKey()) {
+                        case "bonusPoints":
+                            no_of_points.setText(Integer.toString(carSnapshot.getValue(Integer.class)));
+                            break;
+                        case "totalDistance":
+                            no_of_distance.setText(Integer.toString(carSnapshot.getValue(Integer.class)));
+                            break;
+                        case "totalRides":
+                            no_of_rides.setText(Integer.toString(carSnapshot.getValue(Integer.class)));
+                            break;
+                    }
+                }
+            }
 
-//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
-//                    plates.add(carSnapshot.getKey());
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-        no_of_distance.setText("58");
-        no_of_rides.setText("4");
-        no_of_points.setText("470");
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
