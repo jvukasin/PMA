@@ -261,9 +261,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
      * */
     @Override
     public void onLocationChanged(Location location) {
-        if (map != null) {
-            addMarker(location);
-        }
+//        if (map != null) {
+//            addMarker(location);
+//        }
     }
 
     @Override
