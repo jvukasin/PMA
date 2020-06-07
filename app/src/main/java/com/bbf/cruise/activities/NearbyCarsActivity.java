@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.adapters.NearbyCarsAdapter;
-import com.google.android.gms.maps.model.LatLng;
 import com.bbf.cruise.fragments.MapFragment;
 
 import java.util.ArrayList;
@@ -51,8 +50,7 @@ public class NearbyCarsActivity extends AppCompatActivity {
                 Intent intent = new Intent(NearbyCarsActivity.this, CarDetailActivity.class);
                 intent.putExtra("name", item.getCarName());
                 intent.putExtra("avatar", item.getAvatar());
-                intent.putExtra("mileage", String.format("%.1f", item.getMilage()));
-                //TODO izracunati distancu izmedju nas i auta i ubaciti u distance_from_me
+                intent.putExtra("mileage", String.format("%.1f", item.getMileage()));
                 intent.putExtra("distance_from_me", item.getDistanceFromMe());
                 intent.putExtra("fuel_distance", Double.toString(item.getFuel_distance()));
                 intent.putExtra("plate", item.getReg_number());

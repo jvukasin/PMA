@@ -1,5 +1,6 @@
 package com.bbf.cruise.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -13,10 +14,21 @@ import android.widget.TextView;
 
 import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class CarDetailActivity extends AppCompatActivity {
 
-    Button rentBtn;
+    private Button rentBtn;
+    private DatabaseReference reference;
+    private FirebaseUser firebaseUser;
+    private Button favButton;
+    private String plateNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +46,9 @@ public class CarDetailActivity extends AppCompatActivity {
             }
         });
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        plateNo = getIntent().getStringExtra("plate");
+
         initTextFields();
     }
 
@@ -43,7 +58,7 @@ public class CarDetailActivity extends AppCompatActivity {
         carName.setText(getIntent().getStringExtra("name"));
 
         TextView carPlate = (TextView) findViewById(R.id.carPlate);
-        carPlate.setText(getIntent().getStringExtra("plate"));
+        carPlate.setText(plateNo);
 
         TextView carRating = (TextView) findViewById(R.id.carRating);
         carRating.setText(String.valueOf(getIntent().getDoubleExtra("rating", 0.0)));
@@ -70,8 +85,54 @@ public class CarDetailActivity extends AppCompatActivity {
         carTp_rr.setText(String.valueOf(getIntent().getFloatExtra("tp_rr", 0.0f)));
 
         TextView dis_from_me = (TextView) findViewById(R.id.dis_from_me);
-        dis_from_me.setText(getIntent().getStringExtra("distance_from_me") + " km");
+        TextView from_you = (TextView) findViewById(R.id.from_you_str);
+        if(getIntent().getStringExtra("distance_from_me") == null) {
 
+            dis_from_me.setVisibility(View.INVISIBLE);
+            from_you.setVisibility(View.INVISIBLE);
+        } else {
+            dis_from_me.setText(getIntent().getStringExtra("distance_from_me") + " km");
+            dis_from_me.setVisibility(View.VISIBLE);
+            from_you.setVisibility(View.VISIBLE);
+        }
+
+        favButton = (Button) findViewById(R.id.favBtn);
+        favButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(favButton.getTag().equals("add")) {
+                    FirebaseDatabase.getInstance().getReference().child("Favorites").child(firebaseUser.getUid()).child(plateNo).setValue(true);
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("Favorites").child(firebaseUser.getUid()).child(plateNo).removeValue();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        reference = FirebaseDatabase.getInstance().getReference().child("Favorites").child(firebaseUser.getUid());
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(plateNo).exists()) {
+                    favButton.setBackgroundResource(R.drawable.ic_favorite_red);
+                    favButton.setTag("added");
+                } else {
+                    favButton.setBackgroundResource(R.drawable.ic_favorite_gray);
+                    favButton.setTag("add");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

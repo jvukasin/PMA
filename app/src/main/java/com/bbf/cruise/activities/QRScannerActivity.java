@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bbf.cruise.CruiseApplication;
+import com.bbf.cruise.R;
 import com.bbf.cruise.constants.FirebasePaths;
 import com.bbf.cruise.dialogs.ConfirmRentDialog;
 import com.bbf.cruise.dialogs.EditBalanceDialog;
@@ -46,6 +47,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
         // Programmatically initialize the scanner view
         mScannerView = new ZXingScannerView(this);
         // Set the scanner view as the content view
+        setTitle(R.string.qrScan);
         setContentView(mScannerView);
     }
 

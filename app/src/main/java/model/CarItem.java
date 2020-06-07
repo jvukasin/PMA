@@ -9,7 +9,7 @@ public class CarItem implements Parcelable {
     private String model;
     private int avatar;
     private String reg_number;
-    private double milage;
+    private double mileage;
     private int fuel_distance;
     private int no_of_rides;
     private double rating;
@@ -29,7 +29,7 @@ public class CarItem implements Parcelable {
         model = in.readString();
         avatar = in.readInt();
         reg_number = in.readString();
-        milage = in.readDouble();
+        mileage = in.readDouble();
         fuel_distance = in.readInt();
         no_of_rides = in.readInt();
         rating = in.readDouble();
@@ -40,12 +40,12 @@ public class CarItem implements Parcelable {
         distanceFromMe = in.readDouble();
     }
 
-    public CarItem(String brand, String model, int avatar, String reg_number, double milage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, double distanceFromMe) {
+    public CarItem(String brand, String model, int avatar, String reg_number, double mileage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, double distanceFromMe) {
         this.brand = brand;
         this.model = model;
         this.avatar = avatar;
         this.reg_number = reg_number;
-        this.milage = milage;
+        this.mileage = mileage;
         this.fuel_distance = fuel_distance;
         this.no_of_rides = no_of_rides;
         this.rating = rating;
@@ -112,12 +112,12 @@ public class CarItem implements Parcelable {
         this.reg_number = reg_number;
     }
 
-    public double getMilage() {
-        return milage;
+    public double getMileage() {
+        return mileage;
     }
 
-    public void setMilage(double milage) {
-        this.milage = milage;
+    public void setMileage(double mileage) {
+        this.mileage = mileage;
     }
 
     public double getFuel_distance() {
@@ -185,7 +185,7 @@ public class CarItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(brand + " " + model);
         dest.writeString(reg_number);
-        dest.writeDouble(milage);
+        dest.writeDouble(mileage);
         dest.writeInt(fuel_distance);
         dest.writeInt(no_of_rides);
         dest.writeDouble(rating);
