@@ -54,7 +54,6 @@ public class EditBalanceDialog extends AppCompatDialogFragment {
                         }
                         addFundsEditText = view.findViewById(R.id.addFundsEdit);
                         sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-                        String phone = sharedPreferences.getString("phone", "");
                         float balance = sharedPreferences.getFloat("wallet", 0);
                         String funds = addFundsEditText.getText().toString();
                         float addedFunds = Float.parseFloat(funds);
