@@ -9,7 +9,8 @@ import android.os.Build;
 public class CruiseApplication extends Application {
 
     private static Context context;
-    public static final String CHANNEL_ID = "RES_SERVICE_CH";
+    public static final String CHANNEL_ID_LOW = "RES_SERVICE_CH_LOW";
+    public static final String CHANNEL_ID_HIGH = "RES_SERVICE_CH_HIGH";
 
     public void onCreate() {
         super.onCreate();
@@ -25,11 +26,15 @@ public class CruiseApplication extends Application {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
 
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Reservation service channel", NotificationManager.IMPORTANCE_LOW);
-            channel.setDescription("Notifications for reservation service.");
+            NotificationChannel channelLow = new NotificationChannel(CHANNEL_ID_LOW, "Reservation service channel", NotificationManager.IMPORTANCE_LOW);
+            channelLow.setDescription("Notifications for reservation service.");
+
+            NotificationChannel channelHigh = new NotificationChannel(CHANNEL_ID_HIGH, "Reservation service channel", NotificationManager.IMPORTANCE_HIGH);
+            channelHigh.setDescription("Notifications for reservation service.");
 
             NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+            manager.createNotificationChannel(channelLow);
+            manager.createNotificationChannel(channelHigh);
         }
 
     }

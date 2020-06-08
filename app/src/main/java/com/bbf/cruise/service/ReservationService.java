@@ -24,7 +24,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.bbf.cruise.CruiseApplication.CHANNEL_ID;
+import static com.bbf.cruise.CruiseApplication.CHANNEL_ID_HIGH;
+import static com.bbf.cruise.CruiseApplication.CHANNEL_ID_LOW;
 
 public class ReservationService extends Service {
 
@@ -37,12 +38,13 @@ public class ReservationService extends Service {
     public void onCreate() {
 
     }
-
+    //TODO dodati da salje notifikaciju kad servis prestane da radi - kad istekne rez
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         plates = intent.getStringExtra("plates");
         if(intent.getAction().equals("REMOVE_FOREGROUND")){
+            reservationFailedNotification();
             FirebaseDatabase.getInstance().getReference().child("cars").child(plates).child("occupied").setValue(false);
             FirebaseDatabase.getInstance().getReference().child("Reservations").child(plates).removeValue();
             stopForeground(true);
@@ -65,6 +67,7 @@ public class ReservationService extends Service {
                     if(minutes == 0) {
                         seconds = 0;
                         timer.cancel();
+                        reservationFailedNotification();
                         FirebaseDatabase.getInstance().getReference().child("cars").child(plates).child("occupied").setValue(false);
                         FirebaseDatabase.getInstance().getReference().child("Reservations").child(plates).removeValue();
                         stopForeground(true);
@@ -84,10 +87,11 @@ public class ReservationService extends Service {
         }, 1000,1000);
     }
 
+    //TODO proveriti kako moze iz notifikacije da se vrati na prethdono stanje aktivnosti
     private void notificationUpdate(String timeLeft){
         Intent notificationIntent = new Intent(this, CarDetailActivity.class);
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        final Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+        final Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID_LOW)
                 .setContentTitle("Reservation " + plates)
                 .setContentText("Time Remaing : " + timeLeft)
                 .setContentIntent(pendingIntent)
@@ -95,6 +99,20 @@ public class ReservationService extends Service {
                 .setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
                 .build();
         startForeground(1, notification);
+    }
+
+    private void reservationFailedNotification(){
+        Intent notificationIntent = new Intent();
+        final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        final Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID_HIGH)
+                .setContentTitle("Reservation " + plates)
+                .setContentText("Reservation failed.")
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_logo)
+                .setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                .build();
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(2, notification);
     }
 
     @Nullable
