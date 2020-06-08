@@ -1,16 +1,20 @@
 package com.bbf.cruise.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,7 +56,6 @@ public class CarDetailActivity extends AppCompatActivity {
         setTitle(R.string.carInfo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         reserveBtn = (Button) findViewById(R.id.reserveBtn);
         rentBtn = (Button) findViewById(R.id.rentBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
@@ -84,7 +87,6 @@ public class CarDetailActivity extends AppCompatActivity {
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("Counter");
-
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -93,25 +95,23 @@ public class CarDetailActivity extends AppCompatActivity {
                 if(counter.getText().equals("00:00")) {
                     cancelBtn.setVisibility(View.INVISIBLE);
                     reserveBtn.setVisibility(View.VISIBLE);
-                    FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("occupied").setValue(false);
-                    FirebaseDatabase.getInstance().getReference().child("Reservations").child(plateNo).removeValue();
                 }
             }
         };
-
         registerReceiver(broadcastReceiver, intentFilter);
+        reservationService = new ReservationService();
     }
 
     private void cancelReservation() {
         counter.setVisibility(View.INVISIBLE);
         cancelBtn.setVisibility(View.INVISIBLE);
         reserveBtn.setVisibility(View.VISIBLE);
-        FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("occupied").setValue(false);
-        FirebaseDatabase.getInstance().getReference().child("Reservations").child(plateNo).removeValue();
-
-        stopService(new Intent(this, reservationService.getClass()));
-
+        Intent intent = new Intent(this, reservationService.getClass());
+        intent.putExtra("plates", plateNo);
+        intent.setAction("REMOVE_FOREGROUND");
+        startService(intent);
     }
+
     private void reserveCar() {
         //TODO PROVERITI DIJALOG ZA PERMISIJU
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.FOREGROUND_SERVICE}, PackageManager.PERMISSION_GRANTED);
@@ -131,10 +131,11 @@ public class CarDetailActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         reference.child("time").setValue(df.format(now.getTime()));
 
-        reservationService = new ReservationService();
-        Intent i = new Intent(this, reservationService.getClass());
-        startService(i);
 
+        Intent i = new Intent(this, reservationService.getClass());
+        i.putExtra("plates", plateNo);
+        i.setAction("START_SERVICE");
+        ContextCompat.startForegroundService(this,i);
     }
 
     @SuppressLint("SetTextI18n")
@@ -220,6 +221,21 @@ public class CarDetailActivity extends AppCompatActivity {
 
             }
         });
+
+        if(isServiceRunning(reservationService.getClass())){
+            dis_from_me.setVisibility(View.INVISIBLE);
+            from_you.setVisibility(View.INVISIBLE);
+            reserveBtn.setVisibility(View.INVISIBLE);
+            counter.setVisibility(View.VISIBLE);
+            cancelBtn.setVisibility(View.VISIBLE);
+        }else{
+            dis_from_me.setVisibility(View.VISIBLE);
+            from_you.setVisibility(View.VISIBLE);
+            reserveBtn.setVisibility(View.VISIBLE);
+            counter.setVisibility(View.INVISIBLE);
+            cancelBtn.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     @Override
@@ -237,6 +253,17 @@ public class CarDetailActivity extends AppCompatActivity {
         Intent intent = new Intent(CarDetailActivity.this, QRScannerActivity.class);
         startActivity(intent);
     }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     protected void onDestroy() {

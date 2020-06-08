@@ -18,12 +18,13 @@ public class Car implements Serializable {
     private float tp_rl;
     private float tp_rr;
     private LocationObject location;
+    private boolean occupied;
 
     public Car(){
 
     }
 
-    public Car(String brand, String model, int avatar, String reg_number, double mileage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, LocationObject location) {
+    public Car(String brand, String model, int avatar, String reg_number, double mileage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, LocationObject location, boolean occupied) {
         this.brand = brand;
         this.model = model;
         this.avatar = avatar;
@@ -37,14 +38,7 @@ public class Car implements Serializable {
         this.tp_rl = tp_rl;
         this.tp_rr = tp_rr;
         this.location = location;
-    }
-
-    public LocationObject getLocation() {
-        return location;
-    }
-
-    public void setLocation(LocationObject location) {
-        this.location = location;
+        this.occupied = occupied;
     }
 
     public String getBrand() {
@@ -141,5 +135,21 @@ public class Car implements Serializable {
 
     public void setTp_rr(float tp_rr) {
         this.tp_rr = tp_rr;
+    }
+
+    public LocationObject getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationObject location) {
+        this.location = location;
+    }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
     }
 }

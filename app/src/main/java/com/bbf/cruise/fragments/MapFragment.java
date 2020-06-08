@@ -93,7 +93,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private TextView name, model, carRating, carPlate, carRides, carFuel, carDistance;
 
     public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
-    private static long UPDATE_INTERVAL = 10 * 1000;
+    private static long UPDATE_INTERVAL = 1000;
     private static long FASTEST_INTERVAL = 2000;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
@@ -101,7 +101,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     private DatabaseReference referencePlates;
     private DatabaseReference referenceCars;
+    private DatabaseReference referenceReservations;
     private ArrayList<Car> favoriteCars = new ArrayList<>();
+    private static boolean result = false;
 
     public static MapFragment newInstance() {
 
@@ -125,6 +127,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         referencePlates = FirebaseDatabase.getInstance().getReference("Favorites").child(firebaseUser.getUid());
         referenceCars = FirebaseDatabase.getInstance().getReference("cars");
+        referenceReservations = FirebaseDatabase.getInstance().getReference("Reservations");
 
         mDialog = new Dialog(getActivity());
         initializeCarInfoDialog();
@@ -138,11 +141,23 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if(locationResult == null){
                     return;
                 }
-                if(heartButton.getVisibility() != View.INVISIBLE){
-                    positionCarMarkers();
-                }else{
-                    positionFavorites();
-                }
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        cars.clear();
+                        for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
+                            cars.add(carSnapshot.getValue(Car.class));
+                        }
+                        if(heartButton.getVisibility() != View.INVISIBLE){
+                            positionCarMarkers();
+                        }else{
+                            positionFavorites();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
             }
         };
 
@@ -158,9 +173,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
                     cars.add(carSnapshot.getValue(Car.class));
                 }
-                //positionCarMarkers();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -308,8 +321,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NearbyCarsActivity.class);
-                intent.putExtra("cars", (Serializable) cars);
-
                 intent.putExtra("myLat", home.getPosition().latitude);
                 intent.putExtra("myLng", home.getPosition().longitude);
                 startActivity(intent);
@@ -646,23 +657,47 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     private void positionCarMarkers(){
+        //TODO provera da li je zauzet i da li sam ga ja rez
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         int radius = sharedPreferences.getInt("radius", 30);
         for(Car car: cars){
-            double distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
-                    car.getLocation().getLatitude(), car.getLocation().getLongitude());
-            if(distance <= radius){
-                addCarMarker(car);
+            if(car.isOccupied() && MapFragment.isReservedByMe(referenceReservations,car.getReg_number(), firebaseUser)){
+                double distance = Math.round(MapFragment.calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
+                        car.getLocation().getLatitude(), car.getLocation().getLongitude()) * 10.0) / 10.0;
+                if(distance <= radius){
+                    addCarMarker(car);
+                }
+            }else if(car.isOccupied() && !MapFragment.isReservedByMe(referenceReservations, car.getReg_number(), firebaseUser)){
+                continue;
+            }else{
+                double distance = Math.round(MapFragment.calculateDistance(home.getPosition().latitude, home.getPosition().longitude, car.getLocation().getLatitude(),
+                        car.getLocation().getLongitude()) * 10.0) / 10.0;
+                if(distance <= radius){
+                    addCarMarker(car);
+                }
             }
         }
     }
 
     private void positionFavorites(){
+        //TODO provera da li je zauzet i da li sam ga ja rez
         int radius = sharedPreferences.getInt("radius", 30);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         for(Car car: favoriteCars){
-            double distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
-                    car.getLocation().getLatitude(), car.getLocation().getLongitude());
-            if(distance <= radius){
-                addCarMarker(car);
+            if(car.isOccupied() && isReservedByMe(referenceReservations,car.getReg_number(), firebaseUser)){
+                double distance = Math.round(MapFragment.calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
+                        car.getLocation().getLatitude(), car.getLocation().getLongitude()) * 10.0) / 10.0;
+                if(distance <= radius){
+                    addCarMarker(car);
+                }
+            }else if(car.isOccupied() && !isReservedByMe(referenceReservations, car.getReg_number(), firebaseUser)){
+                continue;
+            }else{
+                double distance = Math.round(MapFragment.calculateDistance(home.getPosition().latitude, home.getPosition().longitude, car.getLocation().getLatitude(),
+                        car.getLocation().getLongitude()) * 10.0) / 10.0;
+                if(distance <= radius){
+                    addCarMarker(car);
+                }
             }
         }
     }
@@ -707,4 +742,24 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         return (AVERAGE_RADIUS_OF_EARTH * c);
 
     }
+
+    public static boolean isReservedByMe(DatabaseReference referenceReservations, String plates, final FirebaseUser firebaseUser){
+        referenceReservations = referenceReservations.child(plates).child("user");
+        referenceReservations.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String id = dataSnapshot.getValue(String.class);
+                String fId = firebaseUser.getUid();
+                if(firebaseUser.getUid().equals(dataSnapshot.getValue(String.class))){
+                    result = true;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return result;
+    }
+
 }
