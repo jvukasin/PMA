@@ -28,10 +28,8 @@ import static com.bbf.cruise.CruiseApplication.CHANNEL_ID;
 
 public class ReservationService extends Service {
 
-    private long timeRemainingMilis = 10000; //30min = 1800000ms
     private long minutes = 00; //29
     private long seconds = 30; //60
-    private CountDownTimer countDownTimer;
     private Timer timer;
     private String plates;
 
