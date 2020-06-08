@@ -358,6 +358,25 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tyre_pressure"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/counter"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="@color/colorAccent"
+                android:fontFamily="sans-serif-black"
+                android:textSize="30sp"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/howmuchkm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -415,6 +434,17 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/roundedbutton"
                 android:text="Reserve"/>
+
+            <Button
+                android:id="@+id/cancelBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/dummy"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:visibility="gone"
+                android:background="@drawable/roundedbutton"
+                android:text="@string/cancel"/>
 
             <Button
                 android:id="@+id/rentBtn"
