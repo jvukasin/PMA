@@ -2,18 +2,26 @@ package com.bbf.cruise.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
+import com.bbf.cruise.service.ReservationService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,16 +30,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import model.Car;
 
 public class CarDetailActivity extends AppCompatActivity {
 
-    private Button rentBtn;
+    private Button rentBtn, reserveBtn, favButton, cancelBtn;
     private DatabaseReference reference;
     private FirebaseUser firebaseUser;
-    private Button favButton;
     private String plateNo;
-    private Car car;
+    private TextView dis_from_me, from_you, counter;
+    private BroadcastReceiver broadcastReceiver;
+    private ReservationService reservationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +53,88 @@ public class CarDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+        reserveBtn = (Button) findViewById(R.id.reserveBtn);
         rentBtn = (Button) findViewById(R.id.rentBtn);
+        cancelBtn = (Button) findViewById(R.id.cancelBtn);
+        initTextFields();
+
         rentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 initQRScanner();
             }
         });
+        reserveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reserveCar();
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelReservation();
+            }
+        });
+
+        counter = (TextView) findViewById(R.id.counter);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         plateNo = getIntent().getStringExtra("plate");
 
-        initTextFields();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("Counter");
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String timer = intent.getStringExtra("timer");
+                counter.setText(timer);
+                if(counter.getText().equals("00:00")) {
+                    cancelBtn.setVisibility(View.INVISIBLE);
+                    reserveBtn.setVisibility(View.VISIBLE);
+                    FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("occupied").setValue(false);
+                    FirebaseDatabase.getInstance().getReference().child("Reservations").child(plateNo).removeValue();
+                }
+            }
+        };
+
+        registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    private void cancelReservation() {
+        counter.setVisibility(View.INVISIBLE);
+        cancelBtn.setVisibility(View.INVISIBLE);
+        reserveBtn.setVisibility(View.VISIBLE);
+        FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("occupied").setValue(false);
+        FirebaseDatabase.getInstance().getReference().child("Reservations").child(plateNo).removeValue();
+
+        stopService(new Intent(this, reservationService.getClass()));
+
+    }
+    private void reserveCar() {
+        //TODO PROVERITI DIJALOG ZA PERMISIJU
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.FOREGROUND_SERVICE}, PackageManager.PERMISSION_GRANTED);
+
+        dis_from_me.setVisibility(View.INVISIBLE);
+        from_you.setVisibility(View.INVISIBLE);
+        reserveBtn.setVisibility(View.INVISIBLE);
+        counter.setText("00:30"); //TODO promeniti u 30:00
+        counter.setVisibility(View.VISIBLE);
+        cancelBtn.setVisibility(View.VISIBLE);
+
+        FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("occupied").setValue(true);
+        reference = FirebaseDatabase.getInstance().getReference().child("Reservations").child(plateNo);
+        reference.child("user").setValue(firebaseUser.getUid());
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.MINUTE, 30);
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        reference.child("time").setValue(df.format(now.getTime()));
+
+        reservationService = new ReservationService();
+        Intent i = new Intent(this, reservationService.getClass());
+        startService(i);
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -87,16 +169,18 @@ public class CarDetailActivity extends AppCompatActivity {
         TextView carTp_rr = (TextView) findViewById(R.id.carTp_rr);
         carTp_rr.setText(String.valueOf(getIntent().getFloatExtra("tp_rr", 0.0f)));
 
-        TextView dis_from_me = (TextView) findViewById(R.id.dis_from_me);
-        TextView from_you = (TextView) findViewById(R.id.from_you_str);
+        dis_from_me = (TextView) findViewById(R.id.dis_from_me);
+        from_you = (TextView) findViewById(R.id.from_you_str);
 
         if(getIntent().getDoubleExtra("distance_from_me",0) == 0) {
             dis_from_me.setVisibility(View.INVISIBLE);
             from_you.setVisibility(View.INVISIBLE);
+            reserveBtn.setVisibility(View.INVISIBLE);
         } else {
             dis_from_me.setText(String.valueOf(getIntent().getDoubleExtra("distance_from_me",0)) + " km");
             dis_from_me.setVisibility(View.VISIBLE);
             from_you.setVisibility(View.VISIBLE);
+            reserveBtn.setVisibility(View.VISIBLE);
         }
 
         favButton = (Button) findViewById(R.id.favBtn);
@@ -152,5 +236,11 @@ public class CarDetailActivity extends AppCompatActivity {
     private void initQRScanner() {
         Intent intent = new Intent(CarDetailActivity.this, QRScannerActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
     }
 }

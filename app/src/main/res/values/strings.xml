@@ -55,6 +55,9 @@
     <string name="favorites">Favorites</string>
     <string name="qrScan">QR Scan</string>
     <string name="mileage">Mileage:</string>
+    <string name="rent">Rent</string>
+    <string name="reserve">Reserve</string>
+    <string name="cancel">Cancel</string>
     <string name="favorite_empty">No cars added to favorites</string>
 
     <string-array name="pref_distance_entries">
