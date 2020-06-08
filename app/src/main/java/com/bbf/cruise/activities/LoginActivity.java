@@ -3,6 +3,7 @@ package com.bbf.cruise.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
 import com.bbf.cruise.dialogs.LoadingDialog;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -44,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private User usr;
     SharedPreferences sharedPreferences;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        activity = this;
 
         log_in = (Button) findViewById(R.id.log_in);
         log_in.setOnClickListener(new View.OnClickListener() {
@@ -60,8 +64,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String str_email = email.getText().toString();
                 String str_pass = password.getText().toString();
-                if(!checkFields(str_email, str_pass)) {
-                    loginUser(str_email, str_pass);
+                if(NetworkUtil.isConnected(activity)) {
+                    if(!checkFields(str_email, str_pass)) {
+                        loginUser(str_email, str_pass);
+                    }
                 }
             }
         });

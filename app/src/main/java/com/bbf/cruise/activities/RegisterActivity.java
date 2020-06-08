@@ -3,6 +3,7 @@ package com.bbf.cruise.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
 import com.bbf.cruise.dialogs.LoadingDialog;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -30,6 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button signup;
     private TextInputEditText firstName, lastName, email, password, repPassword, phoneNo;
     private FirebaseAuth auth;
+    private Activity activity;
 
     SharedPreferences sharedPreferences;
     FirebaseDatabase rootNode;
@@ -42,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
 
+        activity = this;
         firstName = (TextInputEditText) findViewById(R.id.register_firstname);
         lastName = (TextInputEditText) findViewById(R.id.register_lastname);
         email = (TextInputEditText) findViewById(R.id.register_email);
@@ -65,8 +69,10 @@ public class RegisterActivity extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!checkFields()) {
-                    registerUser();
+                if(NetworkUtil.isConnected(activity)) {
+                    if (!checkFields()) {
+                        registerUser();
+                    }
                 }
             }
         });

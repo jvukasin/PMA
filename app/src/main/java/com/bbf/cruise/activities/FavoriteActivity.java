@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.adapters.FavoriteCarsAdapter;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,9 +51,7 @@ public class FavoriteActivity extends AppCompatActivity {
         thisActivity = this;
         listView = (ListView) findViewById(R.id.favorite_list);
         emptyListView = (TextView) findViewById(R.id.favorite_list_empty);
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        referencePlates = FirebaseDatabase.getInstance().getReference("Favorites").child(firebaseUser.getUid());
-        referenceCars = FirebaseDatabase.getInstance().getReference("cars");
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -81,45 +80,52 @@ public class FavoriteActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        referencePlates.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                favoriteCars.clear();
-                for(DataSnapshot carSnapshot: dataSnapshot.getChildren()) {
-                    String plts = carSnapshot.getKey();
-                    referenceCars.child(plts).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            CarItem ci = new CarItem(dataSnapshot.getValue(Car.class));
-                            favoriteCars.add(ci);
-                            adapter.notifyDataSetChanged();
-                            if(favoriteCars.isEmpty()) {
-                                emptyListView.setVisibility(View.VISIBLE);
-                            } else {
-                                emptyListView.setVisibility(View.INVISIBLE);
+        if(NetworkUtil.isConnected(this)) {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            referencePlates = FirebaseDatabase.getInstance().getReference("Favorites").child(firebaseUser.getUid());
+            referenceCars = FirebaseDatabase.getInstance().getReference("cars");
+
+            referencePlates.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    favoriteCars.clear();
+                    for(DataSnapshot carSnapshot: dataSnapshot.getChildren()) {
+                        String plts = carSnapshot.getKey();
+                        referenceCars.child(plts).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                CarItem ci = new CarItem(dataSnapshot.getValue(Car.class));
+                                favoriteCars.add(ci);
+                                adapter.notifyDataSetChanged();
+                                if(favoriteCars.isEmpty()) {
+                                    emptyListView.setVisibility(View.VISIBLE);
+                                } else {
+                                    emptyListView.setVisibility(View.INVISIBLE);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
+                    adapter = new FavoriteCarsAdapter(thisActivity, favoriteCars);
+                    listView.setAdapter(adapter);
+                    if(plates.isEmpty()) {
+                        emptyListView.setVisibility(View.VISIBLE);
+                    } else {
+                        emptyListView.setVisibility(View.INVISIBLE);
+                    }
                 }
-                adapter = new FavoriteCarsAdapter(thisActivity, favoriteCars);
-                listView.setAdapter(adapter);
-                if(plates.isEmpty()) {
-                    emptyListView.setVisibility(View.VISIBLE);
-                } else {
-                    emptyListView.setVisibility(View.INVISIBLE);
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
                 }
-            }
+            });
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override

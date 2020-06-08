@@ -3,6 +3,7 @@ package com.bbf.cruise.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.dialogs.LoadingDialog;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -27,6 +29,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private TextInputEditText currentPass, newPass, repeatPass;
     private Button changePassBtn;
     private FirebaseUser user;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         setTitle(R.string.changePassword);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        activity = this;
         currentPass = findViewById(R.id.enter_currPass);
         newPass = findViewById(R.id.enter_newPass);
         repeatPass = findViewById(R.id.enter_repeatNewPass);
@@ -43,8 +47,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
         changePassBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkPassOK()) {
-                    resetPassword();
+                if(NetworkUtil.isConnected(activity)) {
+                    if(checkPassOK()) {
+                        resetPassword();
+                    }
                 }
             }
         });

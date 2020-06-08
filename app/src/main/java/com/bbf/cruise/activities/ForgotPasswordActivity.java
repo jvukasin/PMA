@@ -3,6 +3,7 @@ package com.bbf.cruise.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.dialogs.LoadingDialog;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -19,6 +21,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private TextInputEditText email;
     private Button sendBtn;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +29,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password);
 
         email = findViewById(R.id.enter_email_fp);
+        activity = this;
         sendBtn = findViewById(R.id.send_email);
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String emailTxt = email.getText().toString();
-                changePassEmail(emailTxt);
+                if(NetworkUtil.isConnected(activity)) {
+                    changePassEmail(emailTxt);
+                }
             }
         });
 
