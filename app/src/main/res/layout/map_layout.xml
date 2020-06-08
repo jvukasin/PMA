@@ -20,6 +20,31 @@
         </Button>
 
         <Button
+            android:id="@+id/heartButton"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/centreButton"
+            android:alpha="0.9"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/heart_btn">
+        </Button>
+
+        <Button
+            android:id="@+id/refreshButton"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/centreButton"
+            android:alpha="0.9"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/refresh_btn">
+        </Button>
+
+
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
