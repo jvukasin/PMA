@@ -382,6 +382,7 @@
                 android:text="  "/>
 
             <TextView
+                android:id="@+id/from_you_str"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/from_you"
