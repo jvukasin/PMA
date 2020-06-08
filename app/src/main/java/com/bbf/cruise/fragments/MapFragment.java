@@ -36,6 +36,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bbf.cruise.R;
 import com.bbf.cruise.activities.CarDetailActivity;
 import com.bbf.cruise.activities.NearbyCarsActivity;
+import com.bbf.cruise.adapters.FavoriteCarsAdapter;
 import com.bbf.cruise.dialogs.LocationDialog;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -52,6 +53,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,6 +68,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import model.Car;
+import model.CarItem;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -82,6 +86,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private ArrayList<Car> cars = new ArrayList<>();
     private Button centreButton;
     private Button nearbyCarsButton;
+    private Button heartButton;
+    private Button refreshButton;
     private Dialog mDialog;
     private SharedPreferences sharedPreferences;
     private TextView name, model, carRating, carPlate, carRides, carFuel, carDistance;
@@ -92,6 +98,10 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
+
+    private DatabaseReference referencePlates;
+    private DatabaseReference referenceCars;
+    private ArrayList<Car> favoriteCars = new ArrayList<>();
 
     public static MapFragment newInstance() {
 
@@ -106,12 +116,16 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toast.makeText(getActivity(), "Finding cars...", Toast.LENGTH_SHORT).show();
 
         // sacuvace stanje fragmenta prilikom promene konfiguracije, npr: promena orijentacije ekrana
         setRetainInstance(true);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         databaseReference = FirebaseDatabase.getInstance().getReference("cars");
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        referencePlates = FirebaseDatabase.getInstance().getReference("Favorites").child(firebaseUser.getUid());
+        referenceCars = FirebaseDatabase.getInstance().getReference("cars");
+
         mDialog = new Dialog(getActivity());
         initializeCarInfoDialog();
         sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", MODE_PRIVATE);
@@ -240,6 +254,33 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             }
         }
 
+        referencePlates.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                favoriteCars.clear();
+                for(DataSnapshot carSnapshot: dataSnapshot.getChildren()) {
+                    String plts = carSnapshot.getKey();
+                    referenceCars.child(plts).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Car car = dataSnapshot.getValue(Car.class);
+                            favoriteCars.add(car);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -248,6 +289,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         View view = inflater.inflate(R.layout.map_layout, vg, false);
         centreButton = view.findViewById(R.id.centreButton);
         nearbyCarsButton = view.findViewById(R.id.mapButton);
+        heartButton = view.findViewById(R.id.heartButton);
+        refreshButton = view.findViewById(R.id.refreshButton);
         centreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,6 +311,59 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 startActivity(intent);
             }
         });
+
+
+        heartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                map.clear();
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if(location != null){
+                            if (home != null) {
+                                home.remove();
+                            }
+                            home = map.addMarker(new MarkerOptions()
+                                    .title("YOUR_POSITION")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                    .position(new LatLng(location.getLatitude(), location.getLongitude())));
+                            home.setFlat(true);
+                        }
+                    }
+                });
+                positionFavorites();
+                heartButton.setVisibility(View.INVISIBLE);
+                refreshButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                map.clear();
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if(location != null){
+                            if (home != null) {
+                                home.remove();
+                            }
+                            home = map.addMarker(new MarkerOptions()
+                                    .title("YOUR_POSITION")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                    .position(new LatLng(location.getLatitude(), location.getLongitude())));
+                            home.setFlat(true);
+                        }
+                    }
+                });
+                positionCarMarkers();
+                refreshButton.setVisibility(View.INVISIBLE);
+                heartButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        refreshButton.setVisibility(View.INVISIBLE);
 
         return view;
     }
@@ -408,6 +504,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                         public void onSuccess(Location location) {
                             if(location != null){
                                 addMarker(location);
+                                Toast.makeText(getActivity(), "Finding cars...", Toast.LENGTH_SHORT).show();
                                 positionCarMarkers();
                             }
                         }
@@ -421,6 +518,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                         public void onSuccess(Location location) {
                             if(location != null){
                                 addMarker(location);
+                                Toast.makeText(getActivity(), "Finding cars...", Toast.LENGTH_SHORT).show();
                                 positionCarMarkers();
                             }
                         }
@@ -546,6 +644,17 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private void positionCarMarkers(){
         int radius = sharedPreferences.getInt("radius", 30);
         for(Car car: cars){
+            double distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
+                    car.getLocation().getLatitude(), car.getLocation().getLongitude());
+            if(distance <= radius){
+                addCarMarker(car);
+            }
+        }
+    }
+
+    private void positionFavorites(){
+        int radius = sharedPreferences.getInt("radius", 30);
+        for(Car car: favoriteCars){
             double distance = calculateDistance(home.getPosition().latitude, home.getPosition().longitude,
                     car.getLocation().getLatitude(), car.getLocation().getLongitude());
             if(distance <= radius){
