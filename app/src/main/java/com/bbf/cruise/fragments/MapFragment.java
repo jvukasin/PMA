@@ -138,7 +138,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if(locationResult == null){
                     return;
                 }
-                positionCarMarkers();
+                if(heartButton.getVisibility() != View.INVISIBLE){
+                    positionCarMarkers();
+                }else{
+                    positionFavorites();
+                }
             }
         };
 
