@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "171849710371",
+    "firebase_url": "https://cruise-e99e3.firebaseio.com",
+    "project_id": "cruise-e99e3",
+    "storage_bucket": "cruise-e99e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171849710371:android:f862384bd8f70aa2a62a96",
+        "android_client_info": {
+          "package_name": "com.bbf.carapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "171849710371-rfbts4u91s0p2crm50gnmohjreqef1a4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz6s5Gw4FBNgllAZD1uDH74VtHRnT8eXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "171849710371-rfbts4u91s0p2crm50gnmohjreqef1a4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171849710371:android:bcd40ac070f1c2aca62a96",
+        "android_client_info": {
+          "package_name": "com.bbf.cruise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "171849710371-g4ahqqndlejkmo0avsko5snjdskqdvnj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bbf.cruise",
+            "certificate_hash": "02453b0a4e5192b3fe6bae3789f87e8afdcbfc8d"
+          }
+        },
+        {
+          "client_id": "171849710371-rfbts4u91s0p2crm50gnmohjreqef1a4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz6s5Gw4FBNgllAZD1uDH74VtHRnT8eXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "171849710371-rfbts4u91s0p2crm50gnmohjreqef1a4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
