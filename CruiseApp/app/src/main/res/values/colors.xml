@@ -8,4 +8,5 @@
     <color name="colorBlack">#000000</color>
     <color name="colorLogOut">#CD0000</color>
     <color name="colorColumnOne">#465A65</color>
+    <color name="colorTransparentDark">#C6000000</color>
 </resources>

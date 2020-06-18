@@ -26,6 +26,8 @@ import android.widget.Toast;
 import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
 import com.bbf.cruise.service.ReservationService;
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +37,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import model.Car;
 
@@ -48,6 +52,7 @@ public class CarDetailActivity extends AppCompatActivity {
     private TextView dis_from_me, from_you, counter;
     private BroadcastReceiver broadcastReceiver;
     private ReservationService reservationService;
+    private ImageSlider imageSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,8 @@ public class CarDetailActivity extends AppCompatActivity {
         rentBtn = (Button) findViewById(R.id.rentBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
         plateNo = getIntent().getStringExtra("plate");
+        imageSlider = findViewById(R.id.slider);
+        initImages();
         initTextFields();
 
         rentBtn.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +107,14 @@ public class CarDetailActivity extends AppCompatActivity {
         };
         registerReceiver(broadcastReceiver, intentFilter);
         reservationService = new ReservationService();
+    }
+
+    private void initImages() {
+        List<SlideModel> slideModels = new ArrayList<>();
+        slideModels.add(new SlideModel(R.drawable.sample1));
+        slideModels.add(new SlideModel(R.drawable.sample2));
+        slideModels.add(new SlideModel(R.drawable.sample3));
+        imageSlider.setImageList(slideModels, true);
     }
 
     private void cancelReservation() {
