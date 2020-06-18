@@ -35,6 +35,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ public class CarDetailActivity extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver;
     private ReservationService reservationService;
     private ImageSlider imageSlider;
+    private List<SlideModel> slideModels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,7 @@ public class CarDetailActivity extends AppCompatActivity {
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
         plateNo = getIntent().getStringExtra("plate");
         imageSlider = findViewById(R.id.slider);
-        initImages();
+        slideModels = new ArrayList<>();
         initTextFields();
 
         rentBtn.setOnClickListener(new View.OnClickListener() {
@@ -110,11 +113,24 @@ public class CarDetailActivity extends AppCompatActivity {
     }
 
     private void initImages() {
-        List<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel(R.drawable.sample1));
-        slideModels.add(new SlideModel(R.drawable.sample2));
-        slideModels.add(new SlideModel(R.drawable.sample3));
-        imageSlider.setImageList(slideModels, true);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("images");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snap: dataSnapshot.getChildren()){
+                    slideModels.add(new SlideModel(snap.getValue(String.class)));
+                }
+                if(slideModels.isEmpty()) {
+                    slideModels.add(new SlideModel(R.drawable.image_not_available));
+                }
+                imageSlider.setImageList(slideModels, true);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void cancelReservation() {
@@ -236,6 +252,8 @@ public class CarDetailActivity extends AppCompatActivity {
 
             }
         });
+
+        initImages();
 
         if(isServiceRunning(reservationService.getClass())){
             dis_from_me.setVisibility(View.INVISIBLE);
