@@ -59,6 +59,7 @@ public class CarDetailActivity extends AppCompatActivity {
         reserveBtn = (Button) findViewById(R.id.reserveBtn);
         rentBtn = (Button) findViewById(R.id.rentBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
+        plateNo = getIntent().getStringExtra("plate");
         initTextFields();
 
         rentBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +84,6 @@ public class CarDetailActivity extends AppCompatActivity {
         counter = (TextView) findViewById(R.id.counter);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        plateNo = getIntent().getStringExtra("plate");
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("Counter");
@@ -119,7 +119,7 @@ public class CarDetailActivity extends AppCompatActivity {
         dis_from_me.setVisibility(View.INVISIBLE);
         from_you.setVisibility(View.INVISIBLE);
         reserveBtn.setVisibility(View.INVISIBLE);
-        counter.setText("00:30"); //TODO promeniti u 30:00
+        counter.setText("30:00");
         counter.setVisibility(View.VISIBLE);
         cancelBtn.setVisibility(View.VISIBLE);
 

@@ -59,6 +59,7 @@
     <string name="reserve">Reserve</string>
     <string name="cancel">Cancel</string>
     <string name="favorite_empty">No cars added to favorites</string>
+    <string name="quickScan">Quick scan</string>
 
     <string-array name="pref_distance_entries">
         <item>Kilometers</item>

@@ -33,6 +33,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
     private ZXingScannerView mScannerView;
     private Context context = CruiseApplication.getAppContext();
+    private boolean resumeCamera = false;
 
     @Override
     public void onCreate(Bundle state) {
@@ -81,9 +82,6 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
     public void handleResult(Result rawResult) {
         processFeedback(QRProcessingService.processScannedQR(rawResult));
 
-
-
-
     }
 
     private void processFeedback(QRScanFeedback feedback) {
@@ -122,6 +120,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
             }
         });
 
+//        mScannerView.resumeCameraPreview(this);
 
     }
 

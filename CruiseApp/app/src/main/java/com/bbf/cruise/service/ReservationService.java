@@ -29,8 +29,8 @@ import static com.bbf.cruise.CruiseApplication.CHANNEL_ID_LOW;
 
 public class ReservationService extends Service {
 
-    private long minutes = 00; //29
-    private long seconds = 30; //60
+    private long minutes = 29;
+    private long seconds = 60;
     private Timer timer;
     private String plates;
 
@@ -57,8 +57,8 @@ public class ReservationService extends Service {
 
     public void startTimer() {
         timer = new Timer();
-        minutes = 00; //29
-        seconds = 30;
+        minutes = 29;
+        seconds = 60;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
