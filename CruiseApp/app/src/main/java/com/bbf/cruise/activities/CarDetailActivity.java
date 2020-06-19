@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
 import com.bbf.cruise.service.ReservationService;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -134,39 +135,43 @@ public class CarDetailActivity extends AppCompatActivity {
     }
 
     private void cancelReservation() {
-        counter.setVisibility(View.INVISIBLE);
-        cancelBtn.setVisibility(View.INVISIBLE);
-        reserveBtn.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(this, reservationService.getClass());
-        intent.putExtra("plates", plateNo);
-        intent.setAction("REMOVE_FOREGROUND");
-        startService(intent);
+        if(NetworkUtil.isConnected(this)) {
+            counter.setVisibility(View.INVISIBLE);
+            cancelBtn.setVisibility(View.INVISIBLE);
+            reserveBtn.setVisibility(View.VISIBLE);
+            Intent intent = new Intent(this, reservationService.getClass());
+            intent.putExtra("plates", plateNo);
+            intent.setAction("REMOVE_FOREGROUND");
+            startService(intent);
+        }
     }
 
     private void reserveCar() {
-        //TODO PROVERITI DIJALOG ZA PERMISIJU
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.FOREGROUND_SERVICE}, PackageManager.PERMISSION_GRANTED);
+        if(NetworkUtil.isConnected(this)) {
+            //TODO PROVERITI DIJALOG ZA PERMISIJU
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.FOREGROUND_SERVICE}, PackageManager.PERMISSION_GRANTED);
 
-        dis_from_me.setVisibility(View.INVISIBLE);
-        from_you.setVisibility(View.INVISIBLE);
-        reserveBtn.setVisibility(View.INVISIBLE);
-        counter.setText("30:00");
-        counter.setVisibility(View.VISIBLE);
-        cancelBtn.setVisibility(View.VISIBLE);
+            dis_from_me.setVisibility(View.INVISIBLE);
+            from_you.setVisibility(View.INVISIBLE);
+            reserveBtn.setVisibility(View.INVISIBLE);
+            counter.setText("30:00");
+            counter.setVisibility(View.VISIBLE);
+            cancelBtn.setVisibility(View.VISIBLE);
 
-        FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("occupied").setValue(true);
-        reference = FirebaseDatabase.getInstance().getReference().child("Reservations").child(plateNo);
-        reference.child("user").setValue(firebaseUser.getUid());
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.MINUTE, 30);
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        reference.child("time").setValue(df.format(now.getTime()));
+            FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("occupied").setValue(true);
+            reference = FirebaseDatabase.getInstance().getReference().child("Reservations").child(plateNo);
+            reference.child("user").setValue(firebaseUser.getUid());
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.MINUTE, 30);
+            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            reference.child("time").setValue(df.format(now.getTime()));
 
 
-        Intent i = new Intent(this, reservationService.getClass());
-        i.putExtra("plates", plateNo);
-        i.setAction("START_SERVICE");
-        ContextCompat.startForegroundService(this,i);
+            Intent i = new Intent(this, reservationService.getClass());
+            i.putExtra("plates", plateNo);
+            i.setAction("START_SERVICE");
+            ContextCompat.startForegroundService(this, i);
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -233,40 +238,42 @@ public class CarDetailActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        reference = FirebaseDatabase.getInstance().getReference().child("Favorites").child(firebaseUser.getUid());
+        if(NetworkUtil.isConnected(this)) {
+            reference = FirebaseDatabase.getInstance().getReference().child("Favorites").child(firebaseUser.getUid());
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(plateNo).exists()) {
-                    favButton.setBackgroundResource(R.drawable.ic_favorite_red);
-                    favButton.setTag("added");
-                } else {
-                    favButton.setBackgroundResource(R.drawable.ic_favorite_gray);
-                    favButton.setTag("add");
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.child(plateNo).exists()) {
+                        favButton.setBackgroundResource(R.drawable.ic_favorite_red);
+                        favButton.setTag("added");
+                    } else {
+                        favButton.setBackgroundResource(R.drawable.ic_favorite_gray);
+                        favButton.setTag("add");
+                    }
                 }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            initImages();
+
+            if (isServiceRunning(reservationService.getClass())) {
+                dis_from_me.setVisibility(View.INVISIBLE);
+                from_you.setVisibility(View.INVISIBLE);
+                reserveBtn.setVisibility(View.INVISIBLE);
+                counter.setVisibility(View.VISIBLE);
+                cancelBtn.setVisibility(View.VISIBLE);
+            } else {
+                dis_from_me.setVisibility(View.VISIBLE);
+                from_you.setVisibility(View.VISIBLE);
+                reserveBtn.setVisibility(View.VISIBLE);
+                counter.setVisibility(View.INVISIBLE);
+                cancelBtn.setVisibility(View.INVISIBLE);
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        initImages();
-
-        if(isServiceRunning(reservationService.getClass())){
-            dis_from_me.setVisibility(View.INVISIBLE);
-            from_you.setVisibility(View.INVISIBLE);
-            reserveBtn.setVisibility(View.INVISIBLE);
-            counter.setVisibility(View.VISIBLE);
-            cancelBtn.setVisibility(View.VISIBLE);
-        }else{
-            dis_from_me.setVisibility(View.VISIBLE);
-            from_you.setVisibility(View.VISIBLE);
-            reserveBtn.setVisibility(View.VISIBLE);
-            counter.setVisibility(View.INVISIBLE);
-            cancelBtn.setVisibility(View.INVISIBLE);
         }
 
     }
