@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bbf.cruise.R;
+import com.bbf.cruise.activities.RideActivity;
 import com.bbf.cruise.service.RentService;
 import com.bbf.cruise.tools.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
+
+import java.util.Date;
 
 import model.Car;
 import model.Rent;
@@ -34,9 +38,11 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
     DatabaseReference reference;
     FirebaseAuth auth;
     Car carForRent;
+    Context context;
 
-    public ConfirmRentDialog(Car carForRent) {
+    public ConfirmRentDialog(Car carForRent, Context context) {
         this.carForRent = carForRent;
+        this.context = context;
     }
 
     @NonNull
@@ -62,9 +68,17 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
                             return;
                         }
 
-                        RentService rentService = new RentService();
-                        Rent r = rentService.createRent(carForRent.getReg_number(), auth.getUid());
+                        //TODO namestiti sve sa bazom sto treba
+
+                        Rent r = new Rent();
+                        r.setDate_created(new Date());
+                        r.setCar_reg_number(carForRent.getReg_number());
+                        r.setUser_id(auth.getUid());
                         System.out.println(r);
+
+                        Intent intent = new Intent(context, RideActivity.class);
+                        intent.putExtra("plates", carForRent.getReg_number());
+                        startActivity(intent);
                     }
                 });
         return builder.create();

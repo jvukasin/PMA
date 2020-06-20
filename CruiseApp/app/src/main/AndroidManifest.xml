@@ -18,8 +18,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service android:name=".service.ReservationService"/>
-        <activity android:name=".activities.FavoriteActivity"></activity>
+        <activity android:name=".activities.RideActivity"></activity>
+
+        <service android:name=".service.ReservationService" />
+
+        <activity android:name=".activities.FavoriteActivity" />
         <activity
             android:name=".activities.ChangePasswordActivity"
             android:theme="@style/AppTheme"

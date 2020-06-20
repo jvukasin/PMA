@@ -60,6 +60,13 @@
     <string name="cancel">Cancel</string>
     <string name="favorite_empty">No cars added to favorites</string>
     <string name="quickScan">Quick scan</string>
+    <string name="start_rate">Start:</string>
+    <string name="ride_rate">Rate:</string>
+    <string name="activeRide">Active ride</string>
+    <string name="timeElapsed">Time elapsed</string>
+    <string name="distanceCovered">Kilometers</string>
+    <string name="ride_price">EUR</string>
+    <string name="finishRide">Finish ride</string>
 
     <string-array name="pref_distance_entries">
         <item>Kilometers</item>

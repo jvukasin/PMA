@@ -125,7 +125,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
     }
 
     private void openConfirmRentDialog(Car car) {
-        ConfirmRentDialog dialog = new ConfirmRentDialog(car);
+        ConfirmRentDialog dialog = new ConfirmRentDialog(car, this);
         dialog.show(getSupportFragmentManager(), "Confirm Rent");
     }
 

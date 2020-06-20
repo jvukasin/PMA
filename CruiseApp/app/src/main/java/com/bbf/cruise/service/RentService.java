@@ -1,17 +1,17 @@
 package com.bbf.cruise.service;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 
-import model.Rent;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 
-public class RentService {
+import androidx.annotation.Nullable;
 
-    public Rent createRent(String carRegNumber, String userId) {
-        Rent r = new Rent();
-        r.setDate_created(new Date());
-        r.setCar_reg_number(carRegNumber);
-        r.setUser_id(userId);
-        return r;
+public class RentService extends Service {
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }
