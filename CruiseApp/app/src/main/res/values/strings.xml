@@ -67,6 +67,17 @@
     <string name="distanceCovered">Kilometers</string>
     <string name="ride_price">EUR</string>
     <string name="finishRide">Finish ride</string>
+    <string name="rateYourRide">Rate your ride:</string>
+    <string name="exitRideOnBackTitle">Are you sure you want to exit?</string>
+    <string name="exitRideOnBackMessage">Your ride will end and you will be charged for it.</string>
+    <string name="exit">Exit</string>
+    <string name="wait">Wait</string>
+    <string name="totalBonusPoints">Total bonus points:</string>
+    <string name="earnedPoints">Earned bonus points:</string>
+    <string name="rideFee">Ride fee:</string>
+    <string name="rideFeeBP">Ride fee using bonus points:</string>
+    <string name="pay">Pay</string>
+    <string name="payWithBP">Pay with points</string>
 
     <string-array name="pref_distance_entries">
         <item>Kilometers</item>

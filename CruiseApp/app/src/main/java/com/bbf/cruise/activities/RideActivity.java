@@ -2,6 +2,11 @@ package com.bbf.cruise.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -14,6 +19,7 @@ public class RideActivity extends AppCompatActivity {
 
     private Chronometer chronometer;
     private Button finishBtn;
+    private Dialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +31,43 @@ public class RideActivity extends AppCompatActivity {
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chronometer.stop();
+                finishRide();
             }
         });
 
-
         chronometer = findViewById(R.id.rideTime);
         chronometer.start();
+
+        mDialog = new Dialog(this);
+        mDialog.setContentView(R.layout.rate_finish_dialog);
+        mDialog.setCancelable(false);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    }
+
+    private void finishRide() {
+        chronometer.stop();
+        mDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.exitRideOnBackTitle);
+        builder.setMessage(R.string.exitRideOnBackMessage);
+        builder.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //TODO exit and charge
+
+                finish();
+            }
+        });
+        builder.setNegativeButton("Wait", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
     @Override

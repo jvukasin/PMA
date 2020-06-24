@@ -58,7 +58,7 @@
                     android:id="@+id/ridePrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.5"
+                    android:text="2.0"
                     android:layout_gravity="center"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="24sp"/>
