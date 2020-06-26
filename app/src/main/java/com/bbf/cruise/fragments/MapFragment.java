@@ -63,6 +63,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -102,6 +103,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private DatabaseReference referencePlates;
     private DatabaseReference referenceCars;
     private DatabaseReference referenceReservations;
+    private ValueEventListener databaseReferenceListener;
     private ArrayList<Car> favoriteCars = new ArrayList<>();
     private static boolean result = false;
 
@@ -141,7 +143,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if(locationResult == null){
                     return;
                 }
-                databaseReference.addValueEventListener(new ValueEventListener() {
+                databaseReferenceListener = databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         cars.clear();
@@ -724,6 +726,14 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     public void onPause() {
         super.onPause();
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        databaseReference.removeEventListener(databaseReferenceListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        databaseReference.removeEventListener(databaseReferenceListener);
     }
 
     public static double calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
