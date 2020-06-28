@@ -89,17 +89,25 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimaryDark"
                 android:text="@string/rideFee"
-                android:textSize="15sp"
-                android:paddingTop="2dp"/>
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/fee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="21.5 EUR"
+                android:text="21.5"
                 android:textColor="@color/colorAccent"
                 android:layout_toEndOf="@id/feeText"
+                android:layout_marginStart="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@string/ride_price"
+                android:textColor="@color/colorAccent"
+                android:layout_toEndOf="@id/fee"
                 android:layout_marginStart="5dp"/>
 
             <TextView
@@ -117,10 +125,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="18 EUR"
+                android:text="18"
                 android:textColor="@color/colorAccent"
                 android:layout_below="@id/fee"
                 android:layout_toEndOf="@id/feeWithBPText"
+                android:layout_marginStart="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@string/ride_price"
+                android:textColor="@color/colorAccent"
+                android:layout_below="@id/fee"
+                android:layout_toEndOf="@id/feeBP"
                 android:layout_marginStart="5dp"/>
 
         </RelativeLayout>
