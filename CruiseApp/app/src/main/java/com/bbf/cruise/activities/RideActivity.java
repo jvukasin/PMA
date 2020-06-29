@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 
 import com.bbf.cruise.R;
+import com.bbf.cruise.fragments.RideMapFragment;
+import com.bbf.cruise.tools.FragmentTransition;
 
 public class RideActivity extends AppCompatActivity {
 
@@ -65,15 +68,25 @@ public class RideActivity extends AppCompatActivity {
         mDialog.setContentView(R.layout.rate_finish_dialog);
         mDialog.setCancelable(false);
         mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RideMapFragment fragment = RideMapFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putDouble("lat", getIntent().getDoubleExtra("lat", 0));
+        bundle.putDouble("lng", getIntent().getDoubleExtra("lng", 0));
+        fragment.setArguments(bundle);
+        FragmentTransition.addRideMap(fragment, this, false);
     }
 
     private void finishRide() {
+        Intent intent = new Intent();
+        intent.setAction("RIDE_FINISHED_ACTION");
+        sendBroadcast(intent);
         chronometer.stop();
         //TODO proslediti parametre u dijalog
         TextView showPrice = mDialog.findViewById(R.id.fee);
         showPrice.setText(priceTV.getText());
         //TODO napraviti da ako ubije aplikaciju ili izadje ili sta god, da mu se skine sa racuna svakako cena
-        mDialog.show();
+        //mDialog.show();
     }
 
     @Override
