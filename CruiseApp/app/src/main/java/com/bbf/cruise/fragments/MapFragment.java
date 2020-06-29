@@ -389,9 +389,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
      * */
     @Override
     public void onLocationChanged(Location location) {
-//        if (map != null) {
-//            addMarker(location);
-//        }
+        if (map != null) {
+            addMarker(location);
+        }
     }
 
     @Override
@@ -657,7 +657,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     private void positionCarMarkers(){
-        //TODO provera da li je zauzet i da li sam ga ja rez
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         int radius = sharedPreferences.getInt("radius", 30);
         for(Car car: cars){

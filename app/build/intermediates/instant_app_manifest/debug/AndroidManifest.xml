@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.bbf.cruise"
+    android:targetSandboxVersion="2"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="24"
+        android:targetSdkVersion="29" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <application
+        android:name="com.bbf.cruise.CruiseApplication"
+        android:allowBackup="true"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:debuggable="true"
+        android:extractNativeLibs="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:testOnly="true"
+        android:theme="@style/AppTheme" >
+        <service android:name="com.bbf.cruise.service.ReservationService" />
+
+        <activity android:name="com.bbf.cruise.activities.FavoriteActivity" />
+        <activity
+            android:name="com.bbf.cruise.activities.ChangePasswordActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <!--
+         RESAVA PROBLEM CRASH-A APLIKACIJE PRILIKOM PRIKAZAVINJA MAPE
+             FIX: https://stackoverflow.com/questions/50461881/java-lang-noclassdeffounderrorfailed-resolution-of-lorg-apache-http-protocolve
+        -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" /> <!-- MAPE -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key" /> <!-- MAPE -->
+        <activity
+            android:name="com.bbf.cruise.activities.ForgotPasswordActivity"
+            android:theme="@style/AppTheme.NoBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.bbf.cruise.activities.CarDetailActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.bbf.cruise.activities.NearbyCarsActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.bbf.cruise.activities.SettingsActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.bbf.cruise.activities.RideHistoryActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.bbf.cruise.activities.WalletActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.bbf.cruise.activities.AboutUsActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.bbf.cruise.activities.QRScannerActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.bbf.cruise.activities.RegisterActivity"
+            android:theme="@style/AppTheme.NoBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.bbf.cruise.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.bbf.cruise.activities.SplashScreenActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoBarSS" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.bbf.cruise.activities.LoginActivity"
+            android:theme="@style/AppTheme.NoBar"
+            android:windowSoftInputMode="adjustResize" />
+
+        <service
+            android:name="com.google.firebase.components.ComponentDiscoveryService"
+            android:directBootAware="true"
+            android:exported="false" >
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+        </service>
+
+        <activity
+            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:permission="com.google.firebase.auth.api.gms.permission.LAUNCH_FEDERATED_SIGN_IN"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <provider
+            android:name="com.google.firebase.provider.FirebaseInitProvider"
+            android:authorities="com.bbf.cruise.firebaseinitprovider"
+            android:exported="false"
+            android:initOrder="100" />
+
+        <activity
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+
+</manifest>

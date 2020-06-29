@@ -110,8 +110,10 @@ public class CarDetailActivity extends AppCompatActivity {
             }
         };
         registerReceiver(broadcastReceiver, intentFilter);
-        reservationService = new ReservationService();
+        if(reservationService == null) reservationService = new ReservationService();
     }
+
+
 
     private void initImages() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("images");
@@ -306,8 +308,18 @@ public class CarDetailActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = intent.getExtras();
+        if(extras != null){
+            initTextFields();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
     }
+
 }

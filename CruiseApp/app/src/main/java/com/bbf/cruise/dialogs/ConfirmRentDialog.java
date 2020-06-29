@@ -78,6 +78,8 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
 
                         Intent intent = new Intent(context, RideActivity.class);
                         intent.putExtra("plates", carForRent.getReg_number());
+                        intent.putExtra("lat", carForRent.getLocation().getLatitude());
+                        intent.putExtra("lng", carForRent.getLocation().getLongitude());
                         startActivity(intent);
                     }
                 });
