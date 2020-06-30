@@ -4,4 +4,5 @@ public class FirebasePaths {
 
     public static String CARS_PATH = "cars";
     public static String RENTS_PATH = "rents";
+    public static String USERS_PATH = "Users";
 }

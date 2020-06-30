@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,15 +22,17 @@ import com.bbf.cruise.R;
 import com.bbf.cruise.activities.WalletActivity;
 import com.bbf.cruise.tools.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class EditBalanceDialog extends AppCompatDialogFragment {
 
+    private static int minBalance = 25;
     private EditText addFundsEditText;
     SharedPreferences sharedPreferences;
-    FirebaseDatabase rootNode;
-    DatabaseReference reference;
     FirebaseAuth auth;
 
     @NonNull
@@ -53,24 +57,34 @@ public class EditBalanceDialog extends AppCompatDialogFragment {
                             return;
                         }
                         addFundsEditText = view.findViewById(R.id.addFundsEdit);
-                        sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-                        float balance = sharedPreferences.getFloat("wallet", 0);
-                        String funds = addFundsEditText.getText().toString();
-                        float addedFunds = Float.parseFloat(funds);
-                        balance += addedFunds;
-                        // azuriraj stanje za shared
-                        sharedPreferences = getActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putFloat("wallet", balance);
-                        editor.apply();
-                        // azuriraj u bazi
-                        String firebaseUserUID = auth.getCurrentUser().getUid();
-                        rootNode = FirebaseDatabase.getInstance();
-                        reference = rootNode.getReference("Users");
-                        reference.child(firebaseUserUID).child("wallet").setValue(balance);
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                        reference.child(auth.getCurrentUser().getUid()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Double balance = dataSnapshot.getValue(Double.class);
+                                String funds = addFundsEditText.getText().toString();
+                                float addedFunds = Float.parseFloat(funds);
+                                balance += addedFunds;
 
-                        TextView walletBalance = getActivity().findViewById(R.id.walletBalance);
-                        walletBalance.setText(String.valueOf(balance));
+                                if(balance < minBalance){
+                                    Toast.makeText(getActivity(), "Balance must be greater than 25 EUR.", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                String firebaseUserUID = auth.getCurrentUser().getUid();
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                                ref.child(firebaseUserUID).child("wallet").setValue(balance);
+                                TextView walletBalance = getActivity().findViewById(R.id.walletBalance);
+                                walletBalance.setText(String.valueOf(balance));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
                     }
                 });
         return builder.create();

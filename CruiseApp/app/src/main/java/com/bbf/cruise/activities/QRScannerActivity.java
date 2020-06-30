@@ -93,7 +93,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
         DatabaseReference carReference = FirebaseDatabase.getInstance().getReference(FirebasePaths.CARS_PATH).child(feedback.getParsed());
 
-        carReference.addValueEventListener(new ValueEventListener() {
+        carReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Car car = dataSnapshot.getValue(Car.class);
@@ -123,6 +123,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 //        mScannerView.resumeCameraPreview(this);
 
     }
+
 
     private void openConfirmRentDialog(Car car) {
         ConfirmRentDialog dialog = new ConfirmRentDialog(car, this);

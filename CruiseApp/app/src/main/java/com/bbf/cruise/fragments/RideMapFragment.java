@@ -17,9 +17,14 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Looper;
 import android.os.Parcelable;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +62,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,7 +71,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,14 +90,17 @@ import java.util.TimerTask;
 
 import model.Car;
 import model.CarItem;
+import model.RideHistory;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class RideMapFragment extends Fragment implements LocationListener, OnMapReadyCallback {
+public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private static String RIDE_FINISHED_ACTION = "RIDE_FINISHED_ACTION";
+    private static String SAVE_RIDE_HISTORY_ACTION = "SAVE_RIDE_HISTORY_ACTION";
+    private static double sum = 0;
 
     private List<LatLng> route = new ArrayList<>();
     private LocationManager locationManager;
@@ -90,16 +109,17 @@ public class RideMapFragment extends Fragment implements LocationListener, OnMap
     private AlertDialog dialog;
     private Marker home, car;
     private GoogleMap map;
-    private DatabaseReference databaseReference;
+    private DatabaseReference ridHistoryReference;
+    private DatabaseReference userReference;
     private LatLng startLocation;
 
-    private static long UPDATE_INTERVAL = 500;
-    private static long FASTEST_INTERVAL = 2000;
+    private static long UPDATE_INTERVAL = 1200;
+    private static long FASTEST_INTERVAL = 1200;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
+    private SharedPreferences sharedPreferences;
 
-    private Button finishBtn;
 
     public static RideMapFragment newInstance() {
         RideMapFragment mpf = new RideMapFragment();
@@ -112,7 +132,6 @@ public class RideMapFragment extends Fragment implements LocationListener, OnMap
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // sacuvace stanje fragmenta prilikom promene konfiguracije, npr: promena orijentacije ekrana
         setRetainInstance(true);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -125,16 +144,18 @@ public class RideMapFragment extends Fragment implements LocationListener, OnMap
                 }
                 route.add(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
                 addCarMarker(locationResult.getLastLocation());
+                updateDistance();
             }
         };
 
-        locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(FASTEST_INTERVAL);
-
         IntentFilter rideFinishedFilter = new IntentFilter(RIDE_FINISHED_ACTION);
         requireActivity().registerReceiver(rideFinishedReciever, rideFinishedFilter);
+
+        IntentFilter saveRideHistoryFilter = new IntentFilter(SAVE_RIDE_HISTORY_ACTION);
+        requireActivity().registerReceiver(saveRideHistoryReciever, saveRideHistoryFilter);
+
+        ridHistoryReference = FirebaseDatabase.getInstance().getReference("RideHistory");
+        userReference = FirebaseDatabase.getInstance().getReference("Users");
     }
 
 
@@ -185,10 +206,6 @@ public class RideMapFragment extends Fragment implements LocationListener, OnMap
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean wifi = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(FASTEST_INTERVAL);
 
         if (!gps && !wifi) {
             showLocatonDialog();
@@ -215,29 +232,6 @@ public class RideMapFragment extends Fragment implements LocationListener, OnMap
         View view = inflater.inflate(R.layout.ride_map_layout, vg, false);
         startLocation = new LatLng(getArguments().getDouble("lat"), getArguments().getDouble("lng"));
         return view;
-    }
-
-    /**
-     * Svaki put kada uredjaj dobije novu informaciju o lokaciji ova metoda se poziva
-     * i prosledjuje joj se nova informacija o kordinatamad
-     * */
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 
     public boolean checkLocationPermission() {
@@ -332,6 +326,12 @@ public class RideMapFragment extends Fragment implements LocationListener, OnMap
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+
         addMarker(startLocation);
 
         // ako zelmo da reagujemo na klik markera koristimo marker click listener
@@ -409,6 +409,17 @@ public class RideMapFragment extends Fragment implements LocationListener, OnMap
         map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
+    private void updateDistance(){
+        if(route.size() >= 2){
+            TextView view = getActivity().findViewById(R.id.rideDistance);
+            LatLng pos_prev = route.get(route.size()-2);
+            LatLng pos_curr = route.get(route.size()-1);
+            double distance = MapFragment.calculateDistance(pos_prev.latitude, pos_prev.longitude, pos_curr.latitude, pos_curr.longitude);
+            sum += distance;
+            view.setText(String.valueOf(Math.round(sum * 10.0) / 10.0));
+        }
+    }
+
     /**
      *
      * Rad sa lokacja izuzetno trosi bateriju.Obavezno osloboditi kada vise ne koristmo
@@ -417,6 +428,8 @@ public class RideMapFragment extends Fragment implements LocationListener, OnMap
     public void onPause() {
         super.onPause();
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        sum = 0;
+        route.clear();
     }
 
     private final BroadcastReceiver rideFinishedReciever = new BroadcastReceiver() {
@@ -424,24 +437,212 @@ public class RideMapFragment extends Fragment implements LocationListener, OnMap
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(RIDE_FINISHED_ACTION)){
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-                Polyline routePoly = map.addPolyline(new PolylineOptions()
-                        .width(5)
-                        .color(Color.BLUE)
-                        .geodesic(true));
-                routePoly.setPoints(route);
-                LatLng lastLocation = route.get(route.size()-1);
-                int height = 100;
-                int width = 70;
-                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.finish_pin);
-                Bitmap b=bitmapdraw.getBitmap();
-                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-                map.addMarker(new MarkerOptions()
-                        .title("YOUR_POSITION")
-                        .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-                        .position(lastLocation))
-                        .setFlat(true);
+                if(route.size() > 1){
+                    Polyline routePoly = map.addPolyline(new PolylineOptions()
+                            .width(5)
+                            .color(Color.BLUE)
+                            .geodesic(true));
+                    routePoly.setPoints(route);
+                    LatLng lastLocation = route.get(route.size()-1);
+                    int height = 100;
+                    int width = 70;
+                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.finish_pin);
+                    Bitmap b=bitmapdraw.getBitmap();
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                    map.addMarker(new MarkerOptions()
+                            .title("YOUR_POSITION")
+                            .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+                            .position(lastLocation))
+                            .setFlat(true);
+                }
+            }
+            sum = 0;
+            route.clear();
+
+        }
+    };
+
+    private final BroadcastReceiver saveRideHistoryReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //TODO: sacuvati i bonus poene, ukupno voznji, ukupno predjeno
+            if(intent.getAction().equals(SAVE_RIDE_HISTORY_ACTION)){
+                final String path = "";
+                final boolean flagBonusPoints = intent.getBooleanExtra("flagBonusPoints", false);
+                RideHistory rideHistory = (RideHistory) intent.getSerializableExtra("rideHistory");
+                final RideHistory temp = rideHistory;
+                GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+                    @Override
+                    public void onSnapshotReady(Bitmap bitmap) {
+                        uploadFile(bitmap, temp, flagBonusPoints);
+                    }
+                };
+                map.snapshot(callback);
             }
         }
     };
+
+    private void uploadFile(Bitmap bitmap, final RideHistory rideHistory, final boolean flagBonusPoints) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://cruise-e99e3.appspot.com/");
+        StorageReference mountainImagesRef = storageRef.child("rideHistory/" + rideHistory.getUserId() + "/" + rideHistory.getStartDate()  +  ".jpg");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+        final byte[] data = baos.toByteArray();
+        final String path = "";
+        UploadTask uploadTask = mountainImagesRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        if(flagBonusPoints == false){
+                            pay(uri, rideHistory);
+                        }else{
+                            payWithBP(uri, rideHistory);
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void payWithBP(Uri uri, RideHistory rideHistory) {
+        String url = uri.toString();
+        RideHistory rdh = new RideHistory(rideHistory);
+        final String userId = rdh.getUserId();
+        final double distance = rdh.getDistance();
+        final double price = rdh.getPrice();
+        rdh.setImage(url);
+
+        ridHistoryReference.child(rdh.getUserId()).push().setValue(rdh);
+        userReference.child(rdh.getUserId()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Double value = dataSnapshot.getValue(Double.class);
+                userReference.child(userId).child("wallet").setValue(value - price);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        userReference.child(rdh.getUserId()).child("bonusPoints").setValue(0);
+
+        userReference.child(rdh.getUserId()).child("totalRides").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer rides = dataSnapshot.getValue(Integer.class);
+                userReference.child(userId).child("totalRides").setValue(rides+1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        userReference.child(rdh.getUserId()).child("totalDistance").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Double totalDistance = dataSnapshot.getValue(Double.class);
+                userReference.child(userId).child("totalDistance").setValue(totalDistance + distance);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void pay(Uri uri, RideHistory rideHistory) {
+        String url = uri.toString();
+        RideHistory rdh = new RideHistory(rideHistory);
+        final String userId = rdh.getUserId();
+        final double distance = rdh.getDistance();
+        final double price = rdh.getPrice();
+        final int points = rdh.getPoints();
+        rdh.setImage(url);
+
+        ridHistoryReference.child(rdh.getUserId()).push().setValue(rdh);
+        userReference.child(rdh.getUserId()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Double value = dataSnapshot.getValue(Double.class);
+                userReference.child(userId).child("wallet").setValue(value - price);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        userReference.child(rdh.getUserId()).child("bonusPoints").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer currPoints = dataSnapshot.getValue(Integer.class);
+                userReference.child(userId).child("bonusPoints").setValue(currPoints + points);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        userReference.child(rdh.getUserId()).child("totalRides").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer rides = dataSnapshot.getValue(Integer.class);
+                userReference.child(userId).child("totalRides").setValue(rides+1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        userReference.child(rdh.getUserId()).child("totalDistance").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Double totalDistance = dataSnapshot.getValue(Double.class);
+                userReference.child(userId).child("totalDistance").setValue(totalDistance + distance);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public boolean isStoragePermissionGranted() {
+        String TAG = "Storage Permission";
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ContextCompat.checkSelfPermission(getContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission is granted");
+                return true;
+            } else {
+                Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted");
+            return true;
+        }
+    }
 
 }

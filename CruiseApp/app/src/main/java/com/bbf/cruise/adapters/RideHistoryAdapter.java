@@ -14,6 +14,7 @@ import org.w3c.dom.Text;
 
 import model.RideHistoryItem;
 
+//TODO: dodati prave podatke iz baze
 public class RideHistoryAdapter extends BaseAdapter {
 
     private Activity activity;

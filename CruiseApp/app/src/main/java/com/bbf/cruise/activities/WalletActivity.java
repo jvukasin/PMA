@@ -1,5 +1,6 @@
 package com.bbf.cruise.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -14,6 +15,12 @@ import android.widget.TextView;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.dialogs.EditBalanceDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class WalletActivity extends AppCompatActivity {
@@ -22,6 +29,7 @@ public class WalletActivity extends AppCompatActivity {
     private TextView walletBalance;
 
     SharedPreferences sharedPreferences;
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +37,7 @@ public class WalletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wallet);
         setTitle("Wallet");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        auth = FirebaseAuth.getInstance();
 
         button = (Button) findViewById(R.id.editBalanceButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -38,12 +47,20 @@ public class WalletActivity extends AppCompatActivity {
             }
         });
 
-        // postavi vrednost za balance
-        walletBalance = (TextView) findViewById(R.id.walletBalance);
-        sharedPreferences = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-        float balance = sharedPreferences.getFloat("wallet", 0);
-        walletBalance = findViewById(R.id.walletBalance);
-        walletBalance.setText(String.valueOf(balance));
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(auth.getCurrentUser().getUid()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Double balance = dataSnapshot.getValue(Double.class);
+                walletBalance = findViewById(R.id.walletBalance);
+                walletBalance.setText(String.valueOf(balance));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

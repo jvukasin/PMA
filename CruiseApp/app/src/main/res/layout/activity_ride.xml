@@ -83,7 +83,7 @@
                     android:id="@+id/rideDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="13.4"
+                    android:text="0.0"
                     android:layout_gravity="center"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="22sp"/>
