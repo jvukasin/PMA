@@ -291,6 +291,7 @@ public class CarDetailActivity extends AppCompatActivity {
     }
 
     private void initQRScanner() {
+        //TODO proveri da li ima >0eura na racunu, ako ima moze ovo ispod ako ne kazi mu da nema para
         Intent intent = new Intent(CarDetailActivity.this, QRScannerActivity.class);
         startActivity(intent);
     }

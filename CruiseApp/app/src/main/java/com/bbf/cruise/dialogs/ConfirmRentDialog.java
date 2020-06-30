@@ -69,6 +69,7 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
                         }
 
                         //TODO namestiti sve sa bazom sto treba
+                        // occupied = true za vozilo
 
                         Rent r = new Rent();
                         r.setDate_created(new Date());

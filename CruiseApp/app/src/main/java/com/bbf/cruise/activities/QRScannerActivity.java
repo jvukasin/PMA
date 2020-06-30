@@ -17,7 +17,6 @@ import com.bbf.cruise.constants.FirebasePaths;
 import com.bbf.cruise.dialogs.ConfirmRentDialog;
 import com.bbf.cruise.dialogs.EditBalanceDialog;
 import com.bbf.cruise.helpers.QRScanFeedback;
-import com.bbf.cruise.service.CarService;
 import com.bbf.cruise.service.QRProcessingService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -97,19 +96,13 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Car car = dataSnapshot.getValue(Car.class);
-                CarService carService = new CarService();
 
-                if (car == null) {
-                    // TODO show error dialog
-                    finish();
-                    return;
-                }
+                //TODO Proveri da li je auto occuppied
 
-                if (!carService.isCarAvailableForRent(car)) {
-                    // TODO show car not available for rent dialog
-                    finish();
-                    return;
-                }
+//                if (occupied) {
+//                    //show error dialog
+//                    return;
+//                }
 
                 openConfirmRentDialog(car);
             }
@@ -119,8 +112,6 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-
-//        mScannerView.resumeCameraPreview(this);
 
     }
 

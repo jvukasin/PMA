@@ -46,7 +46,7 @@ public class ReservationService extends Service {
     public void onCreate() {
 
     }
-    //TODO dodati da salje notifikaciju kad servis prestane da radi - kad istekne rez
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -97,7 +97,7 @@ public class ReservationService extends Service {
         }, 1000,1000);
     }
 
-    // TODO: ako uspes podesi da kad ugasi app i klikne na not da otvori prethodno stanje
+
     private void notificationUpdate(String timeLeft){
         final Intent notificationIntent = new Intent(this, CarDetailActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);

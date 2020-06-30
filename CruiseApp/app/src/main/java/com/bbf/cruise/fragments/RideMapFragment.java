@@ -465,7 +465,6 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     private final BroadcastReceiver saveRideHistoryReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //TODO: sacuvati i bonus poene, ukupno voznji, ukupno predjeno
             if(intent.getAction().equals(SAVE_RIDE_HISTORY_ACTION)){
                 final String path = "";
                 final boolean flagBonusPoints = intent.getBooleanExtra("flagBonusPoints", false);
