@@ -57,7 +57,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     private void resetPassword() {
-        //TODO DA LI U ASYNCTASK?
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null) {
             final LoadingDialog loadingDialog = new LoadingDialog(ChangePasswordActivity.this);

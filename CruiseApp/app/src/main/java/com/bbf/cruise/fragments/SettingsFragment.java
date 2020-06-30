@@ -91,7 +91,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 String prefixStr = sharedPreferences.getString(key, "");
                 pref.setSummary(prefixStr); //novi
 
-                //TODO DA LI U ASYNCTASK?
                 String firebaseUserUID = auth.getCurrentUser().getUid();
                 FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
                 DatabaseReference reference = rootNode.getReference("Users");

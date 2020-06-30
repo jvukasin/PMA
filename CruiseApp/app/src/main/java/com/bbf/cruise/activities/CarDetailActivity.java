@@ -150,7 +150,6 @@ public class CarDetailActivity extends AppCompatActivity {
 
     private void reserveCar() {
         if(NetworkUtil.isConnected(this)) {
-            //TODO PROVERITI DIJALOG ZA PERMISIJU
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.FOREGROUND_SERVICE}, PackageManager.PERMISSION_GRANTED);
 
             dis_from_me.setVisibility(View.INVISIBLE);

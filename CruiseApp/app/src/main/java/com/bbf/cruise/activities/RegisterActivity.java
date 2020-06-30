@@ -114,7 +114,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        //TODO DA LI U ASYNCTASK?
         String str_email = email.getText().toString();
         String str_pass = password.getText().toString();
         final LoadingDialog loadingDialog = new LoadingDialog(RegisterActivity.this);

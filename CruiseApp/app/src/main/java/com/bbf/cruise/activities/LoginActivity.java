@@ -127,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser(String str_email, String str_pass) {
-        //TODO DA LI U ASYNCTASK?
         final LoadingDialog loadingDialog = new LoadingDialog(LoginActivity.this);
         loadingDialog.startLoadingDialog();
         auth.signInWithEmailAndPassword(str_email, str_pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
