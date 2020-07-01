@@ -1,5 +1,6 @@
 package com.bbf.cruise.dialogs;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -17,8 +18,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bbf.cruise.R;
+import com.bbf.cruise.activities.CarDetailActivity;
 import com.bbf.cruise.activities.RideActivity;
 import com.bbf.cruise.service.RentService;
+import com.bbf.cruise.service.ReservationService;
 import com.bbf.cruise.tools.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -68,14 +71,19 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
                             return;
                         }
 
-                        //TODO namestiti sve sa bazom sto treba
-                        // occupied = true za vozilo
+                        ReservationService rService = new ReservationService();
+                        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                            if (rService.getClass().getName().equals(service.service.getClassName())) {
+                                Intent intent = new Intent(context, ReservationService.class);
+                                intent.putExtra("plates", carForRent.getReg_number());
+                                intent.setAction("STOP_FOREGROUND");
+                                context.startService(intent);
+                                break;
+                            }
+                        }
 
-                        Rent r = new Rent();
-                        r.setDate_created(new Date());
-                        r.setCar_reg_number(carForRent.getReg_number());
-                        r.setUser_id(auth.getUid());
-                        System.out.println(r);
+                        FirebaseDatabase.getInstance().getReference().child("cars").child(carForRent.getReg_number()).child("occupied").setValue(true);
 
                         Intent intent = new Intent(context, RideActivity.class);
                         intent.putExtra("plates", carForRent.getReg_number());

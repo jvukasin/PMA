@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -16,8 +17,11 @@ import com.bbf.cruise.R;
 import com.bbf.cruise.constants.FirebasePaths;
 import com.bbf.cruise.dialogs.ConfirmRentDialog;
 import com.bbf.cruise.dialogs.EditBalanceDialog;
+import com.bbf.cruise.fragments.MapFragment;
 import com.bbf.cruise.helpers.QRScanFeedback;
 import com.bbf.cruise.service.QRProcessingService;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -85,7 +89,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
     private void processFeedback(QRScanFeedback feedback) {
         if (!feedback.isSuccess()) {
-            // TODO show error dialog
+            Toast.makeText(context, "Feedback is Success FALSE", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -97,14 +101,15 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Car car = dataSnapshot.getValue(Car.class);
 
-                //TODO Proveri da li je auto occuppied
-
-//                if (occupied) {
-//                    //show error dialog
-//                    return;
-//                }
-
-                openConfirmRentDialog(car);
+                DatabaseReference referenceReservations = FirebaseDatabase.getInstance().getReference("Reservations");
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(car != null && !car.isOccupied()) {
+                    openConfirmRentDialog(car);
+                } else if (car != null && MapFragment.isReservedByMe(referenceReservations, car.getReg_number(), user)) {
+                    openConfirmRentDialog(car);
+                } else {
+                    Toast.makeText(context, "This car is occupied or reserved.", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override

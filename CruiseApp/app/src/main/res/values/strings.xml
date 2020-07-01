@@ -78,6 +78,7 @@
     <string name="rideFeeBP">Ride fee using bonus points:</string>
     <string name="pay">Pay</string>
     <string name="payWithBP">Pay with points</string>
+    <string name="insufficientFunds">Insufficient funds! You have 2 or less euros in your wallet</string>
 
     <string-array name="pref_distance_entries">
         <item>Kilometers</item>

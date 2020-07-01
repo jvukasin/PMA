@@ -188,10 +188,7 @@ public class RideActivity extends AppCompatActivity {
         intent.setAction("RIDE_FINISHED_ACTION");
         sendBroadcast(intent);
         chronometer.stop();
-<<<<<<< HEAD
-=======
 
->>>>>>> c1541ea097ab31576d3b61b8d8f6392d319667ad
         TextView showPrice = mDialog.findViewById(R.id.fee);
         showPrice.setText(priceTV.getText());
 
@@ -260,7 +257,6 @@ public class RideActivity extends AppCompatActivity {
             chronometer.setBase(SystemClock.elapsedRealtime());
         }
         if(!paid) {
-            //TODO stavi da vise nije zauzet
             userReference = FirebaseDatabase.getInstance().getReference("Users");
             firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             userReference.child(firebaseUser.getUid()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -274,6 +270,8 @@ public class RideActivity extends AppCompatActivity {
 
                 }
             });
+
+            FirebaseDatabase.getInstance().getReference().child("cars").child(plates).child("occupied").setValue(false);
         }
     }
 }

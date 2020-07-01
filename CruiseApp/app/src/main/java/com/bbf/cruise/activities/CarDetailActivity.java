@@ -29,6 +29,7 @@ import com.bbf.cruise.service.ReservationService;
 import com.bbf.cruise.tools.NetworkUtil;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -76,7 +77,7 @@ public class CarDetailActivity extends AppCompatActivity {
         rentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initQRScanner();
+                initQRScanner(v);
             }
         });
         reserveBtn.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +96,8 @@ public class CarDetailActivity extends AppCompatActivity {
         counter = (TextView) findViewById(R.id.counter);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        initImages();
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("Counter");
@@ -260,8 +263,6 @@ public class CarDetailActivity extends AppCompatActivity {
                 }
             });
 
-            initImages();
-
             if (isServiceRunning(reservationService.getClass())) {
                 dis_from_me.setVisibility(View.INVISIBLE);
                 from_you.setVisibility(View.INVISIBLE);
@@ -290,13 +291,39 @@ public class CarDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initQRScanner() {
-        //TODO proveri da li ima >0eura na racunu, ako ima moze ovo ispod ako ne kazi mu da nema para
-        Intent intent = new Intent(CarDetailActivity.this, QRScannerActivity.class);
-        startActivity(intent);
+    private void initQRScanner(View v) {
+        FirebaseUser usr = FirebaseAuth.getInstance().getCurrentUser();
+        final View view = v;
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(usr.getUid()).child("wallet");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Double wall = dataSnapshot.getValue(Double.class);
+                if(wall > 2) {
+                    Intent intent = new Intent(CarDetailActivity.this, QRScannerActivity.class);
+                    startActivity(intent);
+                } else {
+                    Snackbar snack = Snackbar.make(view, R.string.insufficientFunds, Snackbar.LENGTH_LONG);
+                    snack.setDuration(10000);
+                    snack.setAction("ADD FUNDS", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(CarDetailActivity.this, WalletActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    snack.show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    private boolean isServiceRunning(Class<?> serviceClass) {
+    public boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {

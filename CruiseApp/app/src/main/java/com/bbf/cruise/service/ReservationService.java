@@ -58,7 +58,11 @@ public class ReservationService extends Service {
                 FirebaseDatabase.getInstance().getReference().child("Reservations").child(plates).removeValue();
                 stopForeground(true);
                 stopSelf();
-            }else{
+            } else if (intent.getAction().equals("STOP_FOREGROUND")) {
+                FirebaseDatabase.getInstance().getReference().child("Reservations").child(plates).removeValue();
+                stopForeground(true);
+                stopSelf();
+            } else{
                 startTimer();
             }
         }
