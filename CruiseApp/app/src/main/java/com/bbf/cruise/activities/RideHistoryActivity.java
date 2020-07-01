@@ -5,6 +5,7 @@ import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,8 +43,9 @@ public class RideHistoryActivity extends AppCompatActivity {
 
         rideHistoryList = findViewById(R.id.rideHistoryItems);
         loading = findViewById(R.id.ride_history_loading);
+
         loading.setVisibility(View.VISIBLE);
-        rideHistoryList.setVisibility(View.INVISIBLE);
+        rideHistoryList.setVisibility(View.GONE);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("RideHistory").child(user.getUid());
@@ -54,7 +56,7 @@ public class RideHistoryActivity extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     list.add(new RideHistoryItem(snapshot.getValue(RideHistory.class)));
                 }
-                loading.setVisibility(View.INVISIBLE);
+                loading.setVisibility(View.GONE);
                 rideHistoryList.setVisibility(View.VISIBLE);
                 RideHistoryAdapter rideHistoryAdapter = new RideHistoryAdapter(RideHistoryActivity.this, list);
                 rideHistoryList.setAdapter(rideHistoryAdapter);
