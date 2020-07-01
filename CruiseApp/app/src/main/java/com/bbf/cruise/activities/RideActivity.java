@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
@@ -17,11 +18,14 @@ import android.widget.Chronometer;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bbf.cruise.MainActivity;
 import com.bbf.cruise.R;
 import com.bbf.cruise.constants.FirebasePaths;
+import com.bbf.cruise.dialogs.LoadingDialog;
 import com.bbf.cruise.fragments.RideMapFragment;
 import com.bbf.cruise.tools.FragmentTransition;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,10 +44,13 @@ public class RideActivity extends AppCompatActivity {
     private Dialog mDialog;
     private int counter;
     private double price;
-    private TextView priceTV, distanceTV;
+    private TextView priceTV;
     private FirebaseAuth auth;
     private String plates;
     private DatabaseReference carReference;
+    private boolean paid;
+    private DatabaseReference userReference;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +64,9 @@ public class RideActivity extends AppCompatActivity {
         plates = getIntent().getStringExtra("plates");
         price = 2.0;
         counter = 0;
+        paid = false;
         finishBtn = findViewById(R.id.finishRideBtn);
         priceTV = findViewById(R.id.ridePrice);
-        distanceTV = findViewById(R.id.rideDistance);
 
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +94,7 @@ public class RideActivity extends AppCompatActivity {
 
         mDialog = new Dialog(this);
         mDialog.setContentView(R.layout.rate_finish_dialog);
-        mDialog.setCancelable(true); // TODO: promeniti na false
+        mDialog.setCancelable(false);
         mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         Button payBtn = mDialog.findViewById(R.id.payBPBtn);
@@ -112,6 +119,7 @@ public class RideActivity extends AppCompatActivity {
                 intent.putExtra("rideHistory", new RideHistory(startDate, endDate, Double.valueOf(distance.getText().toString()), Double.valueOf(fee.getText().toString()),
                         Integer.valueOf(bonusPoints.getText().toString()), auth.getCurrentUser().getUid()));
                 sendBroadcast(intent);
+                callLoadingDialogAndFinish();
             }
         });
 
@@ -126,6 +134,7 @@ public class RideActivity extends AppCompatActivity {
                         Integer.valueOf(bonusPoints.getText().toString()), auth.getCurrentUser().getUid()));
                 intent.setAction("SAVE_RIDE_HISTORY_ACTION");
                 sendBroadcast(intent);
+                callLoadingDialogAndFinish();
             }
         });
 
@@ -135,6 +144,24 @@ public class RideActivity extends AppCompatActivity {
         bundle.putDouble("lng", getIntent().getDoubleExtra("lng", 0));
         fragment.setArguments(bundle);
         FragmentTransition.addRideMap(fragment, this, false);
+    }
+
+    private void callLoadingDialogAndFinish() {
+        paid = true;
+        mDialog.dismiss();
+        final LoadingDialog loadingDialog = new LoadingDialog(RideActivity.this);
+        loadingDialog.startLoadingDialog();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingDialog.dismissDialog();
+                Intent intent = new Intent(RideActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        }, 1000);
     }
 
     private void updateCarRating(final float rating) {
@@ -161,6 +188,10 @@ public class RideActivity extends AppCompatActivity {
         intent.setAction("RIDE_FINISHED_ACTION");
         sendBroadcast(intent);
         chronometer.stop();
+<<<<<<< HEAD
+=======
+
+>>>>>>> c1541ea097ab31576d3b61b8d8f6392d319667ad
         TextView showPrice = mDialog.findViewById(R.id.fee);
         showPrice.setText(priceTV.getText());
 
@@ -189,7 +220,6 @@ public class RideActivity extends AppCompatActivity {
             }
         });
 
-        //TODO napraviti da ako ubije aplikaciju ili izadje ili sta god, da mu se skine sa racuna svakako cena
         mDialog.show();
     }
 
@@ -210,8 +240,6 @@ public class RideActivity extends AppCompatActivity {
         builder.setMessage(R.string.exitRideOnBackMessage);
         builder.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                //TODO exit and charge
-
                 finish();
             }
         });
@@ -230,6 +258,22 @@ public class RideActivity extends AppCompatActivity {
         if(chronometer.isActivated()) {
             chronometer.stop();
             chronometer.setBase(SystemClock.elapsedRealtime());
+        }
+        if(!paid) {
+            //TODO stavi da vise nije zauzet
+            userReference = FirebaseDatabase.getInstance().getReference("Users");
+            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            userReference.child(firebaseUser.getUid()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Double value = dataSnapshot.getValue(Double.class);
+                    userReference.child(firebaseUser.getUid()).child("wallet").setValue(value - price);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 }

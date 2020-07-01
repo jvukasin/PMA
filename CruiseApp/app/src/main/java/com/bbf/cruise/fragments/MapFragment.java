@@ -678,8 +678,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         }
     }
 
-    private void positionFavorites(){
-        //TODO provera da li je zauzet i da li sam ga ja rez
+    private void positionFavorites() {
         int radius = sharedPreferences.getInt("radius", 30);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         for(Car car: favoriteCars){

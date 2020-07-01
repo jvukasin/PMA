@@ -84,7 +84,6 @@ public class FavoriteActivity extends AppCompatActivity {
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             referencePlates = FirebaseDatabase.getInstance().getReference("Favorites").child(firebaseUser.getUid());
             referenceCars = FirebaseDatabase.getInstance().getReference("cars");
-            //TODO dodati proveru za occupied i reservedByMe
             referencePlates.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
