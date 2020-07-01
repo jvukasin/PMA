@@ -114,6 +114,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     private DatabaseReference userReference;
     private DatabaseReference carReference;
     private LatLng startLocation;
+    private LatLng lastLocation;
 
     private static long UPDATE_INTERVAL = 1200;
     private static long FASTEST_INTERVAL = 1200;
@@ -461,8 +462,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
                             .color(Color.BLUE)
                             .geodesic(true));
                     routePoly.setPoints(route);
-                    LatLng lastLocation = route.get(route.size()-1);
-                    carReference.child(plates).child("location").setValue(new LocationObject(lastLocation.latitude, lastLocation.longitude));
+                    lastLocation = route.get(route.size()-1);
+
                     int height = 100;
                     int width = 70;
                     BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.finish_pin);
@@ -477,9 +478,57 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             }
             sum = 0;
             route.clear();
-
         }
     };
+
+    private void updateCar(LatLng lastLocation, final RideHistory rideHistory) {
+        carReference.child(plates).child("location").setValue(new LocationObject(lastLocation.latitude, lastLocation.longitude));
+        carReference.child(plates).child("occupied").setValue(false);
+
+        carReference.child(plates).child("no_of_rides").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer count = dataSnapshot.getValue(Integer.class);
+                carReference.child(plates).child("no_of_rides").setValue(count+1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        carReference.child(plates).child("fuel_distance").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer fuelDistance = dataSnapshot.getValue(Integer.class);
+                if(fuelDistance == 0){
+                    return;
+                }
+                carReference.child(plates).child("fuel_distance").setValue((int) fuelDistance - rideHistory.getDistance());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        carReference.child(plates).child("mileage").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Double mileage = dataSnapshot.getValue(Double.class);
+                carReference.child(plates).child("mileage").setValue(mileage + rideHistory.getDistance());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 
     private final BroadcastReceiver saveRideHistoryReciever = new BroadcastReceiver() {
         @Override
@@ -496,6 +545,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
                     }
                 };
                 map.snapshot(callback);
+                updateCar(lastLocation, rideHistory);
             }
         }
     };
