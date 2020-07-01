@@ -90,7 +90,7 @@ public class FavoriteActivity extends AppCompatActivity {
                     favoriteCars.clear();
                     for(DataSnapshot carSnapshot: dataSnapshot.getChildren()) {
                         String plts = carSnapshot.getKey();
-                        referenceCars.child(plts).addValueEventListener(new ValueEventListener() {
+                        referenceCars.child(plts).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 CarItem ci = new CarItem(dataSnapshot.getValue(Car.class));
