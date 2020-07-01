@@ -90,6 +90,7 @@ import java.util.TimerTask;
 
 import model.Car;
 import model.CarItem;
+import model.LocationObject;
 import model.RideHistory;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -111,6 +112,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
     private DatabaseReference ridHistoryReference;
     private DatabaseReference userReference;
+    private DatabaseReference carReference;
     private LatLng startLocation;
 
     private static long UPDATE_INTERVAL = 1200;
@@ -119,6 +121,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
     private SharedPreferences sharedPreferences;
+    private String plates;
 
 
     public static RideMapFragment newInstance() {
@@ -148,16 +151,22 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             }
         };
 
+
+        ridHistoryReference = FirebaseDatabase.getInstance().getReference("RideHistory");
+        userReference = FirebaseDatabase.getInstance().getReference("Users");
+        carReference = FirebaseDatabase.getInstance().getReference("cars");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         IntentFilter rideFinishedFilter = new IntentFilter(RIDE_FINISHED_ACTION);
         requireActivity().registerReceiver(rideFinishedReciever, rideFinishedFilter);
 
         IntentFilter saveRideHistoryFilter = new IntentFilter(SAVE_RIDE_HISTORY_ACTION);
         requireActivity().registerReceiver(saveRideHistoryReciever, saveRideHistoryFilter);
 
-        ridHistoryReference = FirebaseDatabase.getInstance().getReference("RideHistory");
-        userReference = FirebaseDatabase.getInstance().getReference("Users");
     }
-
 
     /**
      * Kada zelmo da dobijamo informacije o lokaciji potrebno je da specificiramo
@@ -231,6 +240,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.ride_map_layout, vg, false);
         startLocation = new LatLng(getArguments().getDouble("lat"), getArguments().getDouble("lng"));
+        plates = getArguments().getString("plates");
         return view;
     }
 
@@ -420,6 +430,14 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        requireActivity().unregisterReceiver(rideFinishedReciever);
+        requireActivity().unregisterReceiver(saveRideHistoryReciever);
+    }
+
     /**
      *
      * Rad sa lokacja izuzetno trosi bateriju.Obavezno osloboditi kada vise ne koristmo
@@ -430,8 +448,6 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
         sum = 0;
         route.clear();
-        requireActivity().unregisterReceiver(rideFinishedReciever);
-        requireActivity().unregisterReceiver(saveRideHistoryReciever);
     }
 
     private final BroadcastReceiver rideFinishedReciever = new BroadcastReceiver() {
@@ -446,6 +462,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
                             .geodesic(true));
                     routePoly.setPoints(route);
                     LatLng lastLocation = route.get(route.size()-1);
+                    carReference.child(plates).child("location").setValue(new LocationObject(lastLocation.latitude, lastLocation.longitude));
                     int height = 100;
                     int width = 70;
                     BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.finish_pin);

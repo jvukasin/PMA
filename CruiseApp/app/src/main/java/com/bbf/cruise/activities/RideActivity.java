@@ -140,6 +140,7 @@ public class RideActivity extends AppCompatActivity {
 
         RideMapFragment fragment = RideMapFragment.newInstance();
         Bundle bundle = new Bundle();
+        bundle.putString("plates", plates);
         bundle.putDouble("lat", getIntent().getDoubleExtra("lat", 0));
         bundle.putDouble("lng", getIntent().getDoubleExtra("lng", 0));
         fragment.setArguments(bundle);
