@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="230dp"
         android:background="@drawable/ride_history_item_background"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
@@ -15,13 +15,11 @@
         android:layout_marginTop="10dp">
 
         <RelativeLayout
-            android:layout_marginTop="10dp"
             android:id="@+id/rideHistoryItemLeft"
             android:padding="10dp"
             android:orientation="vertical"
-            android:layout_width="220dp"
-            android:layout_height="match_parent"
-            >
+            android:layout_width="165dp"
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -30,108 +28,82 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:layout_weight="1"
                         android:id="@+id/startDateLabel"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
+                        android:layout_height="wrap_content"
                         android:textColor="@color/colorGhostWhite"
-                        android:text="@string/startDateLabel"
-                        />
-                    <TextView
-                        android:layout_weight="1"
-                        android:id="@+id/endDateLabel"
-                        android:textColor="@color/colorGhostWhite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:text="@string/endDateLabel"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
+                        android:text="@string/startDateLabel"/>
 
                     <TextView
                         android:fontFamily="sans-serif-black"
                         android:id="@+id/startDate"
-                        android:layout_weight="1"
                         android:textColor="@color/colorMenuText"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp">
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp">
                     </TextView>
 
                     <TextView
-                        android:paddingLeft="3dp"
-                        android:layout_weight="1"
+                        android:id="@+id/endDateLabel"
+                        android:textColor="@color/colorGhostWhite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/endDateLabel"/>
+
+                    <TextView
                         android:fontFamily="sans-serif-black"
                         android:id="@+id/endDate"
                         android:textColor="@color/colorMenuText"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp">
-                    </TextView>
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:layout_weight="1"
                         android:id="@+id/distanceLabel"
                         android:textColor="@color/colorGhostWhite"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:text="@string/distanceLabel"
-                        />
+                        android:layout_height="wrap_content"
+                        android:text="@string/distanceLabel"/>
 
                     <TextView
-                        android:layout_weight="1"
-                        android:id="@+id/priceLabel"
-                        android:textColor="@color/colorGhostWhite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:text="Price      "
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_weight="1"
                         android:fontFamily="sans-serif-black"
                         android:id="@+id/distance"
                         android:textColor="@color/colorMenuText"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp">
-                    </TextView>
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"/>
 
                     <TextView
-                        android:paddingLeft="5dp"
-                        android:layout_weight="1"
+                        android:id="@+id/priceLabel"
+                        android:textColor="@color/colorGhostWhite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/priceLabel"/>
+
+                    <TextView
                         android:fontFamily="sans-serif-black"
                         android:id="@+id/price"
                         android:textColor="@color/colorMenuText"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp">
-                    </TextView>
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"/>
 
                 </LinearLayout>
 
                 <RelativeLayout
-                    android:layout_marginTop="35dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="43dp">
 
                     <TextView
                         android:id="@+id/earnedPointsLabel"
@@ -143,8 +115,8 @@
                         android:fontFamily="sans-serif"
                         android:text="Bonus points:"
                         android:textSize="14sp"
-                        android:textColor="@color/colorGhostWhite"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="2dp"
+                        android:textColor="@color/colorGhostWhite"/>
 
                     <TextView
                         android:layout_toRightOf="@id/earnedPointsLabel"
@@ -154,8 +126,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-black"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="10dp"/>
+                        android:textSize="16sp"/>
 
 <!--                    <TextView-->
 <!--                        android:layout_toEndOf="@id/points"-->
@@ -179,18 +150,16 @@
         <RelativeLayout
             android:layout_toRightOf="@id/rideHistoryItemLeft"
             android:layout_toEndOf="@id/rideHistoryItemLeft"
-            android:paddingLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="bottom|center"
-            >
+            android:gravity="bottom|center">
 
                 <ImageView
                     android:background="@drawable/ride_history_item_background"
                     android:id="@+id/route"
                     android:scaleType="fitXY"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></ImageView>
+                    android:layout_height="match_parent"/>
 
         </RelativeLayout>
 

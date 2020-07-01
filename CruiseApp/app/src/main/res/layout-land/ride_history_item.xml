@@ -144,7 +144,7 @@
                         android:text="Bonus points:"
                         android:textSize="14sp"
                         android:textColor="@color/colorGhostWhite"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="12dp"/>
 
                     <TextView
                         android:layout_toRightOf="@id/earnedPointsLabel"
