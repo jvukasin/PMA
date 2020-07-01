@@ -13,6 +13,10 @@ public class RideHistoryItem implements Parcelable {
     private double price;
     private int points;
 
+    public RideHistoryItem(RideHistory rideHistory){
+        this(rideHistory.getStartDate(), rideHistory.getEndDate(), rideHistory.getDistance(), rideHistory.getPrice(), rideHistory.getPoints());
+    }
+
     public RideHistoryItem(String startDate, String endDate, double distance, double price, int points) {
         this.startDate = startDate;
         this.endDate = endDate;

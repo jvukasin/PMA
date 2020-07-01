@@ -116,8 +116,8 @@ public class RideActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("flagBonusPoints", false);
                 intent.setAction("SAVE_RIDE_HISTORY_ACTION");
-                intent.putExtra("rideHistory", new RideHistory(startDate, endDate, Double.valueOf(distance.getText().toString()), Double.valueOf(fee.getText().toString()),
-                        Integer.valueOf(bonusPoints.getText().toString()), auth.getCurrentUser().getUid()));
+                intent.putExtra("rideHistory", new RideHistory(startDate, endDate, Double.parseDouble(distance.getText().toString()), Double.parseDouble(fee.getText().toString()),
+                        Integer.parseInt(bonusPoints.getText().toString()), auth.getCurrentUser().getUid()));
                 sendBroadcast(intent);
                 callLoadingDialogAndFinish();
             }
@@ -130,8 +130,8 @@ public class RideActivity extends AppCompatActivity {
                 updateCarRating(rate.getRating());
                 Intent intent = new Intent();
                 intent.putExtra("flagBonusPoints", true);
-                intent.putExtra("rideHistory", new RideHistory(startDate, endDate, Double.valueOf(distance.getText().toString()), Double.valueOf(feeBP.getText().toString()),
-                        Integer.valueOf(bonusPoints.getText().toString()), auth.getCurrentUser().getUid()));
+                intent.putExtra("rideHistory", new RideHistory(startDate, endDate, Double.parseDouble(distance.getText().toString()), Double.parseDouble(feeBP.getText().toString()),
+                        Integer.parseInt(bonusPoints.getText().toString()), auth.getCurrentUser().getUid()));
                 intent.setAction("SAVE_RIDE_HISTORY_ACTION");
                 sendBroadcast(intent);
                 callLoadingDialogAndFinish();
