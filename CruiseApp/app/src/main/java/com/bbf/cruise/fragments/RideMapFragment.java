@@ -518,7 +518,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double mileage = dataSnapshot.getValue(Double.class);
-                carReference.child(plates).child("mileage").setValue(mileage + rideHistory.getDistance());
+                double rounded = Math.round(mileage * 10) / 10.0;
+                carReference.child(plates).child("mileage").setValue(rounded + rideHistory.getDistance());
             }
 
             @Override
@@ -623,7 +624,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double totalDistance = dataSnapshot.getValue(Double.class);
-                userReference.child(userId).child("totalDistance").setValue(totalDistance + distance);
+                double rounded = Math.round(totalDistance * 10) / 10.0;
+                userReference.child(userId).child("totalDistance").setValue(rounded + distance);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -646,7 +648,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double value = dataSnapshot.getValue(Double.class);
-                userReference.child(userId).child("wallet").setValue(value - price);
+                double rounded = Math.round(value * 10) / 10.0;
+                userReference.child(userId).child("wallet").setValue(rounded - price);
             }
 
             @Override
@@ -685,7 +688,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double totalDistance = dataSnapshot.getValue(Double.class);
-                userReference.child(userId).child("totalDistance").setValue(totalDistance + distance);
+                double rounded = Math.round(totalDistance * 10) / 10.0;
+                userReference.child(userId).child("totalDistance").setValue(rounded + distance);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
