@@ -118,7 +118,6 @@ public class RideActivity extends AppCompatActivity {
         payWithPointsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: uraditi placanje sa bonus poenima
                 String endDate = formatter.format(new Date());
                 updateCarRating(rate.getRating());
                 Intent intent = new Intent();
@@ -162,7 +161,6 @@ public class RideActivity extends AppCompatActivity {
         intent.setAction("RIDE_FINISHED_ACTION");
         sendBroadcast(intent);
         chronometer.stop();
-        //TODO proslediti parametre u dijalog
         TextView showPrice = mDialog.findViewById(R.id.fee);
         showPrice.setText(priceTV.getText());
 
