@@ -84,6 +84,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private GoogleMap map;
     private DatabaseReference databaseReference;
     private ArrayList<Car> cars = new ArrayList<>();
+    private ArrayList<Marker> carMarkers = new ArrayList<>();
     private Button centreButton;
     private Button nearbyCarsButton;
     private Button heartButton;
@@ -93,8 +94,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private TextView name, model, carRating, carPlate, carRides, carFuel, carDistance;
 
     public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
-    private static long UPDATE_INTERVAL = 1000;
-    private static long FASTEST_INTERVAL = 2000;
+    private static long UPDATE_INTERVAL = 500;
+    private static long FASTEST_INTERVAL = 500;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
@@ -141,7 +142,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if(locationResult == null){
                     return;
                 }
-                databaseReference.addValueEventListener(new ValueEventListener() {
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         cars.clear();
@@ -166,7 +167,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         locationRequest.setInterval(UPDATE_INTERVAL);
         locationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 cars.clear();
@@ -247,11 +248,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean wifi = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(FASTEST_INTERVAL);
 
         if (!gps && !wifi) {
             showLocatonDialog();
@@ -657,6 +653,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     private void positionCarMarkers(){
+        clearCarMarkers();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         int radius = sharedPreferences.getInt("radius", 30);
         for(Car car: cars){
@@ -679,6 +676,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     private void positionFavorites() {
+        clearCarMarkers();
         int radius = sharedPreferences.getInt("radius", 30);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         for(Car car: favoriteCars){
@@ -707,12 +705,21 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car_map_pin_no_border_yellow);
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-        map.addMarker(new MarkerOptions()
+
+        Marker marker = map.addMarker(new MarkerOptions()
                 .title(car.getReg_number())
                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-                .position(loc))
-                .setFlat(true);
+                .position(loc));
+        marker.setFlat(true);
+        carMarkers.add(marker);
     }
+
+    private void clearCarMarkers(){
+        for(Marker carMarker: carMarkers){
+            carMarker.remove();
+        }
+    }
+
 
     /**
      *

@@ -7,77 +7,174 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="250dp"
         android:background="@drawable/ride_history_item_background"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp">
 
-        <LinearLayout
+        <RelativeLayout
+            android:layout_marginTop="10dp"
             android:id="@+id/rideHistoryItemLeft"
-            android:paddingLeft="10dp"
+            android:padding="10dp"
             android:orientation="vertical"
-            android:layout_width="430dp"
+            android:layout_width="400dp"
             android:layout_height="match_parent"
             >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:textColor="@color/colorGhostWhite"
-                android:text="@string/startDateLabel"
-                />
-            <TextView
-                android:fontFamily="sans-serif-black"
-                android:id="@+id/startDate"
-                android:textColor="@color/colorMenuText"
-                android:layout_width="match_parent"
-                android:layout_height="20dp">
-            </TextView>
 
-            <TextView
-                android:textColor="@color/colorGhostWhite"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="@string/endDateLabel"
-                />
-            <TextView
-                android:fontFamily="sans-serif-black"
-                android:id="@+id/endDate"
-                android:textColor="@color/colorMenuText"
-                android:layout_width="match_parent"
-                android:layout_height="20dp">
-            </TextView>
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:textColor="@color/colorGhostWhite"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="@string/distanceLabel"
-                />
-            <TextView
-                android:fontFamily="sans-serif-black"
-                android:id="@+id/distance"
-                android:textColor="@color/colorMenuText"
-                android:layout_width="match_parent"
-                android:layout_height="20dp">
-            </TextView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:textColor="@color/colorGhostWhite"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="@string/priceLabel"
-                />
-            <TextView
-                android:fontFamily="sans-serif-black"
-                android:id="@+id/price"
-                android:textColor="@color/colorMenuText"
-                android:layout_width="match_parent"
-                android:layout_height="20dp">
-            </TextView>
+                    <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/startDateLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:textColor="@color/colorGhostWhite"
+                        android:text="@string/startDateLabel"
+                        />
+                    <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/endDateLabel"
+                        android:textColor="@color/colorGhostWhite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:text="@string/endDateLabel"
+                        />
 
-        </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:fontFamily="sans-serif-black"
+                        android:id="@+id/startDate"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorMenuText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp">
+                    </TextView>
+
+                    <TextView
+                        android:paddingLeft="3dp"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-black"
+                        android:id="@+id/endDate"
+                        android:textColor="@color/colorMenuText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp">
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/distanceLabel"
+                        android:textColor="@color/colorGhostWhite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:text="@string/distanceLabel"
+                        />
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/priceLabel"
+                        android:textColor="@color/colorGhostWhite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:text="Price      "
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-black"
+                        android:id="@+id/distance"
+                        android:textColor="@color/colorMenuText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp">
+                    </TextView>
+
+                    <TextView
+                        android:paddingLeft="5dp"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-black"
+                        android:id="@+id/price"
+                        android:textColor="@color/colorMenuText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp">
+                    </TextView>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_marginTop="35dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/earnedPointsLabel"
+                        android:paddingLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="Bonus points:"
+                        android:textSize="14sp"
+                        android:textColor="@color/colorGhostWhite"
+                        android:layout_marginBottom="10dp"/>
+
+                    <TextView
+                        android:layout_toRightOf="@id/earnedPointsLabel"
+                        android:id="@+id/points"
+                        android:layout_alignParentBottom="true"
+                        android:textColor="@color/colorMenuText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="10dp"/>
+
+                    <!--                    <TextView-->
+                    <!--                        android:layout_toEndOf="@id/points"-->
+                    <!--                        android:paddingLeft="5dp"-->
+                    <!--                        android:layout_alignParentBottom="true"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_toRightOf="@id/points"-->
+                    <!--                        android:fontFamily="sans-serif"-->
+                    <!--                        android:text="points"-->
+                    <!--                        android:textSize="14sp"-->
+                    <!--                        android:textColor="@color/colorGhostWhite"-->
+                    <!--                        android:layout_marginBottom="10dp"/>-->
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_toRightOf="@id/rideHistoryItemLeft"
@@ -86,28 +183,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom|center"
-            android:background="@drawable/points_border"
             >
-            <TextView
-                android:id="@+id/points"
-                android:layout_alignParentBottom="true"
-                android:textColor="@color/colorMenuText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-black"
-                android:textSize="16sp"
-                android:layout_marginBottom="10dp"/>
-            <TextView
-                android:paddingLeft="5dp"
-                android:layout_alignParentBottom="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/points"
-                android:fontFamily="sans-serif"
-                android:text="points"
-                android:textSize="14sp"
-                android:textColor="@color/colorGhostWhite"
-                android:layout_marginBottom="10dp"/>
+
+            <ImageView
+                android:background="@drawable/ride_history_item_background"
+                android:id="@+id/route"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></ImageView>
+
         </RelativeLayout>
 
     </RelativeLayout>

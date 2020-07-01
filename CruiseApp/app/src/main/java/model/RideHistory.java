@@ -12,6 +12,8 @@ public class RideHistory implements Serializable {
     private String userId;
     private String image;
 
+    public RideHistory(){}
+
     public RideHistory(String startDate, String endDate, double distance, double price, int points, String userId) {
         this.startDate = startDate;
         this.endDate = endDate;
