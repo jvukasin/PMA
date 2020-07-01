@@ -221,9 +221,9 @@ public class RideActivity extends AppCompatActivity {
         mDialog.show();
     }
 
-    private int calculateFeeBP(int bonusPoints, Double fee) {
-        int bp = (int) ((fee/1000) * bonusPoints);
-        return (int) (fee - bp);
+    private double calculateFeeBP(int bonusPoints, Double fee) {
+        double bp = Math.round(((fee/1000) * bonusPoints) * 10.0) / 10.0;
+        return (fee - bp);
     }
 
     private int calculateBonusPoints(Double distance) {
