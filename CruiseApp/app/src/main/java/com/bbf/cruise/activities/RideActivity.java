@@ -3,6 +3,7 @@ package com.bbf.cruise.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -176,7 +177,7 @@ public class RideActivity extends AppCompatActivity {
         };
         registerReceiver(broadcastReceiver, intentFilter);
     }
-0
+
     private void callLoadingDialogAndFinish() {
         paid = true;
         mDialog.dismiss();
@@ -253,6 +254,8 @@ public class RideActivity extends AppCompatActivity {
             }
         });
 
+        Intent intentService = new Intent(this, RentService.class);
+        stopService(intentService);
         mDialog.show();
     }
 
@@ -293,8 +296,13 @@ public class RideActivity extends AppCompatActivity {
             chronometer.setBase(SystemClock.elapsedRealtime());
         }
         if(!paid) {
-            Intent intentService = new Intent(this, RentService.class);
-            stopService(intentService);
+            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (RentService.class.getName().equals(service.service.getClassName())) {
+                    Intent intentService = new Intent(this, RentService.class);
+                    stopService(intentService);
+                }
+            }
             userReference = FirebaseDatabase.getInstance().getReference("Users");
             firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             userReference.child(firebaseUser.getUid()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
