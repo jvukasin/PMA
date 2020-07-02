@@ -446,9 +446,14 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         super.onPause();
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
         sum = 0;
         route.clear();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     private final BroadcastReceiver rideFinishedReciever = new BroadcastReceiver() {
