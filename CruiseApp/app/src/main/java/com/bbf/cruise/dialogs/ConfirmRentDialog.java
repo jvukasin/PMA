@@ -1,5 +1,6 @@
 package com.bbf.cruise.dialogs;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -71,10 +72,9 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
                             return;
                         }
 
-                        ReservationService rService = new ReservationService();
                         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
                         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                            if (rService.getClass().getName().equals(service.service.getClassName())) {
+                            if (ReservationService.class.getName().equals(service.service.getClassName())) {
                                 Intent intent = new Intent(context, ReservationService.class);
                                 intent.putExtra("plates", carForRent.getReg_number());
                                 intent.setAction("STOP_FOREGROUND");
@@ -89,7 +89,8 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
                         intent.putExtra("plates", carForRent.getReg_number());
                         intent.putExtra("lat", carForRent.getLocation().getLatitude());
                         intent.putExtra("lng", carForRent.getLocation().getLongitude());
-                        startActivity(intent);
+                        context.startActivity(intent);
+                        ((Activity) context).finish();
                     }
                 });
         return builder.create();

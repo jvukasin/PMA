@@ -750,7 +750,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     public static boolean isReservedByMe(DatabaseReference referenceReservations, String plates, final FirebaseUser firebaseUser){
         referenceReservations = referenceReservations.child(plates).child("user");
-        referenceReservations.addValueEventListener(new ValueEventListener() {
+        referenceReservations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String id = dataSnapshot.getValue(String.class);

@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -82,9 +83,8 @@ public class RideActivity extends AppCompatActivity {
                 System.out.println(counter);
                 if(counter == 60) {
                     counter = 0;
-                    System.out.println("usao");
                     price += 0.4;
-                    double rounded = Math.round(price * 10) / 10.0;
+                    double rounded = Math.round(price * 10.0) / 10.0;
                     priceTV.setText(String.valueOf(rounded));
                 }
                 counter++;
@@ -157,8 +157,6 @@ public class RideActivity extends AppCompatActivity {
             public void run() {
                 loadingDialog.dismissDialog();
                 Intent intent = new Intent(RideActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
@@ -199,9 +197,6 @@ public class RideActivity extends AppCompatActivity {
         TextView bounsPoints = mDialog.findViewById(R.id.earnedPoints);
         bounsPoints.setText(String.valueOf(bonusPoints));
 
-        TextView feeBP = mDialog.findViewById(R.id.feeBP);
-        feeBP.setText(String.valueOf(calculateFeeBP(bonusPoints, Double.valueOf(showPrice.getText().toString()))));
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FirebasePaths.USERS_PATH);
         databaseReference.child(auth.getCurrentUser().getUid()).child("bonusPoints").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -211,6 +206,11 @@ public class RideActivity extends AppCompatActivity {
                 TextView totalPoints = mDialog.findViewById(R.id.totalPoints);
                 int val = points + Integer.parseInt(bounsPoints.getText().toString());
                 totalPoints.setText(String.valueOf(val));
+                TextView feeBP = mDialog.findViewById(R.id.feeBP);
+
+                DecimalFormat df = new DecimalFormat("#.#");
+                df.format(calculateFeeBP(val, Double.valueOf(priceTV.getText().toString())));
+                feeBP.setText(String.valueOf(df));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

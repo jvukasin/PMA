@@ -518,7 +518,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double mileage = dataSnapshot.getValue(Double.class);
-                double rounded = Math.round(mileage * 10) / 10.0;
+                double rounded = Math.round(mileage * 10.0) / 10.0;
                 carReference.child(plates).child("mileage").setValue(rounded + rideHistory.getDistance());
             }
 

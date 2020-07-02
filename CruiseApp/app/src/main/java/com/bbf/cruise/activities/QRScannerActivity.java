@@ -3,6 +3,7 @@ package com.bbf.cruise.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -96,6 +97,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
         DatabaseReference carReference = FirebaseDatabase.getInstance().getReference(FirebasePaths.CARS_PATH).child(feedback.getParsed());
 
+
         carReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -103,12 +105,18 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
                 DatabaseReference referenceReservations = FirebaseDatabase.getInstance().getReference("Reservations");
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+                String hasReservation = sharedPreferences.getString("reservation", "");
                 if(car != null && !car.isOccupied()) {
                     openConfirmRentDialog(car);
-                } else if (car != null && MapFragment.isReservedByMe(referenceReservations, car.getReg_number(), user)) {
+                    mScannerView.stopCamera();
+                } else if (car.isOccupied() && hasReservation.equals(car.getReg_number())) {
                     openConfirmRentDialog(car);
-                } else {
+                    mScannerView.stopCamera();
+                } else if (car.isOccupied() && hasReservation.equals("none")) {
                     Toast.makeText(context, "This car is occupied or reserved.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, "Error fetching info if car is reserved", Toast.LENGTH_LONG).show();
                 }
             }
 
