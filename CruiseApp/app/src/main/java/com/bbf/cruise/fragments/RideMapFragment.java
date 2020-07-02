@@ -476,6 +476,9 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
                             .setFlat(true);
                 }
             }
+            if(route.isEmpty()){
+                lastLocation = startLocation;
+            }
             sum = 0;
             route.clear();
         }

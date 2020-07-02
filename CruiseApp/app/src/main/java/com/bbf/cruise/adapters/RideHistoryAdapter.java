@@ -124,11 +124,6 @@ public class RideHistoryAdapter extends BaseAdapter {
             }
         });
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return vi;
     }
 
