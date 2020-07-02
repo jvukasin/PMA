@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -24,6 +27,7 @@ import com.bbf.cruise.R;
 import com.bbf.cruise.constants.FirebasePaths;
 import com.bbf.cruise.dialogs.LoadingDialog;
 import com.bbf.cruise.fragments.RideMapFragment;
+import com.bbf.cruise.service.RentService;
 import com.bbf.cruise.tools.FragmentTransition;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,6 +57,7 @@ public class RideActivity extends AppCompatActivity {
     private boolean paid;
     private DatabaseReference userReference;
     private FirebaseUser firebaseUser;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,19 +83,21 @@ public class RideActivity extends AppCompatActivity {
         });
 
         chronometer = findViewById(R.id.rideTime);
-        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                if(counter == 60) {
-                    counter = 0;
-                    price += 0.4;
-                    double rounded = Math.round(price * 10.0) / 10.0;
-                    priceTV.setText(String.valueOf(rounded));
-                }
-                counter++;
-            }
-        });
+//        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+//            @Override
+//            public void onChronometerTick(Chronometer chronometer) {
+//                if(counter == 60) {
+//                    counter = 0;
+//                    price += 0.4;
+//                    double rounded = Math.round(price * 10.0) / 10.0;
+//                    priceTV.setText(String.valueOf(rounded));
+//                }
+//                counter++;
+//            }
+//        });
         chronometer.start();
+        Intent intentService = new Intent(this, RentService.class);
+        startService(intentService);
 
         mDialog = new Dialog(this);
         mDialog.setContentView(R.layout.rate_finish_dialog);
@@ -156,6 +163,18 @@ public class RideActivity extends AppCompatActivity {
         bundle.putDouble("lng", getIntent().getDoubleExtra("lng", 0));
         fragment.setArguments(bundle);
         FragmentTransition.addRideMap(fragment, this, false);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("Price");
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Double currPrice = intent.getDoubleExtra("price", 0.0);
+                price = currPrice;
+                priceTV.setText(String.valueOf(currPrice));
+            }
+        };
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     private void callLoadingDialogAndFinish() {
@@ -274,6 +293,8 @@ public class RideActivity extends AppCompatActivity {
             chronometer.setBase(SystemClock.elapsedRealtime());
         }
         if(!paid) {
+            Intent intentService = new Intent(this, RentService.class);
+            stopService(intentService);
             userReference = FirebaseDatabase.getInstance().getReference("Users");
             firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             userReference.child(firebaseUser.getUid()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -290,5 +311,6 @@ public class RideActivity extends AppCompatActivity {
 
             FirebaseDatabase.getInstance().getReference().child("cars").child(plates).child("occupied").setValue(false);
         }
+        unregisterReceiver(broadcastReceiver);
     }
 }
