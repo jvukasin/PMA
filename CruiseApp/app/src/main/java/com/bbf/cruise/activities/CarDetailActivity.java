@@ -122,7 +122,6 @@ public class CarDetailActivity extends AppCompatActivity {
     }
 
 
-
     private void initImages() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("images");
         ref.addValueEventListener(new ValueEventListener() {
@@ -153,6 +152,9 @@ public class CarDetailActivity extends AppCompatActivity {
             intent.putExtra("plates", plateNo);
             intent.setAction("REMOVE_FOREGROUND");
             startService(intent);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("reservation", "none");
+            editor.apply();
         }
     }
 

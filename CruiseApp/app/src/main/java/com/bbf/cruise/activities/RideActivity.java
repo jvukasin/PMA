@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -161,6 +162,10 @@ public class RideActivity extends AppCompatActivity {
     private void callLoadingDialogAndFinish() {
         paid = true;
         mDialog.dismiss();
+        SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("reservation", "none");
+        editor.apply();
         final LoadingDialog loadingDialog = new LoadingDialog(RideActivity.this);
         loadingDialog.startLoadingDialog();
         new Handler().postDelayed(new Runnable() {
