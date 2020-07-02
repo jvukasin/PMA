@@ -1,6 +1,7 @@
 package com.bbf.cruise.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,11 +57,12 @@ public class RideHistoryActivity extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     list.add(new RideHistoryItem(snapshot.getValue(RideHistory.class)));
                 }
-                loading.setVisibility(View.GONE);
-                rideHistoryList.setVisibility(View.VISIBLE);
+
                 RideHistoryAdapter rideHistoryAdapter = new RideHistoryAdapter(RideHistoryActivity.this, list);
                 rideHistoryList.setAdapter(rideHistoryAdapter);
                 rideHistoryList.setDivider(null);
+                loading.setVisibility(View.GONE);
+                rideHistoryList.setVisibility(View.VISIBLE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
