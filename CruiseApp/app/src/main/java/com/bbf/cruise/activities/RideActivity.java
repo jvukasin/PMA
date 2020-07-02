@@ -81,7 +81,6 @@ public class RideActivity extends AppCompatActivity {
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
-                System.out.println(counter);
                 if(counter == 60) {
                     counter = 0;
                     price += 0.4;
@@ -180,22 +179,24 @@ public class RideActivity extends AppCompatActivity {
     }
 
     private void updateCarRating(final float rating) {
-        carReference.child(plates).child("rating").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               Double rate = dataSnapshot.getValue(Double.class);
-               if(rate == 0){
-                   carReference.child(plates).child("rating").setValue(rating);
-               }else{
-                   double newRating = Math.round(((rate + rating) / 2) * 10.0) / 10.0;
-                   carReference.child(plates).child("rating").setValue(newRating);
-               }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        if(rating != 0.0) {
+            carReference.child(plates).child("rating").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Double rate = dataSnapshot.getValue(Double.class);
+                    if(rate == 0){
+                        carReference.child(plates).child("rating").setValue(rating);
+                    }else{
+                        double newRating = Math.round(((rate + rating) / 2) * 10.0) / 10.0;
+                        carReference.child(plates).child("rating").setValue(newRating);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     private void finishRide() {
