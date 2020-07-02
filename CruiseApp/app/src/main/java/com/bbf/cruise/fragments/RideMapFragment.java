@@ -482,8 +482,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     };
 
     private void updateCar(LatLng lastLocation, final RideHistory rideHistory) {
-        carReference.child(plates).child("location").setValue(new LocationObject(lastLocation.latitude, lastLocation.longitude));
         carReference.child(plates).child("occupied").setValue(false);
+        carReference.child(plates).child("location").setValue(new LocationObject(lastLocation.latitude, lastLocation.longitude));
 
         carReference.child(plates).child("no_of_rides").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

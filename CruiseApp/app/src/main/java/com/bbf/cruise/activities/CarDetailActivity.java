@@ -177,7 +177,6 @@ public class CarDetailActivity extends AppCompatActivity {
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                 reference.child("time").setValue(df.format(now.getTime()));
 
-
                 Intent i = new Intent(this, reservationService.getClass());
                 i.putExtra("plates", plateNo);
                 i.setAction("START_SERVICE");
@@ -185,8 +184,9 @@ public class CarDetailActivity extends AppCompatActivity {
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("reservation", plateNo);
+                editor.apply();
             }else{
-                return;
+                Toast.makeText(this, "You already made one reservation.", Toast.LENGTH_LONG).show();
             }
 
         }

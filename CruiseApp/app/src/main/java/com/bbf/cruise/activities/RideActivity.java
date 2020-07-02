@@ -119,7 +119,13 @@ public class RideActivity extends AppCompatActivity {
                 intent.putExtra("rideHistory", new RideHistory(startDate, endDate, Double.parseDouble(distance.getText().toString()), Double.parseDouble(fee.getText().toString()),
                         Integer.parseInt(bonusPoints.getText().toString()), auth.getCurrentUser().getUid()));
                 sendBroadcast(intent);
-                callLoadingDialogAndFinish();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        callLoadingDialogAndFinish();
+                    }
+                }, 500);
+
             }
         });
 
@@ -134,7 +140,12 @@ public class RideActivity extends AppCompatActivity {
                         Integer.parseInt(bonusPoints.getText().toString()), auth.getCurrentUser().getUid()));
                 intent.setAction("SAVE_RIDE_HISTORY_ACTION");
                 sendBroadcast(intent);
-                callLoadingDialogAndFinish();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        callLoadingDialogAndFinish();
+                    }
+                }, 500);
             }
         });
 
@@ -208,9 +219,8 @@ public class RideActivity extends AppCompatActivity {
                 totalPoints.setText(String.valueOf(val));
                 TextView feeBP = mDialog.findViewById(R.id.feeBP);
 
-                DecimalFormat df = new DecimalFormat("#.#");
-                df.format(calculateFeeBP(val, Double.valueOf(priceTV.getText().toString())));
-                feeBP.setText(String.valueOf(df));
+                double rounded = Math.round(calculateFeeBP(val, Double.valueOf(priceTV.getText().toString())) * 10.0) / 10.0;
+                feeBP.setText(Double.toString(rounded));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
