@@ -152,6 +152,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                         if(heartButton.getVisibility() != View.INVISIBLE){
                             positionCarMarkers();
                         }else{
+
                             positionFavorites();
                         }
                     }
@@ -327,6 +328,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         heartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!sharedPreferences.getString("reservation", "none").equals("none")) {
+                    Toast.makeText(getActivity(), "Could not position favourite cars, reservation is in progress.", Toast.LENGTH_LONG);
+                    return;
+                }
+
                 map.clear();
                 fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -654,6 +660,18 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     private void positionCarMarkers(){
         clearCarMarkers();
+
+        if(!sharedPreferences.getString("reservation", "none").equals("none")) {
+            String plates = sharedPreferences.getString("reservation", "none");
+            for(Car car: cars){
+                if (car.getReg_number().equals(plates)) {
+                    addCarMarker(car);
+                    break;
+                }
+            }
+            return;
+        }
+
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         int radius = sharedPreferences.getInt("radius", 30);
         for(Car car: cars){
@@ -677,6 +695,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     private void positionFavorites() {
         clearCarMarkers();
+
         int radius = sharedPreferences.getInt("radius", 30);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         for(Car car: favoriteCars){
