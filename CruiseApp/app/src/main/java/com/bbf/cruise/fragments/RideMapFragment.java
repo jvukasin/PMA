@@ -456,7 +456,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(RIDE_FINISHED_ACTION)){
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-                if(route.size() > 1){
+                if(route.size() >= 1){
                     Polyline routePoly = map.addPolyline(new PolylineOptions()
                             .width(5)
                             .color(Color.BLUE)
