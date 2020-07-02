@@ -176,7 +176,7 @@ public class RideActivity extends AppCompatActivity {
         };
         registerReceiver(broadcastReceiver, intentFilter);
     }
-
+0
     private void callLoadingDialogAndFinish() {
         paid = true;
         mDialog.dismiss();
