@@ -114,6 +114,9 @@ public class CarDetailActivity extends AppCompatActivity {
                 if(counter.getText().equals("00:00")) {
                     cancelBtn.setVisibility(View.INVISIBLE);
                     reserveBtn.setVisibility(View.VISIBLE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("reservation", "none");
+                    editor.apply();
                 }
             }
         };
