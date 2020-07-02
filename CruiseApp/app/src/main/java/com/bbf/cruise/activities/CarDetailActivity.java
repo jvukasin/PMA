@@ -13,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,6 +59,7 @@ public class CarDetailActivity extends AppCompatActivity {
     private ReservationService reservationService;
     private ImageSlider imageSlider;
     private List<SlideModel> slideModels;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,9 @@ public class CarDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_car_detail);
         setTitle(R.string.carInfo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+
 
         reserveBtn = (Button) findViewById(R.id.reserveBtn);
         rentBtn = (Button) findViewById(R.id.rentBtn);
@@ -153,28 +158,37 @@ public class CarDetailActivity extends AppCompatActivity {
 
     private void reserveCar() {
         if(NetworkUtil.isConnected(this)) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.FOREGROUND_SERVICE}, PackageManager.PERMISSION_GRANTED);
 
-            dis_from_me.setVisibility(View.INVISIBLE);
-            from_you.setVisibility(View.INVISIBLE);
-            reserveBtn.setVisibility(View.INVISIBLE);
-            counter.setText("30:00");
-            counter.setVisibility(View.VISIBLE);
-            cancelBtn.setVisibility(View.VISIBLE);
+            if(sharedPreferences.getString("reservation", "none").equals("none")){
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.FOREGROUND_SERVICE}, PackageManager.PERMISSION_GRANTED);
 
-            FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("occupied").setValue(true);
-            reference = FirebaseDatabase.getInstance().getReference().child("Reservations").child(plateNo);
-            reference.child("user").setValue(firebaseUser.getUid());
-            Calendar now = Calendar.getInstance();
-            now.add(Calendar.MINUTE, 30);
-            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-            reference.child("time").setValue(df.format(now.getTime()));
+                dis_from_me.setVisibility(View.INVISIBLE);
+                from_you.setVisibility(View.INVISIBLE);
+                reserveBtn.setVisibility(View.INVISIBLE);
+                counter.setText("30:00");
+                counter.setVisibility(View.VISIBLE);
+                cancelBtn.setVisibility(View.VISIBLE);
+
+                FirebaseDatabase.getInstance().getReference().child("cars").child(plateNo).child("occupied").setValue(true);
+                reference = FirebaseDatabase.getInstance().getReference().child("Reservations").child(plateNo);
+                reference.child("user").setValue(firebaseUser.getUid());
+                Calendar now = Calendar.getInstance();
+                now.add(Calendar.MINUTE, 30);
+                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                reference.child("time").setValue(df.format(now.getTime()));
 
 
-            Intent i = new Intent(this, reservationService.getClass());
-            i.putExtra("plates", plateNo);
-            i.setAction("START_SERVICE");
-            ContextCompat.startForegroundService(this, i);
+                Intent i = new Intent(this, reservationService.getClass());
+                i.putExtra("plates", plateNo);
+                i.setAction("START_SERVICE");
+                ContextCompat.startForegroundService(this, i);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("reservation", plateNo);
+            }else{
+                return;
+            }
+
         }
     }
 
