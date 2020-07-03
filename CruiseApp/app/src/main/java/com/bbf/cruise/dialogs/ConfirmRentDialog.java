@@ -33,6 +33,7 @@ import org.w3c.dom.Text;
 import java.util.Date;
 
 import model.Car;
+import model.LocationObject;
 import model.Rent;
 
 public class ConfirmRentDialog extends AppCompatDialogFragment {
@@ -81,7 +82,9 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
                             }
 
                             FirebaseDatabase.getInstance().getReference().child("cars").child(carForRent.getReg_number()).child("occupied").setValue(true);
-                            FirebaseDatabase.getInstance().getReference("Rent").child(carForRent.getReg_number()).child("started").setValue(true);
+                            FirebaseDatabase.getInstance().getReference("Rent").child(carForRent.getReg_number()).child("active").setValue("started");
+                            LocationObject loc = new LocationObject(carForRent.getLocation().getLatitude(), carForRent.getLocation().getLongitude());
+                            FirebaseDatabase.getInstance().getReference("Rent").child(carForRent.getReg_number()).child("location").setValue(loc);
 
                             Intent intent = new Intent(context, RideActivity.class);
                             intent.putExtra("plates", carForRent.getReg_number());
