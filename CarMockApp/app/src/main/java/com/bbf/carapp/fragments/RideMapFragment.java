@@ -79,6 +79,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     private LocationRequest locationRequest;
     private String plates;
     public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
+    private ValueEventListener rentFinishedListener;
 
     public static RideMapFragment newInstance() {
         RideMapFragment mpf = new RideMapFragment();
@@ -195,7 +196,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
         rentReference = FirebaseDatabase.getInstance().getReference("Rent");
         rentReference.child(plates).child("active").setValue("active");
-        rentReference.child(plates).child("active").addValueEventListener(new ValueEventListener() {
+        rentFinishedListener = rentReference.child(plates).child("active").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String active = dataSnapshot.getValue(String.class);
@@ -204,10 +205,11 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            getActivity().finish();
                             Intent intent = new Intent(getActivity(), MainActivity.class);
                             startActivity(intent);
                         }
-                    }, 500);
+                    }, 1000);
                 }
             }
 
@@ -396,6 +398,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         super.onPause();
+        rentReference.removeEventListener(rentFinishedListener);
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     @Override
