@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bbf.cruise.R;
 import com.bbf.cruise.dialogs.EditBalanceDialog;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,6 +49,7 @@ public class WalletActivity extends AppCompatActivity {
         });
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        boolean isConnected = NetworkUtil.isConnected(this);
         reference.child(auth.getCurrentUser().getUid()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -68,29 +68,28 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(!NetworkUtil.isConnected(getActivity())) {
-                            return;
-                        }
-
-                        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-                        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                            if (ReservationService.class.getName().equals(service.service.getClassName())) {
-                                Intent intent = new Intent(context, ReservationService.class);
-                                intent.putExtra("plates", carForRent.getReg_number());
-                                intent.setAction("STOP_FOREGROUND");
-                                context.startService(intent);
-                                break;
+                        if(NetworkUtil.isConnected(getActivity())) {
+                            ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                                if (ReservationService.class.getName().equals(service.service.getClassName())) {
+                                    Intent intent = new Intent(context, ReservationService.class);
+                                    intent.putExtra("plates", carForRent.getReg_number());
+                                    intent.setAction("STOP_FOREGROUND");
+                                    context.startService(intent);
+                                    break;
+                                }
                             }
+
+                            FirebaseDatabase.getInstance().getReference().child("cars").child(carForRent.getReg_number()).child("occupied").setValue(true);
+                            FirebaseDatabase.getInstance().getReference("Rent").child(carForRent.getReg_number()).child("started").setValue(true);
+
+                            Intent intent = new Intent(context, RideActivity.class);
+                            intent.putExtra("plates", carForRent.getReg_number());
+                            intent.putExtra("lat", carForRent.getLocation().getLatitude());
+                            intent.putExtra("lng", carForRent.getLocation().getLongitude());
+                            context.startActivity(intent);
+                            ((Activity) context).finish();
                         }
-
-                        FirebaseDatabase.getInstance().getReference().child("cars").child(carForRent.getReg_number()).child("occupied").setValue(true);
-
-                        Intent intent = new Intent(context, RideActivity.class);
-                        intent.putExtra("plates", carForRent.getReg_number());
-                        intent.putExtra("lat", carForRent.getLocation().getLatitude());
-                        intent.putExtra("lng", carForRent.getLocation().getLongitude());
-                        context.startActivity(intent);
-                        ((Activity) context).finish();
                     }
                 });
         return builder.create();

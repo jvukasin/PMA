@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.bbf.cruise.dialogs.EditBalanceDialog;
 import com.bbf.cruise.fragments.MapFragment;
 import com.bbf.cruise.helpers.QRScanFeedback;
 import com.bbf.cruise.service.QRProcessingService;
+import com.bbf.cruise.tools.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +32,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.Result;
 
+import java.text.DecimalFormat;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import model.Car;
 
@@ -37,7 +43,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
     private ZXingScannerView mScannerView;
     private Context context = CruiseApplication.getAppContext();
-    private boolean resumeCamera = false;
+    private Context thisContext = this;
 
     @Override
     public void onCreate(Bundle state) {
@@ -84,8 +90,17 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
     @Override
     public void handleResult(Result rawResult) {
-        processFeedback(QRProcessingService.processScannedQR(rawResult));
+        if( NetworkUtil.isConnected(this)) {
+            processFeedback(QRProcessingService.processScannedQR(rawResult));
+        } else {
+            new Handler().postDelayed(new Runnable() {
 
+                @Override
+                public void run() {
+                    mScannerView.resumeCameraPreview((ZXingScannerView.ResultHandler) thisContext);
+                }
+            }, 1000);
+        }
     }
 
     private void processFeedback(QRScanFeedback feedback) {

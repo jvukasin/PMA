@@ -14,7 +14,7 @@ public class NetworkUtil {
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         boolean isConnected = networkInfo != null && networkInfo.isConnectedOrConnecting();
         if(!isConnected){
-            Toast.makeText(context, "No internet connection.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "No internet connection.", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

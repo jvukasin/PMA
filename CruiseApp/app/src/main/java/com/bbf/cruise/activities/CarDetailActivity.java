@@ -60,6 +60,7 @@ public class CarDetailActivity extends AppCompatActivity {
     private ImageSlider imageSlider;
     private List<SlideModel> slideModels;
     SharedPreferences sharedPreferences;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class CarDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_car_detail);
         setTitle(R.string.carInfo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        context = this;
 
         sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
 
@@ -247,10 +249,12 @@ public class CarDetailActivity extends AppCompatActivity {
         favButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(favButton.getTag().equals("add")) {
-                    FirebaseDatabase.getInstance().getReference().child("Favorites").child(firebaseUser.getUid()).child(plateNo).setValue(true);
-                } else {
-                    FirebaseDatabase.getInstance().getReference().child("Favorites").child(firebaseUser.getUid()).child(plateNo).removeValue();
+                if(NetworkUtil.isConnected(context)) {
+                    if(favButton.getTag().equals("add")) {
+                        FirebaseDatabase.getInstance().getReference().child("Favorites").child(firebaseUser.getUid()).child(plateNo).setValue(true);
+                    } else {
+                        FirebaseDatabase.getInstance().getReference().child("Favorites").child(firebaseUser.getUid()).child(plateNo).removeValue();
+                    }
                 }
             }
         });
