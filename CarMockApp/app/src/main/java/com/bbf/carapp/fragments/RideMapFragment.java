@@ -127,7 +127,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void updateRent(Location lastLocation) {
-        rentReference.child("location").setValue(new LocationObject(lastLocation.getLatitude(), lastLocation.getLongitude()));
+        rentReference.child(plates).child("location").setValue(new LocationObject(lastLocation.getLatitude(), lastLocation.getLongitude()));
     }
 
     @Override
