@@ -73,13 +73,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                favoriteCars.clear();
+                for(DataSnapshot carSnapshot: dataSnapshot.getChildren()){
+                    favoriteCars.add(new CarItem(carSnapshot.getValue(Car.class)));
+                }
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
     }
+
 
 }
