@@ -100,6 +100,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
                 if(locationResult == null){
                     return;
                 }
+                updateRent(locationResult.getLastLocation());
                 route.add(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
                 addCarMarker(locationResult.getLastLocation());
                 updateDistance();
@@ -123,6 +124,10 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         });
+    }
+
+    private void updateRent(Location lastLocation) {
+        rentReference.child("location").setValue(new LocationObject(lastLocation.getLatitude(), lastLocation.getLongitude()));
     }
 
     @Override

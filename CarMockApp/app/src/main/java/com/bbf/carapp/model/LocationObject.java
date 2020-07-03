@@ -9,9 +9,9 @@ public class LocationObject implements Serializable {
 
     public LocationObject(){}
 
-    public LocationObject(double longitude, double latitude) {
-        this.longitude = longitude;
+    public LocationObject(double latitude, double longitude) {
         this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public double getLongitude() {
