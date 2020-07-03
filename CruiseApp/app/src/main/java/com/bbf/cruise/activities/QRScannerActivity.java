@@ -105,13 +105,12 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
     private void processFeedback(QRScanFeedback feedback) {
         if (!feedback.isSuccess()) {
-            Toast.makeText(context, "Feedback is Success FALSE", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Please scan again", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
         DatabaseReference carReference = FirebaseDatabase.getInstance().getReference(FirebasePaths.CARS_PATH).child(feedback.getParsed());
-
 
         carReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

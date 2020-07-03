@@ -51,7 +51,7 @@ public class RideActivity extends AppCompatActivity {
     private Dialog mDialog;
     private int counter;
     private double price;
-    private TextView priceTV;
+    private TextView priceTV, distanceTV;
     private FirebaseAuth auth;
     private String plates;
     private DatabaseReference carReference;
@@ -59,6 +59,7 @@ public class RideActivity extends AppCompatActivity {
     private DatabaseReference userReference;
     private FirebaseUser firebaseUser;
     private BroadcastReceiver broadcastReceiver;
+    private BroadcastReceiver updateDistanceReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,7 @@ public class RideActivity extends AppCompatActivity {
         paid = false;
         finishBtn = findViewById(R.id.finishRideBtn);
         priceTV = findViewById(R.id.ridePrice);
+        distanceTV = findViewById(R.id.rideDistance);
 
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,20 +86,9 @@ public class RideActivity extends AppCompatActivity {
         });
 
         chronometer = findViewById(R.id.rideTime);
-//        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-//            @Override
-//            public void onChronometerTick(Chronometer chronometer) {
-//                if(counter == 60) {
-//                    counter = 0;
-//                    price += 0.4;
-//                    double rounded = Math.round(price * 10.0) / 10.0;
-//                    priceTV.setText(String.valueOf(rounded));
-//                }
-//                counter++;
-//            }
-//        });
         chronometer.start();
         Intent intentService = new Intent(this, RentService.class);
+        intentService.putExtra("plates", plates);
         startService(intentService);
 
         mDialog = new Dialog(this);
@@ -175,7 +166,16 @@ public class RideActivity extends AppCompatActivity {
                 priceTV.setText(String.valueOf(currPrice));
             }
         };
+        IntentFilter intentUpdateDisFilter = new IntentFilter();
+        intentUpdateDisFilter.addAction("updateDistance");
+        updateDistanceReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                distanceTV.setText(String.valueOf(Math.round(intent.getDoubleExtra("sum", 0) * 10.0) / 10.0));
+            }
+        };
         registerReceiver(broadcastReceiver, intentFilter);
+        registerReceiver(updateDistanceReceiver, intentUpdateDisFilter);
     }
 
     private void callLoadingDialogAndFinish() {
@@ -192,8 +192,8 @@ public class RideActivity extends AppCompatActivity {
             public void run() {
                 loadingDialog.dismissDialog();
                 Intent intent = new Intent(RideActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                finish();
             }
         }, 1000);
     }
@@ -269,7 +269,7 @@ public class RideActivity extends AppCompatActivity {
     }
 
     private int calculateBonusPoints(Double distance) {
-        return (int) (distance * 35);
+        return (int) (distance * 15);
     }
 
     @Override
@@ -325,5 +325,6 @@ public class RideActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference().child("cars").child(plates).child("occupied").setValue(false);
         }
         unregisterReceiver(broadcastReceiver);
+        unregisterReceiver(updateDistanceReceiver);
     }
 }

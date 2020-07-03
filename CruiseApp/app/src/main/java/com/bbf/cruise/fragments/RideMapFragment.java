@@ -102,6 +102,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private static String RIDE_FINISHED_ACTION = "RIDE_FINISHED_ACTION";
     private static String SAVE_RIDE_HISTORY_ACTION = "SAVE_RIDE_HISTORY_ACTION";
+    private static String ADD_CAR_MARKER_ACTION = "addCarMarker";
     private static double sum = 0;
 
     private List<LatLng> route = new ArrayList<>();
@@ -169,6 +170,9 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
         IntentFilter saveRideHistoryFilter = new IntentFilter(SAVE_RIDE_HISTORY_ACTION);
         requireActivity().registerReceiver(saveRideHistoryReciever, saveRideHistoryFilter);
+
+        IntentFilter addMarkerFilter = new IntentFilter(ADD_CAR_MARKER_ACTION);
+        requireActivity().registerReceiver(addMarkerReceiver, addMarkerFilter);
 
     }
 
@@ -348,20 +352,21 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
         addMarker(startLocation);
 
-        rentReference = FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("location");
-
-        locLis = rentReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                LocationObject location = dataSnapshot.getValue(LocationObject.class);
-                addCarMarker(new LatLng(location.getLatitude(), location.getLongitude()));
-                updateDistance();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        rentReference = FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("location");
+//
+//        locLis = rentReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                LocationObject location = dataSnapshot.getValue(LocationObject.class);
+//                route.add(new LatLng(location.getLatitude(), location.getLongitude()));
+//                addCarMarker(new LatLng(location.getLatitude(), location.getLongitude()));
+//                updateDistance();
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         // ako zelmo da reagujemo na klik markera koristimo marker click listener
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -436,40 +441,20 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    private void updateDistance(){
-        if(route.size() >= 2){
-            TextView view = getActivity().findViewById(R.id.rideDistance);
-            LatLng pos_prev = route.get(route.size()-2);
-            LatLng pos_curr = route.get(route.size()-1);
-            double distance = MapFragment.calculateDistance(pos_prev.latitude, pos_prev.longitude, pos_curr.latitude, pos_curr.longitude);
-            sum += distance;
-            view.setText(String.valueOf(Math.round(sum * 10.0) / 10.0));
-        }
-    }
-
 
     @Override
     public void onStop() {
         super.onStop();
         requireActivity().unregisterReceiver(rideFinishedReciever);
         requireActivity().unregisterReceiver(saveRideHistoryReciever);
-    }
-
-    /**
-     *
-     * Rad sa lokacja izuzetno trosi bateriju.Obavezno osloboditi kada vise ne koristmo
-     * */
-    @Override
-    public void onPause() {
-        super.onPause();
-        sum = 0;
-        route.clear();
-        rentReference.removeEventListener(locLis);
+        requireActivity().unregisterReceiver(addMarkerReceiver);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        sum = 0;
+        route.clear();
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
@@ -478,6 +463,9 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(RIDE_FINISHED_ACTION)){
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+                System.out.println("\n\n\n\n ROUTE SIZE:");
+                System.out.println(route.size());
+                System.out.println("\n\n\n\n");
                 if(route.size() >= 1){
                     Polyline routePoly = map.addPolyline(new PolylineOptions()
                             .width(5)
@@ -492,7 +480,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
                     Bitmap b=bitmapdraw.getBitmap();
                     Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
                     map.addMarker(new MarkerOptions()
-                            .title("YOUR_POSITION")
+                            .title("FINISH")
                             .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
                             .position(lastLocation))
                             .setFlat(true);
@@ -506,60 +494,70 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         }
     };
 
-    private void updateCar(LatLng lastLocation, final RideHistory rideHistory) {
-        carReference.child(plates).child("occupied").setValue(false);
-        carReference.child(plates).child("location").setValue(new LocationObject(lastLocation.latitude, lastLocation.longitude));
+    private final BroadcastReceiver addMarkerReceiver = new BroadcastReceiver() {
 
-        carReference.child(plates).child("no_of_rides").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer count = dataSnapshot.getValue(Integer.class);
-                carReference.child(plates).child("no_of_rides").setValue(count+1);
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(ADD_CAR_MARKER_ACTION)) {
+                LatLng ll = new LatLng(intent.getDoubleExtra("lat", 0), intent.getDoubleExtra("lon", 0));
+                route.add(ll);
+                addCarMarker(ll);
             }
+        }
+    };
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        carReference.child(plates).child("fuel_distance").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Double fuelDistance = dataSnapshot.getValue(Double.class);
-                if(fuelDistance == 0){
-                    return;
-                }
-                DecimalFormat df = new DecimalFormat("#.#");
-                double temp = fuelDistance - rideHistory.getDistance();
-                double rounded = Double.valueOf(df.format(temp));
-                carReference.child(plates).child("fuel_distance").setValue(rounded);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        carReference.child(plates).child("mileage").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Double mileage = dataSnapshot.getValue(Double.class);
-                double temp = mileage + rideHistory.getDistance();
-                DecimalFormat df = new DecimalFormat("#.#");
-                double rounded = Double.valueOf(df.format(temp));
-                carReference.child(plates).child("mileage").setValue(rounded);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
+//    private void updateCar(LatLng lastLocation, final RideHistory rideHistory) {
+//        carReference.child(plates).child("occupied").setValue(false);
+//        carReference.child(plates).child("location").setValue(new LocationObject(lastLocation.latitude, lastLocation.longitude));
+//
+//        carReference.child(plates).child("no_of_rides").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Integer count = dataSnapshot.getValue(Integer.class);
+//                carReference.child(plates).child("no_of_rides").setValue(count+1);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        carReference.child(plates).child("fuel_distance").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Double fuelDistance = dataSnapshot.getValue(Double.class);
+//                if(fuelDistance == 0){
+//                    return;
+//                }
+//                DecimalFormat df = new DecimalFormat("#.#");
+//                double temp = fuelDistance - rideHistory.getDistance();
+//                double rounded = Double.valueOf(df.format(temp));
+//                carReference.child(plates).child("fuel_distance").setValue(rounded);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        carReference.child(plates).child("mileage").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Double mileage = dataSnapshot.getValue(Double.class);
+//                double temp = mileage + rideHistory.getDistance();
+//                DecimalFormat df = new DecimalFormat("#.#");
+//                double rounded = Double.valueOf(df.format(temp));
+//                carReference.child(plates).child("mileage").setValue(rounded);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     private final BroadcastReceiver saveRideHistoryReciever = new BroadcastReceiver() {
         @Override
