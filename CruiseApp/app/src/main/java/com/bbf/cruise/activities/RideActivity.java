@@ -225,6 +225,7 @@ public class RideActivity extends AppCompatActivity {
         intent.setAction("RIDE_FINISHED_ACTION");
         sendBroadcast(intent);
         chronometer.stop();
+        FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("active").setValue("finished");
 
         TextView showPrice = mDialog.findViewById(R.id.fee);
         showPrice.setText(priceTV.getText());
@@ -307,6 +308,7 @@ public class RideActivity extends AppCompatActivity {
                 }
             }
             userReference = FirebaseDatabase.getInstance().getReference("Users");
+            FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("active").setValue("finished");
             firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             userReference.child(firebaseUser.getUid()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
