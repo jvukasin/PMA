@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                             no_of_points.setText(Integer.toString(carSnapshot.getValue(Integer.class)));
                             break;
                         case "totalDistance":
-                            no_of_distance.setText(Integer.toString(carSnapshot.getValue(Integer.class)));
+                            no_of_distance.setText(Double.toString(carSnapshot.getValue(Double.class)));
                             break;
                         case "totalRides":
                             no_of_rides.setText(Integer.toString(carSnapshot.getValue(Integer.class)));

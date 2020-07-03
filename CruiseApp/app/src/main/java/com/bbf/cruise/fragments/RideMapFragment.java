@@ -83,6 +83,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -509,11 +510,14 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         carReference.child(plates).child("fuel_distance").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer fuelDistance = dataSnapshot.getValue(Integer.class);
+                Double fuelDistance = dataSnapshot.getValue(Double.class);
                 if(fuelDistance == 0){
                     return;
                 }
-                carReference.child(plates).child("fuel_distance").setValue((int) fuelDistance - rideHistory.getDistance());
+                DecimalFormat df = new DecimalFormat("#.#");
+                double temp = fuelDistance - rideHistory.getDistance();
+                double rounded = Double.valueOf(df.format(temp));
+                carReference.child(plates).child("fuel_distance").setValue(rounded);
             }
 
             @Override
@@ -526,8 +530,10 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double mileage = dataSnapshot.getValue(Double.class);
-                double rounded = Math.round(mileage * 10.0) / 10.0;
-                carReference.child(plates).child("mileage").setValue(rounded + rideHistory.getDistance());
+                double temp = mileage + rideHistory.getDistance();
+                DecimalFormat df = new DecimalFormat("#.#");
+                double rounded = Double.valueOf(df.format(temp));
+                carReference.child(plates).child("mileage").setValue(rounded);
             }
 
             @Override
@@ -603,7 +609,9 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double value = dataSnapshot.getValue(Double.class);
-                userReference.child(userId).child("wallet").setValue(value - price);
+                DecimalFormat df = new DecimalFormat("#.#");
+                double rounded = Double.parseDouble(df.format((value - price)));
+                userReference.child(userId).child("wallet").setValue(rounded);
             }
 
             @Override
@@ -632,8 +640,9 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double totalDistance = dataSnapshot.getValue(Double.class);
-                double rounded = Math.round(totalDistance * 10) / 10.0;
-                userReference.child(userId).child("totalDistance").setValue(rounded + distance);
+                DecimalFormat df = new DecimalFormat("#.#");
+                double rounded = Double.parseDouble(df.format((totalDistance + distance)));
+                userReference.child(userId).child("totalDistance").setValue(rounded);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -656,8 +665,9 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double value = dataSnapshot.getValue(Double.class);
-                double rounded = Math.round(value * 10) / 10.0;
-                userReference.child(userId).child("wallet").setValue(rounded - price);
+                DecimalFormat df = new DecimalFormat("#.#");
+                double rounded = Double.parseDouble(df.format((value - price)));
+                userReference.child(userId).child("wallet").setValue(rounded);
             }
 
             @Override
@@ -696,8 +706,9 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double totalDistance = dataSnapshot.getValue(Double.class);
-                double rounded = Math.round(totalDistance * 10) / 10.0;
-                userReference.child(userId).child("totalDistance").setValue(rounded + distance);
+                DecimalFormat df = new DecimalFormat("#.#");
+                double rounded = Double.parseDouble(df.format((totalDistance + distance)));
+                userReference.child(userId).child("totalDistance").setValue(rounded);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

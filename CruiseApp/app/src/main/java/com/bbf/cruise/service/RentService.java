@@ -8,6 +8,7 @@ import android.widget.Chronometer;
 
 import androidx.annotation.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,7 +28,7 @@ public class RentService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        
+
         timer = new Timer();
         count = 0;
         price = START_PRICE;
@@ -37,7 +38,8 @@ public class RentService extends Service {
                 count++;
                 if(count%60 == 0) {
                     price +=0.4;
-                    double rounded = Math.round(price * 10.0) / 10.0;
+                    DecimalFormat df = new DecimalFormat("#.#");
+                    double rounded = Double.valueOf(df.format(price));
                     Intent intentLocal = new Intent();
                     intentLocal.setAction("Price");
                     intentLocal.putExtra("price", rounded);

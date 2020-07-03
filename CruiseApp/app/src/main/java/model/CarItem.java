@@ -10,7 +10,7 @@ public class CarItem implements Parcelable {
     private int avatar;
     private String reg_number;
     private double mileage;
-    private int fuel_distance;
+    private double fuel_distance;
     private int no_of_rides;
     private double rating;
     private float tp_fl;
@@ -44,7 +44,7 @@ public class CarItem implements Parcelable {
         distanceFromMe = in.readDouble();
     }
 
-    public CarItem(String brand, String model, int avatar, String reg_number, double mileage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, double distanceFromMe) {
+    public CarItem(String brand, String model, int avatar, String reg_number, double mileage, double fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, double distanceFromMe) {
         this.brand = brand;
         this.model = model;
         this.avatar = avatar;
@@ -190,7 +190,7 @@ public class CarItem implements Parcelable {
         dest.writeString(brand + " " + model);
         dest.writeString(reg_number);
         dest.writeDouble(mileage);
-        dest.writeInt(fuel_distance);
+        dest.writeDouble(fuel_distance);
         dest.writeInt(no_of_rides);
         dest.writeDouble(rating);
         dest.writeFloat(tp_fl);

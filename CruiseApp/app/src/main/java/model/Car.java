@@ -10,7 +10,7 @@ public class Car implements Serializable {
     private int avatar;
     private String reg_number;
     private double mileage;
-    private int fuel_distance;
+    private double fuel_distance;
     private int no_of_rides;
     private double rating;
     private float tp_fl;
@@ -24,7 +24,7 @@ public class Car implements Serializable {
 
     }
 
-    public Car(String brand, String model, int avatar, String reg_number, double mileage, int fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, LocationObject location, boolean occupied) {
+    public Car(String brand, String model, int avatar, String reg_number, double mileage, double fuel_distance, int no_of_rides, double rating, float tp_fl, float tp_fr, float tp_rl, float tp_rr, LocationObject location, boolean occupied) {
         this.brand = brand;
         this.model = model;
         this.avatar = avatar;
@@ -81,11 +81,11 @@ public class Car implements Serializable {
         this.mileage = mileage;
     }
 
-    public int getFuel_distance() {
+    public double getFuel_distance() {
         return fuel_distance;
     }
 
-    public void setFuel_distance(int fuel_distance) {
+    public void setFuel_distance(double fuel_distance) {
         this.fuel_distance = fuel_distance;
     }
 
