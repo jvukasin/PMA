@@ -1,34 +1,20 @@
-package com.bbf.cruise.fragments;
+package com.bbf.carapp.fragments;
 
 import android.Manifest;
-import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Looper;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,15 +23,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.bbf.cruise.MainActivity;
-import com.bbf.cruise.R;
-import com.bbf.cruise.activities.CarDetailActivity;
-import com.bbf.cruise.activities.NearbyCarsActivity;
-import com.bbf.cruise.adapters.FavoriteCarsAdapter;
-import com.bbf.cruise.dialogs.LocationDialog;
+import com.bbf.carapp.MainActivity;
+import com.bbf.carapp.R;
+import com.bbf.carapp.activities.RideActivity;
+import com.bbf.carapp.model.LocationObject;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -60,72 +43,41 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import model.Car;
-import model.CarItem;
-import model.LocationObject;
-import model.RideHistory;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    private static String RIDE_FINISHED_ACTION = "RIDE_FINISHED_ACTION";
-    private static String SAVE_RIDE_HISTORY_ACTION = "SAVE_RIDE_HISTORY_ACTION";
-    private static double sum = 0;
 
-    private List<LatLng> route = new ArrayList<>();
     private LocationManager locationManager;
     private String provider;
     private SupportMapFragment mMapFragment;
     private AlertDialog dialog;
     private Marker home, car;
     private GoogleMap map;
-    private DatabaseReference ridHistoryReference;
-    private DatabaseReference userReference;
     private DatabaseReference carReference;
     private DatabaseReference rentReference;
     private LatLng startLocation;
     private LatLng lastLocation;
+    private List<LatLng> route = new ArrayList<>();
+    private static double sum = 0;
 
     private static long UPDATE_INTERVAL = 1200;
     private static long FASTEST_INTERVAL = 1200;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
-    private SharedPreferences sharedPreferences;
     private String plates;
-
+    public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
 
     public static RideMapFragment newInstance() {
         RideMapFragment mpf = new RideMapFragment();
@@ -142,48 +94,40 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         setRetainInstance(true);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-//        locationCallback = new LocationCallback() {
-//            @Override
-//            public void onLocationResult(LocationResult locationResult) {
-//                if(locationResult == null){
-//                    return;
-//                }
-//                route.add(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
-//                addCarMarker(locationResult.getLastLocation());
-//                updateDistance();
-//            }
-//        };
-
-        rentReference = FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("location");
-        rentReference.addValueEventListener(new ValueEventListener() {
+        locationCallback = new LocationCallback() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                LocationObject location = dataSnapshot.getValue(LocationObject.class);
-                addCarMarker(new LatLng(location.getLatitude(), location.getLongitude()));
+            public void onLocationResult(LocationResult locationResult) {
+                if(locationResult == null){
+                    return;
+                }
+                route.add(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
+                addCarMarker(locationResult.getLastLocation());
                 updateDistance();
             }
+        };
+        carReference = FirebaseDatabase.getInstance().getReference("cars");
+        rentReference = FirebaseDatabase.getInstance().getReference("Rent");
+        rentReference.child(plates).child("active").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String active = dataSnapshot.getValue(String.class);
+                if(active.equals("finished")){
+                    updateCar(lastLocation);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-
-
-        ridHistoryReference = FirebaseDatabase.getInstance().getReference("RideHistory");
-        userReference = FirebaseDatabase.getInstance().getReference("Users");
-        carReference = FirebaseDatabase.getInstance().getReference("cars");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        IntentFilter rideFinishedFilter = new IntentFilter(RIDE_FINISHED_ACTION);
-        requireActivity().registerReceiver(rideFinishedReciever, rideFinishedFilter);
-
-        IntentFilter saveRideHistoryFilter = new IntentFilter(SAVE_RIDE_HISTORY_ACTION);
-        requireActivity().registerReceiver(saveRideHistoryReciever, saveRideHistoryFilter);
-
     }
 
     /**
@@ -214,7 +158,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
     private void showLocatonDialog() {
         if (dialog == null) {
-            dialog = new LocationDialog(getActivity()).prepareDialog();
+         //   dialog = new LocationDialog(getActivity()).prepareDialog();
         } else {
             if (dialog.isShowing()) {
                 dialog.dismiss();
@@ -359,7 +303,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         locationRequest.setInterval(UPDATE_INTERVAL);
         locationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        addMarker(startLocation);
+
+        //addMarker(startLocation);
 
         // ako zelmo da reagujemo na klik markera koristimo marker click listener
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -393,35 +338,34 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void addMarker(LatLng loc) {
-        if (home != null) {
-            home.remove();
-        }
+//    private void addMarker(LatLng loc) {
+//        if (home != null) {
+//            home.remove();
+//        }
+//        int height = 100;
+//        int width = 70;
+//        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.start_pin);
+//        Bitmap b=bitmapdraw.getBitmap();
+//        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+//        home = map.addMarker(new MarkerOptions()
+//                .title("YOUR_POSITION")
+//                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+//                .position(loc));
+//        home.setFlat(true);
+//
+//        CameraPosition cameraPosition = new CameraPosition.Builder()
+//                .target(loc).zoom(14).build();
+//        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//    }
 
-        int height = 100;
-        int width = 70;
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.start_pin);
-        Bitmap b=bitmapdraw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-        home = map.addMarker(new MarkerOptions()
-                .title("YOUR_POSITION")
-                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-                .position(loc));
-        home.setFlat(true);
-
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(loc).zoom(14).build();
-        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
-
-    private void addCarMarker(LatLng loc) {
+    private void addCarMarker(Location lastLocation) {
+        LatLng loc = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
         if(car != null){
             car.remove();
         }
-
         int height = 100;
         int width = 70;
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car_map_pin_no_border_yellow);
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car_map_pin);
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
         car = map.addMarker(new MarkerOptions()
@@ -436,12 +380,11 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
     private void updateDistance(){
         if(route.size() >= 2){
-            TextView view = getActivity().findViewById(R.id.rideDistance);
             LatLng pos_prev = route.get(route.size()-2);
             LatLng pos_curr = route.get(route.size()-1);
-            double distance = MapFragment.calculateDistance(pos_prev.latitude, pos_prev.longitude, pos_curr.latitude, pos_curr.longitude);
-            sum += distance;
-            view.setText(String.valueOf(Math.round(sum * 10.0) / 10.0));
+            double distance = calculateDistance(pos_prev.latitude, pos_prev.longitude, pos_curr.latitude, pos_curr.longitude);
+            sum += Math.round(distance * 10.0) / 10.0;
+            lastLocation = route.get(route.size()-1);
         }
     }
 
@@ -449,8 +392,6 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStop() {
         super.onStop();
-        requireActivity().unregisterReceiver(rideFinishedReciever);
-        requireActivity().unregisterReceiver(saveRideHistoryReciever);
     }
 
     /**
@@ -460,8 +401,6 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         super.onPause();
-        sum = 0;
-        route.clear();
     }
 
     @Override
@@ -470,40 +409,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
-    private final BroadcastReceiver rideFinishedReciever = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(RIDE_FINISHED_ACTION)){
-                fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-                if(route.size() >= 1){
-                    Polyline routePoly = map.addPolyline(new PolylineOptions()
-                            .width(5)
-                            .color(Color.BLUE)
-                            .geodesic(true));
-                    routePoly.setPoints(route);
-                    lastLocation = route.get(route.size()-1);
 
-                    int height = 100;
-                    int width = 70;
-                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.finish_pin);
-                    Bitmap b=bitmapdraw.getBitmap();
-                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-                    map.addMarker(new MarkerOptions()
-                            .title("YOUR_POSITION")
-                            .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-                            .position(lastLocation))
-                            .setFlat(true);
-                }
-            }
-            if(route.isEmpty()){
-                lastLocation = startLocation;
-            }
-            sum = 0;
-            route.clear();
-        }
-    };
-
-    private void updateCar(LatLng lastLocation, final RideHistory rideHistory) {
+    private void updateCar(LatLng lastLocation) {
         carReference.child(plates).child("occupied").setValue(false);
         carReference.child(plates).child("location").setValue(new LocationObject(lastLocation.latitude, lastLocation.longitude));
 
@@ -528,7 +435,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
                     return;
                 }
                 DecimalFormat df = new DecimalFormat("#.#");
-                double temp = fuelDistance - rideHistory.getDistance();
+                double temp = fuelDistance - sum;
                 double rounded = Double.valueOf(df.format(temp));
                 carReference.child(plates).child("fuel_distance").setValue(rounded);
             }
@@ -543,7 +450,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double mileage = dataSnapshot.getValue(Double.class);
-                double temp = mileage + rideHistory.getDistance();
+                double temp = mileage + sum;
                 DecimalFormat df = new DecimalFormat("#.#");
                 double rounded = Double.valueOf(df.format(temp));
                 carReference.child(plates).child("mileage").setValue(rounded);
@@ -555,198 +462,23 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
     }
 
-    private final BroadcastReceiver saveRideHistoryReciever = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(SAVE_RIDE_HISTORY_ACTION)){
-                final String path = "";
-                final boolean flagBonusPoints = intent.getBooleanExtra("flagBonusPoints", false);
-                RideHistory rideHistory = (RideHistory) intent.getSerializableExtra("rideHistory");
-                final RideHistory temp = rideHistory;
-                GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
-                    @Override
-                    public void onSnapshotReady(Bitmap bitmap) {
-                        uploadFile(bitmap, temp, flagBonusPoints);
-                    }
-                };
-                map.snapshot(callback);
-                //updateCar(lastLocation, rideHistory);
-            }
-        }
-    };
+    public static double calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
 
-    private void uploadFile(Bitmap bitmap, final RideHistory rideHistory, final boolean flagBonusPoints) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://cruise-e99e3.appspot.com/");
-        StorageReference mountainImagesRef = storageRef.child("rideHistory/" + rideHistory.getUserId() + "/" + rideHistory.getStartDate()  +  ".jpg");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        final byte[] data = baos.toByteArray();
-        final String path = "";
-        UploadTask uploadTask = mountainImagesRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        if(flagBonusPoints == false){
-                            pay(uri, rideHistory);
-                        }else{
-                            payWithBP(uri, rideHistory);
-                        }
-                    }
-                });
-            }
-        });
+        double latDistance = Math.toRadians(userLat - venueLat);
+        double lngDistance = Math.toRadians(userLng - venueLng);
 
-    }
+        double a = (Math.sin(latDistance / 2) * Math.sin(latDistance / 2)) +
+                (Math.cos(Math.toRadians(userLat))) *
+                        (Math.cos(Math.toRadians(venueLat))) *
+                        (Math.sin(lngDistance / 2)) *
+                        (Math.sin(lngDistance / 2));
 
-    private void payWithBP(Uri uri, RideHistory rideHistory) {
-        String url = uri.toString();
-        RideHistory rdh = new RideHistory(rideHistory);
-        final String userId = rdh.getUserId();
-        final double distance = rdh.getDistance();
-        final double price = rdh.getPrice();
-        rdh.setImage(url);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        ridHistoryReference.child(rdh.getUserId()).push().setValue(rdh);
-        userReference.child(rdh.getUserId()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Double value = dataSnapshot.getValue(Double.class);
-                DecimalFormat df = new DecimalFormat("#.#");
-                double rounded = Double.parseDouble(df.format((value - price)));
-                userReference.child(userId).child("wallet").setValue(rounded);
-            }
+        return (AVERAGE_RADIUS_OF_EARTH * c);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-        userReference.child(rdh.getUserId()).child("bonusPoints").setValue(0);
-
-        userReference.child(rdh.getUserId()).child("totalRides").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer rides = dataSnapshot.getValue(Integer.class);
-                userReference.child(userId).child("totalRides").setValue(rides+1);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        userReference.child(rdh.getUserId()).child("totalDistance").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Double totalDistance = dataSnapshot.getValue(Double.class);
-                DecimalFormat df = new DecimalFormat("#.#");
-                double rounded = Double.parseDouble(df.format((totalDistance + distance)));
-                userReference.child(userId).child("totalDistance").setValue(rounded);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void pay(Uri uri, RideHistory rideHistory) {
-        String url = uri.toString();
-        RideHistory rdh = new RideHistory(rideHistory);
-        final String userId = rdh.getUserId();
-        final double distance = rdh.getDistance();
-        final double price = rdh.getPrice();
-        final int points = rdh.getPoints();
-        rdh.setImage(url);
-
-        ridHistoryReference.child(rdh.getUserId()).push().setValue(rdh);
-        userReference.child(rdh.getUserId()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Double value = dataSnapshot.getValue(Double.class);
-                DecimalFormat df = new DecimalFormat("#.#");
-                double rounded = Double.parseDouble(df.format((value - price)));
-                userReference.child(userId).child("wallet").setValue(rounded);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        userReference.child(rdh.getUserId()).child("bonusPoints").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer currPoints = dataSnapshot.getValue(Integer.class);
-                userReference.child(userId).child("bonusPoints").setValue(currPoints + points);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        userReference.child(rdh.getUserId()).child("totalRides").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer rides = dataSnapshot.getValue(Integer.class);
-                userReference.child(userId).child("totalRides").setValue(rides+1);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        userReference.child(rdh.getUserId()).child("totalDistance").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Double totalDistance = dataSnapshot.getValue(Double.class);
-                DecimalFormat df = new DecimalFormat("#.#");
-                double rounded = Double.parseDouble(df.format((totalDistance + distance)));
-                userReference.child(userId).child("totalDistance").setValue(rounded);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public boolean isStoragePermissionGranted() {
-        String TAG = "Storage Permission";
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ContextCompat.checkSelfPermission(getContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG, "Permission is granted");
-                return true;
-            } else {
-                Log.v(TAG, "Permission is revoked");
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted");
-            return true;
-        }
     }
 
 }

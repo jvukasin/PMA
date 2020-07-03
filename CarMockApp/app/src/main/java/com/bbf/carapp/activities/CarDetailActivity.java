@@ -1,7 +1,9 @@
 package com.bbf.carapp.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +11,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bbf.carapp.R;
+import com.bbf.carapp.model.Rent;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -17,6 +25,7 @@ public class CarDetailActivity extends AppCompatActivity {
 
     private ImageView QRCode;
     private String qrCodeText;
+    private DatabaseReference rentReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +33,35 @@ public class CarDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_car_detail);
         setTitle(R.string.detail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        rentReference = FirebaseDatabase.getInstance().getReference("Rent");
         QRCode = (ImageView) findViewById(R.id.imageView);
-        String plates = getIntent().getStringExtra("plate");
+        final String plates = getIntent().getStringExtra("plate");
         qrCodeText = "{\"car\":\"" + plates + "\"}";
         generateQRCode();
+
+        Rent rent = new Rent();
+        rent.setActive("none");
+        rentReference.child(plates).setValue(rent);
+
+        rentReference.child(plates).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Rent rent = dataSnapshot.getValue(Rent.class);
+                if(rent.getActive().equals("started")){
+                    Intent intent = new Intent(CarDetailActivity.this, RideActivity.class);
+                    intent.putExtra("plates", plates);
+                    intent.putExtra("lat", rent.getLocation().getLatitude());
+                    intent.putExtra("lng", rent.getLocation().getLongitude());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void generateQRCode() {
