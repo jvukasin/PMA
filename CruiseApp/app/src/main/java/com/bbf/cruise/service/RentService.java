@@ -26,7 +26,8 @@ public class RentService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        super.onStartCommand(intent, flags, startId);
+        
         timer = new Timer();
         count = 0;
         price = START_PRICE;
@@ -46,7 +47,7 @@ public class RentService extends Service {
         }, 0,1000);
 
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
