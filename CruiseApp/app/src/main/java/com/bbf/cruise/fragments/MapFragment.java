@@ -62,6 +62,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -622,8 +623,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         model.setText(car.getModel());
         carRating.setText(Double.toString(car.getRating()));
         carRides.setText(Integer.toString(car.getNo_of_rides()));
-        carFuel.setText(Integer.toString(car.getFuel_distance()).concat(" km"));
-        final double dist = Math.round((calculateDistance(home.getPosition().latitude, home.getPosition().longitude, car.getLocation().getLatitude(), car.getLocation().getLongitude()) * 10.0)) / 10.0;
+        carFuel.setText(Double.toString(car.getFuel_distance()).concat(" km"));
+        DecimalFormat df = new DecimalFormat("#.#");
+        final double dist = Double.valueOf(df.format(calculateDistance(home.getPosition().latitude, home.getPosition().longitude, car.getLocation().getLatitude(), car.getLocation().getLongitude())));
         carDistance.setText(String.valueOf(dist).concat(" km"));
 
         Button viewBtn = (Button) mDialog.findViewById(R.id.markerViewBtn);
@@ -635,7 +637,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 intent.putExtra("name", finalCar.getBrand() + " " + finalCar.getModel());
                 intent.putExtra("mileage", String.format("%.1f", finalCar.getMileage()));
                 intent.putExtra("distance_from_me", dist);
-                intent.putExtra("fuel_distance", Integer.toString(finalCar.getFuel_distance()));
+                intent.putExtra("fuel_distance", Double.toString(finalCar.getFuel_distance()));
                 intent.putExtra("plate", markerTitle);
                 intent.putExtra("no_of_rides", finalCar.getNo_of_rides());
                 intent.putExtra("rating", finalCar.getRating());
