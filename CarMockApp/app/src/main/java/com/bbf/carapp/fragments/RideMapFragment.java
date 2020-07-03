@@ -11,6 +11,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -107,23 +108,6 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
             }
         };
         carReference = FirebaseDatabase.getInstance().getReference("cars");
-        rentReference = FirebaseDatabase.getInstance().getReference("Rent");
-        rentReference.child(plates).child("active").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String active = dataSnapshot.getValue(String.class);
-                if(active.equals("finished")){
-                    updateCar(lastLocation);
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void updateRent(Location lastLocation) {
@@ -208,6 +192,31 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.ride_map_layout, vg, false);
         startLocation = new LatLng(getArguments().getDouble("lat"), getArguments().getDouble("lng"));
         plates = getArguments().getString("plates");
+
+        rentReference = FirebaseDatabase.getInstance().getReference("Rent");
+        rentReference.child(plates).child("active").setValue("active");
+        rentReference.child(plates).child("active").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String active = dataSnapshot.getValue(String.class);
+                if(active.equals("finished")){
+                    updateCar(lastLocation);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
+                        }
+                    }, 500);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         return view;
     }
 
@@ -343,25 +352,6 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-//    private void addMarker(LatLng loc) {
-//        if (home != null) {
-//            home.remove();
-//        }
-//        int height = 100;
-//        int width = 70;
-//        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.start_pin);
-//        Bitmap b=bitmapdraw.getBitmap();
-//        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-//        home = map.addMarker(new MarkerOptions()
-//                .title("YOUR_POSITION")
-//                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-//                .position(loc));
-//        home.setFlat(true);
-//
-//        CameraPosition cameraPosition = new CameraPosition.Builder()
-//                .target(loc).zoom(14).build();
-//        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//    }
 
     private void addCarMarker(Location lastLocation) {
         LatLng loc = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());

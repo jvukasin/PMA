@@ -26,6 +26,7 @@ public class CarDetailActivity extends AppCompatActivity {
     private ImageView QRCode;
     private String qrCodeText;
     private DatabaseReference rentReference;
+    private ValueEventListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +44,18 @@ public class CarDetailActivity extends AppCompatActivity {
         rent.setActive("none");
         rentReference.child(plates).setValue(rent);
 
-        rentReference.child(plates).addListenerForSingleValueEvent(new ValueEventListener() {
+        listener = rentReference.child(plates).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Rent rent = dataSnapshot.getValue(Rent.class);
-                if(rent.getActive().equals("started")){
-                    Intent intent = new Intent(CarDetailActivity.this, RideActivity.class);
-                    intent.putExtra("plates", plates);
-                    intent.putExtra("lat", rent.getLocation().getLatitude());
-                    intent.putExtra("lng", rent.getLocation().getLongitude());
-                    startActivity(intent);
+                if(rent.getActive() != null){
+                    if(rent.getActive().equals("started")){
+                        Intent intent = new Intent(CarDetailActivity.this, RideActivity.class);
+                        intent.putExtra("plates", plates);
+                        intent.putExtra("lat", rent.getLocation().getLatitude());
+                        intent.putExtra("lng", rent.getLocation().getLongitude());
+                        startActivity(intent);
+                    }
                 }
             }
 
@@ -62,6 +65,12 @@ public class CarDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        rentReference.removeEventListener(listener);
     }
 
     private void generateQRCode() {
