@@ -63,8 +63,11 @@ public class EditBalanceDialog extends AppCompatDialogFragment {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 Double balance = dataSnapshot.getValue(Double.class);
                                 String funds = addFundsEditText.getText().toString();
-                                float addedFunds = Float.parseFloat(funds);
-                                balance += addedFunds;
+
+                                if(!funds.equals("")){
+                                    double addedFunds = Double.parseDouble(funds);
+                                    balance += addedFunds;
+                                }
 
                                 if(balance < minBalance){
                                     Toast.makeText(getActivity(), "Balance must be greater than 25 EUR.", Toast.LENGTH_SHORT).show();
