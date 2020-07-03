@@ -142,6 +142,17 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if(locationResult == null){
                     return;
                 }
+                if (home != null) {
+                    home.remove();
+                }
+                LatLng loc = new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+
+                home = map.addMarker(new MarkerOptions()
+                        .title("YOUR_POSITION")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                        .position(loc));
+                home.setFlat(true);
+
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -152,7 +163,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                         if(heartButton.getVisibility() != View.INVISIBLE){
                             positionCarMarkers();
                         }else{
-
                             positionFavorites();
                         }
                     }
@@ -391,9 +401,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
      * */
     @Override
     public void onLocationChanged(Location location) {
-        if (map != null) {
-            addMarker(location);
-        }
+//        if (map != null) {
+//            addMarker(location);
+//        }
     }
 
     @Override

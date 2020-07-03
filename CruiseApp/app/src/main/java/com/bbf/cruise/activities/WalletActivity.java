@@ -48,6 +48,7 @@ public class WalletActivity extends AppCompatActivity {
         });
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        String id = auth.getCurrentUser().getUid();
         reference.child(auth.getCurrentUser().getUid()).child("wallet").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
