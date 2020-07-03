@@ -82,9 +82,10 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
                             }
 
                             FirebaseDatabase.getInstance().getReference().child("cars").child(carForRent.getReg_number()).child("occupied").setValue(true);
-                            FirebaseDatabase.getInstance().getReference("Rent").child(carForRent.getReg_number()).child("active").setValue("started");
                             LocationObject loc = new LocationObject(carForRent.getLocation().getLatitude(), carForRent.getLocation().getLongitude());
                             FirebaseDatabase.getInstance().getReference("Rent").child(carForRent.getReg_number()).child("location").setValue(loc);
+                            FirebaseDatabase.getInstance().getReference("Rent").child(carForRent.getReg_number()).child("active").setValue("started");
+
 
                             Intent intent = new Intent(context, RideActivity.class);
                             intent.putExtra("plates", carForRent.getReg_number());

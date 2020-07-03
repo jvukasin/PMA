@@ -125,6 +125,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
     private LocationRequest locationRequest;
     private SharedPreferences sharedPreferences;
     private String plates;
+    private ValueEventListener locLis;
 
 
     public static RideMapFragment newInstance() {
@@ -143,32 +144,17 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-//        locationCallback = new LocationCallback() {
-//            @Override
-//            public void onLocationResult(LocationResult locationResult) {
-//                if(locationResult == null){
-//                    return;
-//                }
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if(locationResult == null){
+                    return;
+                }
 //                route.add(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
 //                addCarMarker(locationResult.getLastLocation());
 //                updateDistance();
-//            }
-//        };
-
-        rentReference = FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("location");
-        rentReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                LocationObject location = dataSnapshot.getValue(LocationObject.class);
-                addCarMarker(new LatLng(location.getLatitude(), location.getLongitude()));
-                updateDistance();
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+        };
 
         ridHistoryReference = FirebaseDatabase.getInstance().getReference("RideHistory");
         userReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -259,6 +245,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.ride_map_layout, vg, false);
         startLocation = new LatLng(getArguments().getDouble("lat"), getArguments().getDouble("lng"));
         plates = getArguments().getString("plates");
+
         return view;
     }
 
@@ -361,6 +348,21 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
         addMarker(startLocation);
 
+        rentReference = FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("location");
+
+        locLis = rentReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                LocationObject location = dataSnapshot.getValue(LocationObject.class);
+                addCarMarker(new LatLng(location.getLatitude(), location.getLongitude()));
+                updateDistance();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         // ako zelmo da reagujemo na klik markera koristimo marker click listener
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -462,6 +464,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         super.onPause();
         sum = 0;
         route.clear();
+        rentReference.removeEventListener(locLis);
     }
 
     @Override
