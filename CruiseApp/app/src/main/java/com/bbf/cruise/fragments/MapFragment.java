@@ -625,7 +625,14 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         carRides.setText(Integer.toString(car.getNo_of_rides()));
         carFuel.setText(Double.toString(car.getFuel_distance()).concat(" km"));
         DecimalFormat df = new DecimalFormat("#.#");
-        final double dist = Double.valueOf(df.format(calculateDistance(home.getPosition().latitude, home.getPosition().longitude, car.getLocation().getLatitude(), car.getLocation().getLongitude())));
+        String check = df.format(calculateDistance(home.getPosition().latitude, home.getPosition().longitude, car.getLocation().getLatitude(), car.getLocation().getLongitude()));
+        final double dist;
+        if(check.contains(",")) {
+            check = check.replace(',','.');
+            dist = Double.parseDouble(check);
+        } else {
+            dist = Double.parseDouble(check);
+        }
         carDistance.setText(String.valueOf(dist).concat(" km"));
 
         Button viewBtn = (Button) mDialog.findViewById(R.id.markerViewBtn);
