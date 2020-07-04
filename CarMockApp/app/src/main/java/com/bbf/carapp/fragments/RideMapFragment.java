@@ -320,7 +320,6 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         locationRequest.setFastestInterval(FASTEST_INTERVAL);
 
 
-        //addMarker(startLocation);
 
         // ako zelmo da reagujemo na klik markera koristimo marker click listener
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
