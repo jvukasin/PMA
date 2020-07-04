@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -87,12 +88,12 @@ public class ConfirmRentDialog extends AppCompatDialogFragment {
                             FirebaseDatabase.getInstance().getReference("Rent").child(carForRent.getReg_number()).child("active").setValue("started");
 
 
-                            Intent intent = new Intent(context, RideActivity.class);
+                            Intent intent = new Intent(getActivity(), RideActivity.class);
                             intent.putExtra("plates", carForRent.getReg_number());
                             intent.putExtra("lat", carForRent.getLocation().getLatitude());
                             intent.putExtra("lng", carForRent.getLocation().getLongitude());
-                            context.startActivity(intent);
-                            ((Activity) context).finish();
+                            getActivity().startActivity(intent);
+                            getActivity().finish();
                         }
                     }
                 });

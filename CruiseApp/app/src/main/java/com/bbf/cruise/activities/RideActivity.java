@@ -221,9 +221,9 @@ public class RideActivity extends AppCompatActivity {
     }
 
     private void finishRide() {
-        Intent intent = new Intent();
-        intent.setAction("RIDE_FINISHED_ACTION");
-        sendBroadcast(intent);
+//        Intent intent = new Intent();
+//        intent.setAction("RIDE_FINISHED_ACTION");
+//        sendBroadcast(intent);
         chronometer.stop();
         FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("active").setValue("finished");
 

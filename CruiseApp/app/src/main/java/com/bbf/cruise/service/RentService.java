@@ -34,7 +34,7 @@ public class RentService extends Service {
     private static double START_PRICE = 2;
     private ValueEventListener locLis;
     DatabaseReference rentReference;
-    private List<LatLng> route = new ArrayList<>();
+    private ArrayList<LatLng> route = new ArrayList<>();
     private String plates;
     private double sum = 0;
 
@@ -87,7 +87,6 @@ public class RentService extends Service {
             }
         });
 
-
         return START_STICKY;
     }
 
@@ -106,9 +105,13 @@ public class RentService extends Service {
     }
 
     @Override
-    public boolean stopService(Intent name) {
+    public void onDestroy() {
         timer.cancel();
+        Intent i = new Intent();
+        i.setAction("RIDE_FINISHED_ACTION");
+        i.putParcelableArrayListExtra("route", route);
+        sendBroadcast(i);
         rentReference.removeEventListener(locLis);
-        return super.stopService(name);
+        super.onDestroy();
     }
 }
