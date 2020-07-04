@@ -63,7 +63,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.QRScannerActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".activities.RegisterActivity"
             android:theme="@style/AppTheme.NoBar"

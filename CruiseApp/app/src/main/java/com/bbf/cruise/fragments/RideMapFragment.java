@@ -498,7 +498,6 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(ADD_CAR_MARKER_ACTION)) {
                 LatLng ll = new LatLng(intent.getDoubleExtra("lat", 0), intent.getDoubleExtra("lon", 0));
-//                route.add(ll);
                 addCarMarker(ll);
             }
         }

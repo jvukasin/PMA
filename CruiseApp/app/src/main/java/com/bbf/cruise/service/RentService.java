@@ -87,7 +87,6 @@ public class RentService extends Service {
             }
         });
 
-
         return START_STICKY;
     }
 

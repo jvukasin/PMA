@@ -1,6 +1,7 @@
 package com.bbf.cruise.activities;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -105,7 +106,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
     private void processFeedback(QRScanFeedback feedback) {
         if (!feedback.isSuccess()) {
-            Toast.makeText(context, "Please scan again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(thisContext, "Please scan again", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -128,9 +129,9 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
                     openConfirmRentDialog(car);
                     mScannerView.stopCamera();
                 } else if (car.isOccupied() && hasReservation.equals("none")) {
-                    Toast.makeText(context, "This car is occupied or reserved.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(thisContext, "This car is occupied or reserved.", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(context, "Error fetching info if car is reserved", Toast.LENGTH_LONG).show();
+                    Toast.makeText(thisContext, "Error fetching info if car is reserved", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -142,11 +143,14 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
     }
 
-
     private void openConfirmRentDialog(Car car) {
         ConfirmRentDialog dialog = new ConfirmRentDialog(car, this);
         dialog.show(getSupportFragmentManager(), "Confirm Rent");
     }
 
-
+    @Override
+    protected void onDestroy() {
+        mScannerView.stopCamera();
+        super.onDestroy();
+    }
 }
