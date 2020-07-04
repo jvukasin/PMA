@@ -49,6 +49,8 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
+        setTitle(R.string.qrScan);
+        setContentView(R.layout.qr_scanner);
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -57,10 +59,8 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Programmatically initialize the scanner view
-        mScannerView = new ZXingScannerView(this);
-        // Set the scanner view as the content view
-        setTitle(R.string.qrScan);
-        setContentView(mScannerView);
+        mScannerView = findViewById(R.id.zxingScanner);
+
     }
 
     @Override
