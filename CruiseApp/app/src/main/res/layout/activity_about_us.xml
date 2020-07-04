@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AboutUsActivity"
+    android:orientation="vertical"
+    android:background="@color/colorGhostWhite">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/colorAccent" />
+
+    <ImageView
+        android:id="@+id/logo_image"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cruise_splash"
+        android:transitionName="logo_image"
+        android:layout_marginLeft="-26dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/about_text1"
+            android:layout_width="342dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:fontFamily="sans-serif-black"
+            android:text="We are Cruise."
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:transitionName="logo_text" />
+        <TextView
+            android:id="@+id/about_text2"
+            android:layout_width="342dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="We provide fluid mobile rent-a-car service."
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"
+            android:transitionName="logo_text" />
+
+
+        <TextView
+            android:id="@+id/about_contact"
+            android:layout_width="342dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Contact"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            android:transitionName="logo_text" />
+
+        <TextView
+            android:id="@+id/about_email"
+            android:layout_width="342dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="sep.bbf@gmail.com"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:transitionName="logo_text" />
+
+    </LinearLayout>
+
+</LinearLayout>
