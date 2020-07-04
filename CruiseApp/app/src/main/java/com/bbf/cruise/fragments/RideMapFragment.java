@@ -223,7 +223,6 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean wifi = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-
         if (!gps && !wifi) {
             showLocatonDialog();
         } else {
@@ -241,6 +240,8 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         }
+
+        rentReference = FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("location");
     }
 
     @Override
@@ -352,21 +353,18 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
 
         addMarker(startLocation);
 
-//        rentReference = FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("location");
-//
-//        locLis = rentReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                LocationObject location = dataSnapshot.getValue(LocationObject.class);
-//                route.add(new LatLng(location.getLatitude(), location.getLongitude()));
-//                addCarMarker(new LatLng(location.getLatitude(), location.getLongitude()));
-//                updateDistance();
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        rentReference = FirebaseDatabase.getInstance().getReference("Rent").child(plates).child("location");
+        rentReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                LocationObject location = dataSnapshot.getValue(LocationObject.class);
+                addCarMarker(new LatLng(location.getLatitude(), location.getLongitude()));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         // ako zelmo da reagujemo na klik markera koristimo marker click listener
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -463,9 +461,9 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(RIDE_FINISHED_ACTION)){
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-                System.out.println("\n\n\n\n ROUTE SIZE:");
+                route = intent.getParcelableArrayListExtra("route");
+                System.out.println("ROUTE");
                 System.out.println(route.size());
-                System.out.println("\n\n\n\n");
                 if(route.size() >= 1){
                     Polyline routePoly = map.addPolyline(new PolylineOptions()
                             .width(5)
@@ -500,7 +498,7 @@ public class RideMapFragment extends Fragment implements OnMapReadyCallback {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(ADD_CAR_MARKER_ACTION)) {
                 LatLng ll = new LatLng(intent.getDoubleExtra("lat", 0), intent.getDoubleExtra("lon", 0));
-                route.add(ll);
+//                route.add(ll);
                 addCarMarker(ll);
             }
         }
