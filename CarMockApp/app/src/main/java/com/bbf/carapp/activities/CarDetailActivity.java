@@ -55,6 +55,7 @@ public class CarDetailActivity extends AppCompatActivity {
                         intent.putExtra("lat", rent.getLocation().getLatitude());
                         intent.putExtra("lng", rent.getLocation().getLongitude());
                         startActivity(intent);
+                        finish();
                     }
                 }
             }
